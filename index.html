@@ -165,7 +165,7 @@
 
     // --- CONFIGURACIÓN ---
     // REEMPLAZA ESTA URL CON LA DE TU APPS SCRIPT (termina en /exec)
-    const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxfVSbeXhPLZpEgDr03zxtqMMz1BOli0fI36gVaaUnorqwy_86zk2ESG3lHLXFhfas3mA/exec';
+    const BACKEND_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://script.google.com/macros/s/AKfycbxfVSbeXhPLZpEgDr03zxtqMMz1BOli0fI36gVaaUnorqwy_86zk2ESG3lHLXFhfas3mA/exec');
 
     // --- FUNCIÓN PARA LLAMAR AL BACKEND (con no-cors y parseo manual) ---
     async function callBackend(action, data = {}) {
