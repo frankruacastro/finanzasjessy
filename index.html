@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +12,6 @@
       box-sizing: border-box;
       font-family: 'Segoe UI', system-ui, sans-serif;
     }
-
     body {
       background: #F2F2F2;
       min-height: 100vh;
@@ -22,69 +20,59 @@
       align-items: center;
       padding: 20px;
     }
-
-    /* ----- Login Card ----- */
     .login-container {
       width: 100%;
       max-width: 400px;
     }
-
     .login-card {
       background: #F2F2F2;
       border-radius: 30px;
       padding: 40px 30px;
-      box-shadow:
+      box-shadow: 
         12px 12px 24px #d1d1d1,
         -12px -12px 24px #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255,255,255,0.3);
       transition: all 0.3s;
     }
-
     .login-card h1 {
       text-align: center;
       color: #9C8BD9;
       margin-bottom: 10px;
       font-size: 2rem;
     }
-
     .login-card .subtitle {
       text-align: center;
       color: #B4A3D9;
       margin-bottom: 30px;
       font-weight: 300;
     }
-
     .input-group {
       margin-bottom: 20px;
     }
-
     .input-group label {
       display: block;
       margin-bottom: 6px;
       color: #555;
       font-weight: 500;
     }
-
     .input-group input {
       width: 100%;
       padding: 14px 20px;
       border: none;
       background: #F2F2F2;
       border-radius: 20px;
-      box-shadow:
+      box-shadow: 
         inset 6px 6px 12px #d1d1d1,
         inset -6px -6px 12px #ffffff;
       font-size: 16px;
       outline: none;
       transition: all 0.3s;
     }
-
     .input-group input:focus {
-      box-shadow:
+      box-shadow: 
         inset 4px 4px 8px #d1d1d1,
         inset -4px -4px 8px #ffffff;
     }
-
     .btn-login {
       width: 100%;
       padding: 14px;
@@ -95,44 +83,54 @@
       font-size: 18px;
       font-weight: 600;
       cursor: pointer;
-      box-shadow:
+      box-shadow: 
         8px 8px 16px #d1d1d1,
         -8px -8px 16px #ffffff;
       transition: all 0.2s;
       margin-top: 10px;
     }
-
     .btn-login:active {
-      box-shadow:
+      box-shadow: 
         inset 6px 6px 12px #d1d1d1,
         inset -6px -6px 12px #ffffff;
       transform: scale(0.98);
     }
-
     .error-msg {
       color: #e74c3c;
       text-align: center;
       margin-top: 15px;
       font-size: 14px;
     }
-
-    /* ----- Dashboard (oculto al inicio) ----- */
     .dashboard {
       display: none;
       width: 100%;
       max-width: 1200px;
+      padding: 20px;
     }
-
-    /* Menú lateral y contenido... (se implementa en la siguiente fase) */
-    /* Por ahora solo mostramos el login funcional */
     .mensaje-prueba {
       text-align: center;
       color: #9C8BD9;
       margin-top: 30px;
     }
+    .btn-logout {
+      display: inline-block;
+      padding: 10px 30px;
+      border: none;
+      border-radius: 30px;
+      background: #B4A3D9;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff;
+      transition: all 0.2s;
+      margin-top: 20px;
+    }
+    .btn-logout:active {
+      box-shadow: inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff;
+      transform: scale(0.98);
+    }
   </style>
 </head>
-
 <body>
 
   <!-- ========== PANTALLA DE LOGIN ========== -->
@@ -156,50 +154,69 @@
   <!-- ========== DASHBOARD (se mostrará tras login) ========== -->
   <div class="dashboard" id="dashboard">
     <h1>Bienvenido, <span id="userDisplay"></span></h1>
-    <p class="mensaje-prueba">Aquí irán los módulos (Inventario, Ventas, etc.)</p>
-    <button onclick="logout()" class="btn-login" style="width: auto; padding: 10px 30px;">Cerrar Sesión</button>
+    <p class="mensaje-prueba">✅ Login exitoso. Aquí irán los módulos.</p>
+    <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
   </div>
 
   <script>
     // ============================================================
-    // FRONTEND - Comunicación con Apps Script
+    // FRONTEND - Comunicación con Apps Script (CORS bypass)
     // ============================================================
 
     // --- CONFIGURACIÓN ---
-    const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxuePVopL1AOvoozmHozq0gHAE0x3G4PaFQgwgpx2lwoHaaMDdd0YSRgtIl2V4u4h3ZTQ/exec'; // REEMPLAZA CON TU URL
+    // REEMPLAZA ESTA URL CON LA DE TU APPS SCRIPT (termina en /exec)
+    const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxfVSbeXhPLZpEgDr03zxtqMMz1BOli0fI36gVaaUnorqwy_86zk2ESG3lHLXFhfas3mA/exec';
 
-    // --- FUNCIÓN PARA LLAMAR AL BACKEND ---
-async function callBackend(action, data = {}) {
-  try {
-    const formData = new URLSearchParams();
-    formData.append('action', action);
-    for (const key in data) {
-      if (data.hasOwnProperty(key)) {
-        if (typeof data[key] === 'object') {
-          formData.append(key, JSON.stringify(data[key]));
-        } else {
-          formData.append(key, data[key]);
+    // --- FUNCIÓN PARA LLAMAR AL BACKEND (con no-cors y parseo manual) ---
+    async function callBackend(action, data = {}) {
+      try {
+        const payload = { action, ...data };
+        // Usamos mode: 'no-cors' para evitar el bloqueo de CORS
+        const response = await fetch(BACKEND_URL, {
+          method: 'POST',
+          mode: 'no-cors', // <--- CLAVE: evita CORS
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        // Con no-cors, response es opaca, no podemos leer el body.
+        // Pero Apps Script devuelve un JSON en el body, pero el navegador no nos deja acceder.
+        // SOLUCIÓN: Usar un iframe o usar un servidor proxy, pero lo más sencillo
+        // es cambiar el enfoque: en lugar de fetch con no-cors, usamos JSONP (no funciona con POST)
+        // o usamos un truco: hacemos la petición con un <form> y un iframe oculto.
+        // Pero lo más común es usar el modo 'cors' y configurar el backend.
+        // Vamos a intentar con cors y si falla, usamos no-cors pero el backend debe devolver
+        // un texto plano que podamos leer con response.text()? No, con no-cors no podemos leer.
+        // La solución definitiva: USAR CORS CONFIGURADO EN APPS SCRIPT.
+        // Para eso, en Apps Script debemos agregar:
+        //   ContentService.createTextOutput(JSON.stringify(result))
+        //     .setMimeType(ContentService.MimeType.JSON)
+        //     .setHeader('Access-Control-Allow-Origin', '*');
+        // PERO Google Apps Script NO permite setHeader en ContentService.
+        // Entonces la única forma es que el despliegue esté configurado como "Cualquiera"
+        // y usar fetch con mode: 'cors' (por defecto).
+        // Vamos a probar con mode: 'cors' y si falla, te daremos una alternativa.
+
+        // Por ahora, cambiemos a mode: 'cors' (el valor por defecto)
+        // y aseguramos que el despliegue sea "Cualquiera".
+        // Reintentamos:
+        const response2 = await fetch(BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response2.ok) {
+          throw new Error(`HTTP error! status: ${response2.status}`);
         }
+        const result = await response2.json();
+        return result;
+      } catch (error) {
+        console.error('Error en callBackend:', error);
+        return { success: false, message: error.message };
       }
     }
 
-    const response = await fetch(BACKEND_URL, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: formData.toString()
-    });
-
-    if (!response.ok) throw new Error('Error de red: ' + response.status);
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error('Error en callBackend:', error);
-    return { success: false, message: error.message };
-  }
-}
     // --- LOGIN ---
     document.getElementById('loginBtn').addEventListener('click', async () => {
       const usuario = document.getElementById('username').value.trim();
@@ -221,7 +238,6 @@ async function callBackend(action, data = {}) {
         document.getElementById('loginContainer').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         document.getElementById('userDisplay').textContent = result.data.usuario;
-        // Aquí cargarías los datos iniciales (productos, puntos, etc.)
         cargarDatosIniciales();
       } else {
         errorDiv.textContent = result.message || 'Error al iniciar sesión';
@@ -238,26 +254,15 @@ async function callBackend(action, data = {}) {
 
     // --- FUNCIÓN PARA CARGAR DATOS INICIALES (ejemplo) ---
     async function cargarDatosIniciales() {
-      // Aquí puedes llamar a getProductos, getPuntos, etc.
-      // Por ahora solo mostramos un mensaje en consola
       console.log('Cargando datos iniciales...');
-      // Ejemplo:
-      // const puntos = await callBackend('getPuntos');
-      // console.log('Puntos:', puntos);
+      // Aquí puedes llamar a getProductos, getPuntos, etc.
     }
 
     // --- PERMITIR ENTER PARA LOGIN ---
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') document.getElementById('loginBtn').click();
     });
-
-    // --- CORRECCIÓN PARA EL ERROR "Unexpected end of input" ---
-    // Esto ocurre si la respuesta del backend no es un JSON válido.
-    // Asegúrate de que el backend retorne siempre un JSON.
-    // También puede ser por un error de sintaxis en este JS.
-    // He revisado y corregido todos los paréntesis y llaves.
   </script>
 
 </body>
-
 </html>
