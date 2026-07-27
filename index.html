@@ -2,66 +2,97 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>🍰 Control de Postres</title>
   <style>
-    /* ---------- SOFT UI - Neumorphism + Claymorphism ---------- */
+    /* ===== RESET Y BASE ===== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: 'Segoe UI', system-ui, sans-serif;
     }
-
     body {
       background: #F2F2F2;
       min-height: 100vh;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      flex-direction: column;
     }
 
-    /* ----- Login (se oculta al iniciar sesión) ----- */
-    .login-container {
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .login-card {
+    /* ===== SOFT UI NEUMORPHISM + CLAYMORPHISM ===== */
+    .neumorph {
       background: #F2F2F2;
       border-radius: 30px;
-      padding: 40px 30px;
       box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
       border: 1px solid rgba(255,255,255,0.3);
+      transition: all 0.2s;
+    }
+    .neumorph-inset {
+      background: #F2F2F2;
+      border-radius: 20px;
+      box-shadow: inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff;
+    }
+    .btn-soft {
+      display: inline-block;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 30px;
+      background: #F2B3D6;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff;
+      transition: all 0.15s;
+      text-align: center;
+    }
+    .btn-soft:active {
+      box-shadow: inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff;
+      transform: scale(0.96);
+    }
+    .btn-soft-secondary {
+      background: #B4A3D9;
+    }
+    .btn-soft-danger {
+      background: #e74c3c;
+    }
+    .btn-soft-success {
+      background: #2ecc71;
     }
 
+    /* ===== LOGIN ===== */
+    #loginContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      padding: 40px 30px;
+    }
     .login-card h1 {
       text-align: center;
       color: #9C8BD9;
-      margin-bottom: 10px;
-      font-size: 2rem;
+      font-size: 2.2rem;
     }
-
     .login-card .subtitle {
       text-align: center;
       color: #B4A3D9;
       margin-bottom: 30px;
-      font-weight: 300;
     }
-
     .input-group {
       margin-bottom: 20px;
     }
-
     .input-group label {
       display: block;
       margin-bottom: 6px;
       color: #555;
       font-weight: 500;
     }
-
-    .input-group input {
+    .input-group input, .input-group select {
       width: 100%;
       padding: 14px 20px;
       border: none;
@@ -72,31 +103,9 @@
       outline: none;
       transition: all 0.3s;
     }
-
-    .input-group input:focus {
+    .input-group input:focus, .input-group select:focus {
       box-shadow: inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff;
     }
-
-    .btn-login {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 30px;
-      background: #F2B3D6;
-      color: #fff;
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff;
-      transition: all 0.2s;
-      margin-top: 10px;
-    }
-
-    .btn-login:active {
-      box-shadow: inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff;
-      transform: scale(0.98);
-    }
-
     .error-msg {
       color: #e74c3c;
       text-align: center;
@@ -104,264 +113,305 @@
       font-size: 14px;
     }
 
-    /* ----- Dashboard (se muestra tras login) ----- */
-    .dashboard {
+    /* ===== DASHBOARD (oculto inicialmente) ===== */
+    #dashboard {
       display: none;
-      width: 100%;
-      max-width: 1400px;
-      gap: 20px;
+      flex: 1;
+      min-height: 100vh;
     }
 
-    /* Menú lateral */
+    /* ===== SIDEBAR ===== */
     .sidebar {
-      width: 220px;
-      min-height: 80vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100%;
       background: #F2F2F2;
-      border-radius: 30px;
       padding: 20px 15px;
-      box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
-      position: sticky;
-      top: 20px;
-      float: left;
-      margin-right: 20px;
+      box-shadow: 4px 0 16px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      overflow-y: auto;
+      transform: translateX(-100%);
     }
-
-    .sidebar .logo {
-      text-align: center;
-      font-size: 1.5rem;
+    .sidebar.open {
+      transform: translateX(0);
+    }
+    .sidebar .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.4rem;
+      font-weight: 700;
       color: #9C8BD9;
-      font-weight: bold;
       margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 2px solid #d1d1d1;
+      padding-left: 10px;
     }
-
+    .sidebar .brand span {
+      font-size: 1.8rem;
+    }
     .sidebar .menu-item {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 12px 16px;
+      padding: 14px 16px;
       margin: 6px 0;
       border-radius: 20px;
       cursor: pointer;
-      transition: all 0.3s;
       color: #555;
       font-weight: 500;
-      background: #F2F2F2;
-      box-shadow: inset 0 0 0 transparent;
+      transition: all 0.2s;
+      background: transparent;
     }
-
     .sidebar .menu-item:hover {
-      background: #e8e8e8;
-      box-shadow: inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff;
+      background: rgba(180, 163, 217, 0.2);
+      box-shadow: inset 2px 2px 6px #d1d1d1, inset -2px -2px 6px #ffffff;
     }
-
     .sidebar .menu-item.active {
       background: #F2B3D6;
       color: #fff;
-      box-shadow: 8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff;
+      box-shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
     }
-
     .sidebar .menu-item .icon {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
+      width: 30px;
+      text-align: center;
     }
 
-    .sidebar .menu-item.logout {
-      margin-top: 30px;
-      color: #e74c3c;
-      border-top: 1px solid #d1d1d1;
-      padding-top: 15px;
-    }
-
-    /* Contenido principal */
+    /* ===== CONTENIDO PRINCIPAL ===== */
     .main-content {
-      margin-left: 260px;
+      margin-left: 0;
       padding: 20px;
-      background: #F2F2F2;
+      transition: margin-left 0.3s;
+      flex: 1;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .topbar .hamburger {
+      font-size: 2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #9C8BD9;
+      padding: 6px 12px;
+    }
+    .topbar .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .topbar .user-info .logout-btn {
+      background: #e74c3c;
+      padding: 8px 18px;
       border-radius: 30px;
-      min-height: 80vh;
-      box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      box-shadow: 4px 4px 8px #d1d1d1, -4px -4px 8px #ffffff;
+      font-weight: 600;
     }
 
-    .main-content h2 {
+    /* ===== MÓDULOS (páginas) ===== */
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+    .page-title {
+      font-size: 1.8rem;
       color: #9C8BD9;
       margin-bottom: 20px;
-      font-weight: 300;
     }
 
+    /* ===== TARJETAS Y TABLAS ===== */
     .card {
       background: #F2F2F2;
-      border-radius: 20px;
+      border-radius: 30px;
       padding: 20px;
+      box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
+      border: 1px solid rgba(255,255,255,0.3);
       margin-bottom: 20px;
-      box-shadow: inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff;
+      overflow-x: auto;
     }
-
-    .card h3 {
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .card-header h3 {
       color: #555;
-      margin-bottom: 12px;
     }
-
-    .btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 20px;
-      background: #B4A3D9;
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff;
-      transition: all 0.2s;
-      margin: 5px;
-    }
-
-    .btn:active {
-      box-shadow: inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff;
-      transform: scale(0.98);
-    }
-
-    .btn-primary {
-      background: #F2B3D6;
-    }
-
-    .btn-success {
-      background: #9C8BD9;
-    }
-
-    .btn-danger {
-      background: #e74c3c;
-    }
-
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      font-size: 0.9rem;
     }
-
     th, td {
-      padding: 10px;
+      padding: 10px 8px;
       text-align: left;
       border-bottom: 1px solid #ddd;
     }
-
     th {
       color: #9C8BD9;
       font-weight: 600;
     }
-
-    .form-group {
-      margin-bottom: 15px;
+    tr:hover {
+      background: rgba(180, 163, 217, 0.1);
     }
 
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      color: #555;
-      font-weight: 500;
-    }
-
-    .form-group input, .form-group select {
+    /* ===== FORMULARIOS MODALES ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      padding: 10px 14px;
-      border: none;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-card {
       background: #F2F2F2;
-      border-radius: 15px;
-      box-shadow: inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff;
-      font-size: 14px;
-      outline: none;
+      border-radius: 30px;
+      padding: 30px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 20px 20px 40px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+    .modal-card h3 {
+      color: #9C8BD9;
+      margin-bottom: 20px;
+    }
+    .modal-card .input-group {
+      margin-bottom: 16px;
+    }
+    .modal-card .btn-soft {
+      width: 100%;
+      margin-top: 10px;
+    }
+    .modal-card .close-modal {
+      float: right;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #999;
     }
 
-    .form-row {
+    /* ===== SWITCH (puesto/directa) ===== */
+    .switch-container {
       display: flex;
       gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .form-row .form-group {
-      flex: 1;
-      min-width: 150px;
-    }
-
-    .toggle-switch {
-      display: flex;
       align-items: center;
-      gap: 10px;
       margin: 15px 0;
     }
-
-    .toggle-switch label {
-      font-weight: 500;
-      color: #555;
+    .switch-container label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       cursor: pointer;
-    }
-
-    .toggle-switch input[type="radio"] {
-      display: none;
-    }
-
-    .toggle-switch .toggle-option {
-      padding: 8px 16px;
-      border-radius: 20px;
-      background: #F2F2F2;
-      box-shadow: inset 2px 2px 4px #d1d1d1, inset -2px -2px 4px #ffffff;
-      cursor: pointer;
-      transition: all 0.3s;
-      color: #555;
-    }
-
-    .toggle-switch .toggle-option.active {
-      background: #F2B3D6;
-      color: #fff;
-      box-shadow: 4px 4px 8px #d1d1d1, -4px -4px 8px #ffffff;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .mensaje-exito {
-      color: #27ae60;
       font-weight: 500;
-      padding: 10px;
-      background: #d5f5e3;
-      border-radius: 12px;
-      margin: 10px 0;
+    }
+    .switch-container input[type="radio"] {
+      accent-color: #F2B3D6;
+      width: 18px;
+      height: 18px;
+    }
+    .campo-doble {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .campo-doble .input-group {
+      flex: 1;
+      min-width: 120px;
     }
 
-    .mensaje-error {
-      color: #e74c3c;
-      font-weight: 500;
-      padding: 10px;
-      background: #fadbd8;
-      border-radius: 12px;
-      margin: 10px 0;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
+    /* ===== RESPONSIVE ===== */
+    @media (min-width: 768px) {
       .sidebar {
-        width: 100%;
-        float: none;
-        margin-right: 0;
-        min-height: auto;
-        position: relative;
+        transform: translateX(0) !important;
+        position: sticky;
         top: 0;
+        height: 100vh;
+        flex-shrink: 0;
+      }
+      .main-content {
+        margin-left: 260px;
+      }
+      .topbar .hamburger {
+        display: none;
+      }
+    }
+    @media (max-width: 767px) {
+      .sidebar {
+        width: 280px;
       }
       .main-content {
         margin-left: 0;
-        margin-top: 20px;
+        padding: 15px;
       }
-      .form-row {
+      .topbar {
+        flex-direction: row;
+      }
+      .topbar .hamburger {
+        display: block;
+      }
+      .campo-doble {
         flex-direction: column;
+      }
+      .modal-card {
+        padding: 20px;
+        margin: 10px;
+      }
+      table {
+        font-size: 0.75rem;
+      }
+      th, td {
+        padding: 6px 4px;
+      }
+      .card {
+        padding: 12px;
+      }
+    }
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 25px 18px;
+      }
+      .page-title {
+        font-size: 1.4rem;
+      }
+      .sidebar .brand {
+        font-size: 1.2rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- ========== PANTALLA DE LOGIN ========== -->
-  <div class="login-container" id="loginContainer">
-    <div class="login-card">
+  <!-- ===================== LOGIN ===================== -->
+  <div id="loginContainer">
+    <div class="login-card neumorph">
       <h1>🍰 Postres</h1>
       <p class="subtitle">Administración</p>
       <div class="input-group">
@@ -372,719 +422,312 @@
         <label>🔒 Contraseña</label>
         <input type="password" id="password" placeholder="••••••" value="123">
       </div>
-      <button class="btn-login" id="loginBtn">Ingresar</button>
+      <button class="btn-soft" id="loginBtn" style="width:100%;">Ingresar</button>
       <div id="loginError" class="error-msg"></div>
     </div>
   </div>
 
-  <!-- ========== DASHBOARD (con menú lateral) ========== -->
-  <div class="dashboard" id="dashboard">
-    <div class="sidebar" id="sidebar">
-      <div class="logo">🍰 Postres</div>
-      <div class="menu-item active" data-page="dashboard">
-        <span class="icon">📊</span> Dashboard
-      </div>
-      <div class="menu-item" data-page="puntos">
-        <span class="icon">📍</span> Puntos de Venta
-      </div>
-      <div class="menu-item" data-page="inventario">
-        <span class="icon">📦</span> Inventario
-      </div>
-      <div class="menu-item" data-page="ventas">
-        <span class="icon">🧾</span> Ventas
-      </div>
-      <div class="menu-item" data-page="produccion">
-        <span class="icon">🏭</span> Producción
-      </div>
-      <div class="menu-item" data-page="compras">
-        <span class="icon">📥</span> Compras
-      </div>
-      <div class="menu-item" data-page="gastos">
-        <span class="icon">💸</span> Gastos
-      </div>
-      <div class="menu-item" data-page="perdidas">
-        <span class="icon">⚠️</span> Pérdidas
-      </div>
-      <div class="menu-item" data-page="reportes">
-        <span class="icon">📈</span> Reportes
-      </div>
-      <div class="menu-item logout" onclick="logout()">
-        <span class="icon">🚪</span> Cerrar Sesión
-      </div>
-    </div>
+  <!-- ===================== DASHBOARD ===================== -->
+  <div id="dashboard">
 
-    <div class="main-content" id="mainContent">
-      <!-- Contenido dinámico se cargará aquí -->
-      <div id="pageContent">
-        <h2>📊 Dashboard</h2>
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+      <div class="brand"><span>🍰</span> Postres</div>
+      <div class="menu-item active" data-page="dashboardPage"><span class="icon">📊</span> Dashboard</div>
+      <div class="menu-item" data-page="productosPage"><span class="icon">📦</span> Inventario</div>
+      <div class="menu-item" data-page="ventasPage"><span class="icon">🧾</span> Ventas</div>
+      <div class="menu-item" data-page="produccionPage"><span class="icon">🏭</span> Producción</div>
+      <div class="menu-item" data-page="comprasPage"><span class="icon">📥</span> Compras</div>
+      <div class="menu-item" data-page="gastosPage"><span class="icon">💸</span> Gastos</div>
+      <div class="menu-item" data-page="perdidasPage"><span class="icon">⚠️</span> Pérdidas</div>
+      <div class="menu-item" data-page="reportesPage"><span class="icon">📈</span> Reportes</div>
+      <div class="menu-item" style="margin-top:30px;" onclick="logout()"><span class="icon">🚪</span> Cerrar Sesión</div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <div class="main-content">
+      <!-- Topbar -->
+      <div class="topbar">
+        <button class="hamburger" id="hamburgerBtn">☰</button>
+        <div class="user-info">
+          <span id="userDisplay" style="font-weight:500;color:#9C8BD9;"></span>
+          <button class="logout-btn" onclick="logout()">Salir</button>
+        </div>
+      </div>
+
+      <!-- Páginas -->
+      <div id="dashboardPage" class="page active">
+        <div class="page-title">📊 Dashboard</div>
         <div class="card">
-          <h3>Bienvenido, <span id="userDisplay"></span></h3>
-          <p>Aquí se mostrará un resumen del día: ventas, ingresos, gastos, etc.</p>
+          <div class="card-header"><h3>Resumen del día</h3></div>
+          <div id="dashboardResumen">Cargando...</div>
         </div>
         <div class="card">
-          <h3>Ventas del día</h3>
-          <p id="resumenDia">Cargando...</p>
+          <div class="card-header"><h3>Productos con bajo stock</h3></div>
+          <div id="bajoStock"></div>
         </div>
+      </div>
+
+      <div id="productosPage" class="page">
+        <div class="page-title">📦 Inventario</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
+          <button class="btn-soft" onclick="mostrarModal('modalProducto', null)">➕ Agregar Producto</button>
+          <button class="btn-soft btn-soft-secondary" onclick="mostrarModal('modalInsumo', null)">➕ Agregar Insumo</button>
+          <button class="btn-soft btn-soft-secondary" onclick="cargarPuntos()">📍 Gestionar Puntos</button>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Productos</h3></div>
+          <div id="tablaProductos"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Insumos</h3></div>
+          <div id="tablaInsumos"></div>
+        </div>
+      </div>
+
+      <div id="ventasPage" class="page">
+        <div class="page-title">🧾 Ventas</div>
+        <div class="card">
+          <div class="card-header"><h3>Registrar Venta</h3></div>
+          <form id="formVenta">
+            <div class="input-group">
+              <label>📌 Punto de Venta</label>
+              <select id="ventaPunto" required></select>
+            </div>
+            <div class="input-group">
+              <label>🍰 Producto</label>
+              <select id="ventaProducto" required></select>
+            </div>
+            <div class="switch-container">
+              <label><input type="radio" name="tipoVenta" value="puesto" checked> Puesto (llevados/vendidos)</label>
+              <label><input type="radio" name="tipoVenta" value="directa"> Venta Directa</label>
+            </div>
+            <div id="camposPuesto">
+              <div class="campo-doble">
+                <div class="input-group"><label>Enteros llevados</label><input type="number" id="el" value="0" step="1"></div>
+                <div class="input-group"><label>Tajadas llevadas</label><input type="number" id="tl" value="0" step="1"></div>
+              </div>
+              <div class="campo-doble">
+                <div class="input-group"><label>Enteros vendidos</label><input type="number" id="ev" value="0" step="1"></div>
+                <div class="input-group"><label>Tajadas vendidas</label><input type="number" id="tv" value="0" step="1"></div>
+              </div>
+            </div>
+            <div id="camposDirecta" style="display:none;">
+              <div class="campo-doble">
+                <div class="input-group"><label>Enteros vendidos</label><input type="number" id="evd" value="0" step="1"></div>
+                <div class="input-group"><label>Tajadas vendidas</label><input type="number" id="tvd" value="0" step="1"></div>
+              </div>
+            </div>
+            <button type="submit" class="btn-soft" style="width:100%;">Registrar Venta</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Historial de Ventas</h3></div>
+          <div id="tablaVentas"></div>
+        </div>
+      </div>
+
+      <div id="produccionPage" class="page">
+        <div class="page-title">🏭 Producción</div>
+        <div class="card">
+          <div class="card-header"><h3>Registrar Producción</h3></div>
+          <form id="formProduccion">
+            <div class="input-group"><label>🍰 Producto</label><select id="prodProducto" required></select></div>
+            <div class="input-group"><label>Cantidad producida (en tajadas)</label><input type="number" id="prodCantidad" required step="1"></div>
+            <button type="submit" class="btn-soft" style="width:100%;">Registrar Producción</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Historial de Producción</h3></div>
+          <div id="tablaProduccion"></div>
+        </div>
+      </div>
+
+      <div id="comprasPage" class="page">
+        <div class="page-title">📥 Compras</div>
+        <div class="card">
+          <div class="card-header"><h3>Registrar Compra</h3></div>
+          <form id="formCompra">
+            <div class="input-group"><label>📦 Insumo</label><select id="compraInsumo" required></select></div>
+            <div class="input-group"><label>Cantidad</label><input type="number" id="compraCantidad" required step="1"></div>
+            <div class="input-group"><label>Costo unitario</label><input type="number" id="compraCosto" required step="0.01"></div>
+            <div class="input-group"><label>Proveedor</label><input type="text" id="compraProveedor" placeholder="Opcional"></div>
+            <button type="submit" class="btn-soft" style="width:100%;">Registrar Compra</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Historial de Compras</h3></div>
+          <div id="tablaCompras"></div>
+        </div>
+      </div>
+
+      <div id="gastosPage" class="page">
+        <div class="page-title">💸 Gastos</div>
+        <div class="card">
+          <div class="card-header"><h3>Registrar Gasto</h3></div>
+          <form id="formGasto">
+            <div class="input-group"><label>Concepto</label><input type="text" id="gastoConcepto" required></div>
+            <div class="input-group"><label>Categoría</label><input type="text" id="gastoCategoria" placeholder="Ej: Servicios, Movilidad"></div>
+            <div class="input-group"><label>Monto</label><input type="number" id="gastoMonto" required step="0.01"></div>
+            <button type="submit" class="btn-soft" style="width:100%;">Registrar Gasto</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Historial de Gastos</h3></div>
+          <div id="tablaGastos"></div>
+        </div>
+      </div>
+
+      <div id="perdidasPage" class="page">
+        <div class="page-title">⚠️ Pérdidas</div>
+        <div class="card">
+          <div class="card-header"><h3>Registrar Pérdida</h3></div>
+          <form id="formPerdida">
+            <div class="input-group"><label>Tipo</label>
+              <select id="perdidaTipo" required>
+                <option value="insumo">Insumo</option>
+                <option value="producto">Producto</option>
+              </select>
+            </div>
+            <div class="input-group"><label>Ítem</label><select id="perdidaItem" required></select></div>
+            <div class="input-group"><label>Cantidad</label><input type="number" id="perdidaCantidad" required step="1"></div>
+            <div class="input-group"><label>Motivo</label><input type="text" id="perdidaMotivo" placeholder="Ej: Vencimiento, Daño"></div>
+            <div class="input-group"><label>Valor perdido (opcional)</label><input type="number" id="perdidaValor" step="0.01"></div>
+            <button type="submit" class="btn-soft" style="width:100%;">Registrar Pérdida</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Historial de Pérdidas</h3></div>
+          <div id="tablaPerdidas"></div>
+        </div>
+      </div>
+
+      <div id="reportesPage" class="page">
+        <div class="page-title">📈 Reportes</div>
+        <div class="card">
+          <div class="card-header"><h3>Filtros</h3></div>
+          <div style="display:flex; flex-wrap:wrap; gap:15px; align-items:end;">
+            <div class="input-group"><label>Fecha inicio</label><input type="date" id="repFechaInicio"></div>
+            <div class="input-group"><label>Fecha fin</label><input type="date" id="repFechaFin"></div>
+            <div class="input-group"><label>Punto</label><select id="repPunto"><option value="">Todos</option></select></div>
+            <button class="btn-soft" onclick="cargarReporte()">Generar</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Resultados</h3></div>
+          <div id="reporteResultados"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== MODALES ===== -->
+  <!-- Modal Producto -->
+  <div class="modal-overlay" id="modalProducto">
+    <div class="modal-card">
+      <button class="close-modal" onclick="cerrarModal('modalProducto')">&times;</button>
+      <h3 id="modalProductoTitulo">Agregar Producto</h3>
+      <form id="formProducto">
+        <input type="hidden" id="prodId">
+        <div class="input-group"><label>Nombre</label><input type="text" id="prodNombre" required></div>
+        <div class="input-group"><label>Tajadas por entero</label><input type="number" id="prodTajadas" step="1" required></div>
+        <div class="input-group"><label>Precio tajada</label><input type="number" id="prodPrecioT" step="0.01" required></div>
+        <div class="input-group"><label>Precio entero</label><input type="number" id="prodPrecioE" step="0.01" required></div>
+        <div class="input-group"><label>Stock inicial</label><input type="number" id="prodStock" step="1" value="0"></div>
+        <div class="input-group"><label>Receta (JSON: {"id_insumo": cantidad_por_tajada})</label><input type="text" id="prodReceta" placeholder='{"1":0.5, "2":0.2}'></div>
+        <button type="submit" class="btn-soft">Guardar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Insumo -->
+  <div class="modal-overlay" id="modalInsumo">
+    <div class="modal-card">
+      <button class="close-modal" onclick="cerrarModal('modalInsumo')">&times;</button>
+      <h3 id="modalInsumoTitulo">Agregar Insumo</h3>
+      <form id="formInsumo">
+        <input type="hidden" id="insumoId">
+        <div class="input-group"><label>Nombre</label><input type="text" id="insumoNombre" required></div>
+        <div class="input-group"><label>Unidad</label><input type="text" id="insumoUnidad" placeholder="kg, litro, unidad"></div>
+        <div class="input-group"><label>Costo unitario</label><input type="number" id="insumoCosto" step="0.01" required></div>
+        <div class="input-group"><label>Stock actual</label><input type="number" id="insumoStock" step="1" value="0"></div>
+        <div class="input-group"><label>Stock mínimo</label><input type="number" id="insumoStockMin" step="1" value="0"></div>
+        <button type="submit" class="btn-soft">Guardar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Puntos (simple) -->
+  <div class="modal-overlay" id="modalPuntos">
+    <div class="modal-card">
+      <button class="close-modal" onclick="cerrarModal('modalPuntos')">&times;</button>
+      <h3>Gestionar Puntos de Venta</h3>
+      <div id="listaPuntos"></div>
+      <div style="display:flex; gap:10px; margin-top:15px;">
+        <input type="text" id="nuevoPuntoInput" placeholder="Nuevo punto" style="flex:1; padding:10px; border-radius:20px; border:1px solid #ddd;">
+        <button class="btn-soft" onclick="agregarPunto()">Agregar</button>
       </div>
     </div>
   </div>
 
   <script>
-    // ============================================================
-    // CONFIGURACIÓN
-    // ============================================================
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzz_b67cTZa76vrmRpMual4dBY1QAHzFO0QvEH-_Z8DR-atf-rIXJlFMy8NCQLbDQ2Kcw/exec';
+    // ================================================================
+    // CONFIGURACIÓN - REEMPLAZA CON TU URL DE APPS SCRIPT
+    // ================================================================
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyUZl8lUEuwXAqUUmHnCHsg442rNVeyUC16BXhUkuHMLlGWwa83c9Y7d0E43NQnLL3rFA/exec';
     const BACKEND_URL = 'https://corsproxy.io/?' + encodeURIComponent(SCRIPT_URL);
 
-    // ============================================================
-    // FUNCIONES DE COMUNICACIÓN
-    // ============================================================
+    // ================================================================
+    // UTILIDADES DE COMUNICACIÓN
+    // ================================================================
     async function callBackend(action, data = {}) {
       try {
         const payload = { action, ...data };
-        console.log('Enviando petición a:', BACKEND_URL);
-        console.log('Payload:', payload);
         const response = await fetch(BACKEND_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) throw new Error('HTTP error ' + response.status);
         const result = await response.json();
-        console.log('Resultado:', result);
         return result;
       } catch (error) {
-        console.error('Error en callBackend:', error);
+        console.error('callBackend error:', error);
         return { success: false, message: error.message };
       }
     }
 
-    // ============================================================
+    // ================================================================
     // LOGIN
-    // ============================================================
+    // ================================================================
     document.getElementById('loginBtn').addEventListener('click', async () => {
       const usuario = document.getElementById('username').value.trim();
       const contraseña = document.getElementById('password').value.trim();
       const errorDiv = document.getElementById('loginError');
-
       if (!usuario || !contraseña) {
         errorDiv.textContent = 'Completa todos los campos';
         return;
       }
-
       errorDiv.textContent = 'Validando...';
       const result = await callBackend('login', { usuario, contraseña });
-      console.log('Resultado login:', result);
-
       if (result.success) {
         errorDiv.textContent = '';
         document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'flex';
+        document.getElementById('dashboard').style.display = 'block';
         document.getElementById('userDisplay').textContent = result.data.usuario;
-        cargarDatosIniciales();
-        // Cargar página por defecto
-        mostrarPagina('dashboard');
+        // Cargar datos iniciales
+        await cargarTodo();
+        // Mostrar dashboard
+        mostrarPagina('dashboardPage');
       } else {
-        errorDiv.textContent = result.message || 'Error al iniciar sesión';
+        errorDiv.textContent = result.message || 'Error';
       }
     });
-
-    // Permite login con Enter
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') document.getElementById('loginBtn').click();
     });
 
-    // ============================================================
-    // NAVEGACIÓN - Menú lateral
-    // ============================================================
-    document.querySelectorAll('.menu-item[data-page]').forEach(item => {
-      item.addEventListener('click', function() {
-        document.querySelectorAll('.menu-item[data-page]').forEach(el => el.classList.remove('active'));
-        this.classList.add('active');
-        const page = this.dataset.page;
-        mostrarPagina(page);
-      });
-    });
-
-    // ============================================================
-    // FUNCIONES DE CARGA DE PÁGINAS
-    // ============================================================
-    function mostrarPagina(page) {
-      const content = document.getElementById('pageContent');
-      switch(page) {
-        case 'dashboard':
-          content.innerHTML = `
-            <h2>📊 Dashboard</h2>
-            <div class="card">
-              <h3>Bienvenido, <span id="userDisplay2"></span></h3>
-              <p>Resumen del día:</p>
-              <div id="resumenDia">Cargando...</div>
-            </div>
-          `;
-          document.getElementById('userDisplay2').textContent = document.getElementById('userDisplay').textContent;
-          cargarDashboard();
-          break;
-        case 'puntos':
-          content.innerHTML = `
-            <h2>📍 Puntos de Venta</h2>
-            <div class="card">
-              <h3>Registrar Nuevo Punto</h3>
-              <div class="form-group">
-                <label>Nombre del punto:</label>
-                <input type="text" id="nuevoPuntoNombre" placeholder="Ej: Mercado Norte">
-              </div>
-              <button class="btn btn-primary" onclick="registrarPunto()">Agregar Punto</button>
-            </div>
-            <div class="card">
-              <h3>Lista de Puntos</h3>
-              <div id="listaPuntos">Cargando...</div>
-            </div>
-          `;
-          cargarPuntos();
-          break;
-        case 'inventario':
-          content.innerHTML = `
-            <h2>📦 Inventario</h2>
-            <div class="card">
-              <h3>Productos</h3>
-              <div id="listaProductos">Cargando...</div>
-            </div>
-            <div class="card">
-              <h3>Insumos</h3>
-              <div id="listaInsumos">Cargando...</div>
-            </div>
-          `;
-          cargarInventario();
-          break;
-        case 'ventas':
-          content.innerHTML = `
-            <h2>🧾 Registrar Venta</h2>
-            <div class="card">
-              <div class="toggle-switch">
-                <span>Tipo de venta:</span>
-                <label class="toggle-option active" id="togglePuesto" onclick="setTipoVenta('puesto')">📍 Puesto</label>
-                <label class="toggle-option" id="toggleDirecta" onclick="setTipoVenta('directa')">🏠 Directa</label>
-              </div>
-              <div id="formVenta">
-                <div class="form-group">
-                  <label>Punto de venta:</label>
-                  <select id="ventaPunto"><option value="">Seleccionar...</option></select>
-                </div>
-                <div class="form-group">
-                  <label>Producto:</label>
-                  <select id="ventaProducto"><option value="">Seleccionar...</option></select>
-                </div>
-                <div id="camposPuesto" class="form-row">
-                  <div class="form-group">
-                    <label>Enteros Llevados:</label>
-                    <input type="number" id="enterosLlevados" value="0" min="0">
-                  </div>
-                  <div class="form-group">
-                    <label>Tajadas Llevadas:</label>
-                    <input type="number" id="tajadasLlevadas" value="0" min="0">
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label>Enteros Vendidos:</label>
-                    <input type="number" id="enterosVendidos" value="0" min="0">
-                  </div>
-                  <div class="form-group">
-                    <label>Tajadas Vendidas:</label>
-                    <input type="number" id="tajadasVendidas" value="0" min="0">
-                  </div>
-                </div>
-                <div id="infoDevueltos" class="card" style="background: #e8f0fe;">
-                  <p><strong>📦 Devueltos:</strong> <span id="devueltosCalculado">0</span> tajadas</p>
-                  <p><strong>💰 Ingreso estimado:</strong> S/ <span id="ingresoEstimado">0.00</span></p>
-                </div>
-                <button class="btn btn-success" onclick="registrarVenta()">✅ Registrar Venta</button>
-                <div id="mensajeVenta"></div>
-              </div>
-            </div>
-          `;
-          // Cargar selects
-          cargarSelectsVenta();
-          // Eventos para calcular devueltos
-          document.getElementById('enterosLlevados').addEventListener('input', calcularDevueltos);
-          document.getElementById('tajadasLlevadas').addEventListener('input', calcularDevueltos);
-          document.getElementById('enterosVendidos').addEventListener('input', calcularDevueltos);
-          document.getElementById('tajadasVendidas').addEventListener('input', calcularDevueltos);
-          document.getElementById('ventaProducto').addEventListener('change', calcularDevueltos);
-          break;
-        case 'produccion':
-          content.innerHTML = `
-            <h2>🏭 Registrar Producción</h2>
-            <div class="card">
-              <div class="form-group">
-                <label>Producto:</label>
-                <select id="prodProducto"><option value="">Seleccionar...</option></select>
-              </div>
-              <div class="form-group">
-                <label>Cantidad producida (en tajadas):</label>
-                <input type="number" id="prodCantidad" value="0" min="1">
-              </div>
-              <button class="btn btn-success" onclick="registrarProduccion()">✅ Registrar Producción</button>
-              <div id="mensajeProduccion"></div>
-            </div>
-          `;
-          cargarSelectsProduccion();
-          break;
-        case 'compras':
-          content.innerHTML = `
-            <h2>📥 Registrar Compra de Insumos</h2>
-            <div class="card">
-              <div class="form-group">
-                <label>Insumo:</label>
-                <select id="compraInsumo"><option value="">Seleccionar...</option></select>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Cantidad:</label>
-                  <input type="number" id="compraCantidad" value="0" min="1">
-                </div>
-                <div class="form-group">
-                  <label>Costo unitario (S/):</label>
-                  <input type="number" id="compraCosto" value="0" step="0.01" min="0">
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Proveedor (opcional):</label>
-                <input type="text" id="compraProveedor" placeholder="Nombre del proveedor">
-              </div>
-              <button class="btn btn-success" onclick="registrarCompra()">✅ Registrar Compra</button>
-              <div id="mensajeCompra"></div>
-            </div>
-          `;
-          cargarSelectsCompra();
-          break;
-        case 'gastos':
-          content.innerHTML = `
-            <h2>💸 Registrar Gasto</h2>
-            <div class="card">
-              <div class="form-group">
-                <label>Concepto:</label>
-                <input type="text" id="gastoConcepto" placeholder="Ej: Luz, agua, gas...">
-              </div>
-              <div class="form-group">
-                <label>Categoría:</label>
-                <input type="text" id="gastoCategoria" placeholder="Ej: Servicios, Movilidad...">
-              </div>
-              <div class="form-group">
-                <label>Monto (S/):</label>
-                <input type="number" id="gastoMonto" value="0" step="0.01" min="0">
-              </div>
-              <button class="btn btn-success" onclick="registrarGasto()">✅ Registrar Gasto</button>
-              <div id="mensajeGasto"></div>
-            </div>
-          `;
-          break;
-        case 'perdidas':
-          content.innerHTML = `
-            <h2>⚠️ Registrar Pérdida</h2>
-            <div class="card">
-              <div class="form-group">
-                <label>Tipo:</label>
-                <select id="perdidaTipo" onchange="cambiarTipoPerdida()">
-                  <option value="insumo">Insumo</option>
-                  <option value="producto">Producto</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Elemento:</label>
-                <select id="perdidaElemento"><option value="">Seleccionar...</option></select>
-              </div>
-              <div class="form-group">
-                <label>Cantidad:</label>
-                <input type="number" id="perdidaCantidad" value="0" min="1">
-              </div>
-              <div class="form-group">
-                <label>Motivo:</label>
-                <input type="text" id="perdidaMotivo" placeholder="Ej: Vencimiento, daño...">
-              </div>
-              <button class="btn btn-danger" onclick="registrarPerdida()">⚠️ Registrar Pérdida</button>
-              <div id="mensajePerdida"></div>
-            </div>
-          `;
-          cargarSelectsPerdida();
-          break;
-        case 'reportes':
-          content.innerHTML = `
-            <h2>📈 Reportes</h2>
-            <div class="card">
-              <div class="form-group">
-                <label>Fecha (YYYY-MM-DD):</label>
-                <input type="date" id="reporteFecha">
-              </div>
-              <button class="btn btn-primary" onclick="cargarReporte()">Consultar</button>
-            </div>
-            <div class="card">
-              <div id="reporteResultado">Selecciona una fecha para ver el reporte.</div>
-            </div>
-          `;
-          break;
-        default:
-          content.innerHTML = `<h2>Página no encontrada</h2>`;
-      }
-    }
-
-    // ============================================================
-    // FUNCIONES DE CADA MÓDULO
-    // ============================================================
-
-    // ---- Dashboard ----
-    async function cargarDashboard() {
-      const hoy = new Date().toISOString().split('T')[0];
-      const result = await callBackend('getReporteDiario', { fecha: hoy });
-      const div = document.getElementById('resumenDia');
-      if (result.success) {
-        div.innerHTML = `
-          <p>📅 Fecha: ${result.data.fecha}</p>
-          <p>💰 Ingresos: S/ ${result.data.totalIngresos.toFixed(2)}</p>
-          <p>🍰 Tajadas vendidas: ${result.data.totalVendido}</p>
-          <p>📦 Tajadas devueltas: ${result.data.totalDevuelto}</p>
-        `;
-      } else {
-        div.innerHTML = `<span class="mensaje-error">${result.message}</span>`;
-      }
-    }
-
-    // ---- Puntos de Venta ----
-    async function cargarPuntos() {
-      const result = await callBackend('getPuntos');
-      const div = document.getElementById('listaPuntos');
-      if (result.success) {
-        let html = `<table><tr><th>ID</th><th>Nombre</th></tr>`;
-        result.data.forEach(p => {
-          html += `<tr><td>${p.id}</td><td>${p.nombre}</td></tr>`;
-        });
-        html += `</table>`;
-        div.innerHTML = html;
-      } else {
-        div.innerHTML = `<span class="mensaje-error">${result.message}</span>`;
-      }
-    }
-
-    async function registrarPunto() {
-      const nombre = document.getElementById('nuevoPuntoNombre').value.trim();
-      if (!nombre) {
-        mostrarMensaje('listaPuntos', 'Ingresa un nombre válido.', 'error');
-        return;
-      }
-      // Nota: Apps Script no tiene función para agregar punto, pero podemos implementarla.
-      // Por ahora, simulamos que se agrega manualmente.
-      alert('Función en desarrollo. Agrega el punto directamente en la hoja "PuntosVenta".');
-    }
-
-    // ---- Inventario ----
-    async function cargarInventario() {
-      // Productos
-      const prodResult = await callBackend('getProductos');
-      const divProd = document.getElementById('listaProductos');
-      if (prodResult.success) {
-        let html = `<table><tr><th>Nombre</th><th>Tajadas/entero</th><th>Precio tajada</th><th>Precio entero</th><th>Stock (tajadas)</th></tr>`;
-        prodResult.data.forEach(p => {
-          html += `<tr><td>${p.nombre}</td><td>${p.tajadas_por_entero}</td><td>S/ ${p.precio_tajada}</td><td>S/ ${p.precio_entero}</td><td>${p.stock}</td></tr>`;
-        });
-        html += `</table>`;
-        divProd.innerHTML = html;
-      } else {
-        divProd.innerHTML = `<span class="mensaje-error">${prodResult.message}</span>`;
-      }
-
-      // Insumos
-      const insResult = await callBackend('getInsumos');
-      const divIns = document.getElementById('listaInsumos');
-      if (insResult.success) {
-        let html = `<table><tr><th>Nombre</th><th>Unidad</th><th>Costo unitario</th><th>Stock</th><th>Stock mínimo</th></tr>`;
-        insResult.data.forEach(i => {
-          html += `<tr><td>${i.nombre}</td><td>${i.unidad}</td><td>S/ ${i.costo_unitario}</td><td>${i.stock}</td><td>${i.stock_minimo}</td></tr>`;
-        });
-        html += `</table>`;
-        divIns.innerHTML = html;
-      } else {
-        divIns.innerHTML = `<span class="mensaje-error">${insResult.message}</span>`;
-      }
-    }
-
-    // ---- Ventas ----
-    let tipoVenta = 'puesto';
-
-    function setTipoVenta(tipo) {
-      tipoVenta = tipo;
-      document.getElementById('togglePuesto').classList.toggle('active', tipo === 'puesto');
-      document.getElementById('toggleDirecta').classList.toggle('active', tipo === 'directa');
-      const camposPuesto = document.getElementById('camposPuesto');
-      if (tipo === 'puesto') {
-        camposPuesto.style.display = 'flex';
-      } else {
-        camposPuesto.style.display = 'none';
-      }
-      calcularDevueltos();
-    }
-
-    async function cargarSelectsVenta() {
-      // Puntos
-      const puntos = await callBackend('getPuntos');
-      if (puntos.success) {
-        const select = document.getElementById('ventaPunto');
-        select.innerHTML = `<option value="">Seleccionar...</option>`;
-        puntos.data.forEach(p => {
-          select.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
-        });
-      }
-      // Productos
-      const prods = await callBackend('getProductos');
-      if (prods.success) {
-        const select = document.getElementById('ventaProducto');
-        select.innerHTML = `<option value="">Seleccionar...</option>`;
-        prods.data.forEach(p => {
-          select.innerHTML += `<option value="${p.id}" data-tajadas="${p.tajadas_por_entero}" data-precio-tajada="${p.precio_tajada}" data-precio-entero="${p.precio_entero}">${p.nombre}</option>`;
-        });
-      }
-    }
-
-    function calcularDevueltos() {
-      const productSelect = document.getElementById('ventaProducto');
-      const selected = productSelect.options[productSelect.selectedIndex];
-      if (!selected || !selected.value) {
-        document.getElementById('devueltosCalculado').textContent = '0';
-        document.getElementById('ingresoEstimado').textContent = '0.00';
-        return;
-      }
-      const tajadasPorEntero = parseFloat(selected.dataset.tajadas) || 0;
-      const precioTajada = parseFloat(selected.dataset.precioTajada) || 0;
-      const precioEntero = parseFloat(selected.dataset.precioEntero) || 0;
-
-      const eLlevados = parseFloat(document.getElementById('enterosLlevados').value) || 0;
-      const tLlevadas = parseFloat(document.getElementById('tajadasLlevadas').value) || 0;
-      const eVendidos = parseFloat(document.getElementById('enterosVendidos').value) || 0;
-      const tVendidas = parseFloat(document.getElementById('tajadasVendidas').value) || 0;
-
-      let totalLlevado = eLlevados * tajadasPorEntero + tLlevadas;
-      let totalVendido = eVendidos * tajadasPorEntero + tVendidas;
-      let devueltos = totalLlevado - totalVendido;
-      if (devueltos < 0) devueltos = 0;
-
-      document.getElementById('devueltosCalculado').textContent = devueltos;
-
-      let ingreso = 0;
-      if (tipoVenta === 'puesto') {
-        ingreso = eVendidos * precioEntero + tVendidas * precioTajada;
-      } else {
-        ingreso = eVendidos * precioEntero + tVendidas * precioTajada;
-      }
-      document.getElementById('ingresoEstimado').textContent = ingreso.toFixed(2);
-    }
-
-    async function registrarVenta() {
-      const idPunto = document.getElementById('ventaPunto').value;
-      const idProducto = document.getElementById('ventaProducto').value;
-      if (!idPunto || !idProducto) {
-        mostrarMensaje('mensajeVenta', 'Selecciona punto y producto.', 'error');
-        return;
-      }
-
-      const data = {
-        id_punto_venta: parseInt(idPunto),
-        id_producto: parseInt(idProducto),
-        tipo_venta: tipoVenta,
-        enteros_llevados: parseFloat(document.getElementById('enterosLlevados').value) || 0,
-        tajadas_llevadas: parseFloat(document.getElementById('tajadasLlevadas').value) || 0,
-        enteros_vendidos: parseFloat(document.getElementById('enterosVendidos').value) || 0,
-        tajadas_vendidas: parseFloat(document.getElementById('tajadasVendidas').value) || 0
-      };
-
-      const result = await callBackend('registrarVenta', data);
-      if (result.success) {
-        mostrarMensaje('mensajeVenta', `✅ Venta registrada. Devueltos: ${result.data.devuelto} tajadas. Ingreso: S/ ${result.data.ingreso.toFixed(2)}`, 'exito');
-        // Limpiar campos
-        document.getElementById('enterosLlevados').value = 0;
-        document.getElementById('tajadasLlevadas').value = 0;
-        document.getElementById('enterosVendidos').value = 0;
-        document.getElementById('tajadasVendidas').value = 0;
-        calcularDevueltos();
-      } else {
-        mostrarMensaje('mensajeVenta', `❌ ${result.message}`, 'error');
-      }
-    }
-
-    // ---- Producción ----
-    async function cargarSelectsProduccion() {
-      const prods = await callBackend('getProductos');
-      if (prods.success) {
-        const select = document.getElementById('prodProducto');
-        select.innerHTML = `<option value="">Seleccionar...</option>`;
-        prods.data.forEach(p => {
-          select.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
-        });
-      }
-    }
-
-    async function registrarProduccion() {
-      const idProducto = document.getElementById('prodProducto').value;
-      const cantidad = parseFloat(document.getElementById('prodCantidad').value);
-      if (!idProducto || cantidad <= 0) {
-        mostrarMensaje('mensajeProduccion', 'Selecciona producto y cantidad válida.', 'error');
-        return;
-      }
-      const data = {
-        id_producto: parseInt(idProducto),
-        cantidad_producida: cantidad
-      };
-      const result = await callBackend('registrarProduccion', data);
-      if (result.success) {
-        mostrarMensaje('mensajeProduccion', `✅ Producción registrada. Costo: S/ ${result.data.costo.toFixed(2)}`, 'exito');
-        document.getElementById('prodCantidad').value = 0;
-      } else {
-        mostrarMensaje('mensajeProduccion', `❌ ${result.message}`, 'error');
-      }
-    }
-
-    // ---- Compras ----
-    async function cargarSelectsCompra() {
-      const insumos = await callBackend('getInsumos');
-      if (insumos.success) {
-        const select = document.getElementById('compraInsumo');
-        select.innerHTML = `<option value="">Seleccionar...</option>`;
-        insumos.data.forEach(i => {
-          select.innerHTML += `<option value="${i.id}">${i.nombre}</option>`;
-        });
-      }
-    }
-
-    async function registrarCompra() {
-      const idInsumo = document.getElementById('compraInsumo').value;
-      const cantidad = parseFloat(document.getElementById('compraCantidad').value);
-      const costoUnitario = parseFloat(document.getElementById('compraCosto').value);
-      const proveedor = document.getElementById('compraProveedor').value.trim();
-      if (!idInsumo || cantidad <= 0 || costoUnitario <= 0) {
-        mostrarMensaje('mensajeCompra', 'Completa todos los campos correctamente.', 'error');
-        return;
-      }
-      const data = {
-        id_insumo: parseInt(idInsumo),
-        cantidad: cantidad,
-        costo_unitario: costoUnitario,
-        proveedor: proveedor
-      };
-      const result = await callBackend('registrarCompra', data);
-      if (result.success) {
-        mostrarMensaje('mensajeCompra', '✅ Compra registrada.', 'exito');
-        document.getElementById('compraCantidad').value = 0;
-        document.getElementById('compraCosto').value = 0;
-        document.getElementById('compraProveedor').value = '';
-      } else {
-        mostrarMensaje('mensajeCompra', `❌ ${result.message}`, 'error');
-      }
-    }
-
-    // ---- Gastos ----
-    async function registrarGasto() {
-      const concepto = document.getElementById('gastoConcepto').value.trim();
-      const categoria = document.getElementById('gastoCategoria').value.trim();
-      const monto = parseFloat(document.getElementById('gastoMonto').value);
-      if (!concepto || monto <= 0) {
-        mostrarMensaje('mensajeGasto', 'Ingresa concepto y monto válido.', 'error');
-        return;
-      }
-      const data = {
-        concepto: concepto,
-        categoria: categoria || 'General',
-        monto: monto
-      };
-      const result = await callBackend('registrarGasto', data);
-      if (result.success) {
-        mostrarMensaje('mensajeGasto', '✅ Gasto registrado.', 'exito');
-        document.getElementById('gastoConcepto').value = '';
-        document.getElementById('gastoCategoria').value = '';
-        document.getElementById('gastoMonto').value = 0;
-      } else {
-        mostrarMensaje('mensajeGasto', `❌ ${result.message}`, 'error');
-      }
-    }
-
-    // ---- Pérdidas ----
-    async function cargarSelectsPerdida() {
-      cambiarTipoPerdida();
-    }
-
-    async function cambiarTipoPerdida() {
-      const tipo = document.getElementById('perdidaTipo').value;
-      const select = document.getElementById('perdidaElemento');
-      select.innerHTML = `<option value="">Seleccionar...</option>`;
-      if (tipo === 'insumo') {
-        const insumos = await callBackend('getInsumos');
-        if (insumos.success) {
-          insumos.data.forEach(i => {
-            select.innerHTML += `<option value="${i.id}">${i.nombre}</option>`;
-          });
-        }
-      } else {
-        const prods = await callBackend('getProductos');
-        if (prods.success) {
-          prods.data.forEach(p => {
-            select.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
-          });
-        }
-      }
-    }
-
-    async function registrarPerdida() {
-      const tipo = document.getElementById('perdidaTipo').value;
-      const idRef = document.getElementById('perdidaElemento').value;
-      const cantidad = parseFloat(document.getElementById('perdidaCantidad').value);
-      const motivo = document.getElementById('perdidaMotivo').value.trim();
-      if (!idRef || cantidad <= 0) {
-        mostrarMensaje('mensajePerdida', 'Selecciona elemento y cantidad válida.', 'error');
-        return;
-      }
-      const data = {
-        tipo: tipo,
-        id_referencia: parseInt(idRef),
-        cantidad: cantidad,
-        motivo: motivo || 'Sin especificar'
-      };
-      const result = await callBackend('registrarPerdida', data);
-      if (result.success) {
-        mostrarMensaje('mensajePerdida', '✅ Pérdida registrada.', 'exito');
-        document.getElementById('perdidaCantidad').value = 0;
-        document.getElementById('perdidaMotivo').value = '';
-      } else {
-        mostrarMensaje('mensajePerdida', `❌ ${result.message}`, 'error');
-      }
-    }
-
-    // ---- Reportes ----
-    async function cargarReporte() {
-      const fecha = document.getElementById('reporteFecha').value;
-      if (!fecha) {
-        document.getElementById('reporteResultado').innerHTML = '<span class="mensaje-error">Selecciona una fecha.</span>';
-        return;
-      }
-      const result = await callBackend('getReporteDiario', { fecha });
-      const div = document.getElementById('reporteResultado');
-      if (result.success) {
-        div.innerHTML = `
-          <h3>Reporte del día ${result.data.fecha}</h3>
-          <p>💰 Ingresos: S/ ${result.data.totalIngresos.toFixed(2)}</p>
-          <p>🍰 Tajadas vendidas: ${result.data.totalVendido}</p>
-          <p>📦 Tajadas devueltas: ${result.data.totalDevuelto}</p>
-        `;
-      } else {
-        div.innerHTML = `<span class="mensaje-error">${result.message}</span>`;
-      }
-    }
-
-    // ---- Utilidades ----
-    function mostrarMensaje(id, texto, tipo) {
-      const div = document.getElementById(id);
-      const className = tipo === 'exito' ? 'mensaje-exito' : 'mensaje-error';
-      div.innerHTML = `<div class="${className}">${texto}</div>`;
-      setTimeout(() => { div.innerHTML = ''; }, 5000);
-    }
-
-    // ---- Cerrar Sesión ----
     function logout() {
       document.getElementById('dashboard').style.display = 'none';
       document.getElementById('loginContainer').style.display = 'flex';
@@ -1092,12 +735,632 @@
       document.getElementById('loginError').textContent = '';
     }
 
-    // ---- Cargar datos iniciales (después del login) ----
-    async function cargarDatosIniciales() {
-      console.log('Cargando datos iniciales...');
-      // Puedes precargar algo si lo deseas
-    }
-  </script>
+    // ================================================================
+    // NAVEGACIÓN Y SIDEBAR
+    // ================================================================
+    document.getElementById('hamburgerBtn').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('open');
+    });
+    document.querySelectorAll('.sidebar .menu-item[data-page]').forEach(el => {
+      el.addEventListener('click', function() {
+        const page = this.dataset.page;
+        mostrarPagina(page);
+        if (window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open');
+      });
+    });
 
+    function mostrarPagina(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      document.querySelectorAll('.sidebar .menu-item').forEach(m => m.classList.remove('active'));
+      document.querySelector(`.sidebar .menu-item[data-page="${pageId}"]`)?.classList.add('active');
+      // Recargar datos según página
+      switch (pageId) {
+        case 'dashboardPage': cargarDashboard(); break;
+        case 'productosPage': cargarProductos(); cargarInsumos(); break;
+        case 'ventasPage': cargarVentas(); cargarSelects(); break;
+        case 'produccionPage': cargarProducciones(); cargarSelectProductos('prodProducto'); break;
+        case 'comprasPage': cargarCompras(); cargarSelectInsumos('compraInsumo'); break;
+        case 'gastosPage': cargarGastos(); break;
+        case 'perdidasPage': cargarPerdidas(); cargarSelectPerdidaItems(); break;
+        case 'reportesPage': cargarPuntosSelect('repPunto'); break;
+      }
+    }
+
+    // ================================================================
+    // CARGA INICIAL DE DATOS
+    // ================================================================
+    async function cargarTodo() {
+      await cargarDashboard();
+      await cargarProductos();
+      await cargarInsumos();
+      await cargarVentas();
+      await cargarProducciones();
+      await cargarCompras();
+      await cargarGastos();
+      await cargarPerdidas();
+      await cargarSelects();
+    }
+
+    // ================================================================
+    // DASHBOARD
+    // ================================================================
+    async function cargarDashboard() {
+      const hoy = new Date().toISOString().split('T')[0];
+      const res = await callBackend('getReporteDiario', { fecha: hoy });
+      const div = document.getElementById('dashboardResumen');
+      if (res.success) {
+        const d = res.data;
+        div.innerHTML = `
+          <p>📅 Fecha: ${d.fecha}</p>
+          <p>💰 Ingresos: S/ ${d.totalIngresos.toFixed(2)}</p>
+          <p>🍰 Total vendido (tajadas): ${d.totalVendido}</p>
+          <p>↩️ Devuelto: ${d.totalDevuelto}</p>
+        `;
+      } else {
+        div.innerHTML = 'Error al cargar resumen';
+      }
+      // Bajo stock
+      const prod = await callBackend('getProductos');
+      if (prod.success) {
+        const bajo = prod.data.filter(p => p.stock < 10);
+        let html = '<table><tr><th>Producto</th><th>Stock</th></tr>';
+        bajo.forEach(p => html += `<tr><td>${p.nombre}</td><td>${p.stock}</td></tr>`);
+        html += '</table>';
+        document.getElementById('bajoStock').innerHTML = html || 'Sin productos con bajo stock.';
+      }
+    }
+
+    // ================================================================
+    // PRODUCTOS
+    // ================================================================
+    async function cargarProductos() {
+      const res = await callBackend('getProductos');
+      const div = document.getElementById('tablaProductos');
+      if (res.success) {
+        let html = `<table><tr><th>ID</th><th>Nombre</th><th>Tajadas/entero</th><th>Precio tajada</th><th>Precio entero</th><th>Stock</th><th>Acciones</th></tr>`;
+        res.data.forEach(p => {
+          html += `<tr>
+            <td>${p.id}</td>
+            <td>${p.nombre}</td>
+            <td>${p.tajadas_por_entero}</td>
+            <td>${p.precio_tajada}</td>
+            <td>${p.precio_entero}</td>
+            <td>${p.stock}</td>
+            <td>
+              <button class="btn-soft btn-soft-secondary" style="padding:4px 12px;font-size:0.8rem;" onclick="editarProducto(${p.id})">✏️</button>
+              <button class="btn-soft btn-soft-danger" style="padding:4px 12px;font-size:0.8rem;" onclick="eliminarProducto(${p.id})">🗑️</button>
+            </td>
+          </tr>`;
+        });
+        html += '</table>';
+        div.innerHTML = html;
+      } else {
+        div.innerHTML = 'Error cargando productos';
+      }
+    }
+
+    function mostrarModal(id, data) {
+      document.getElementById(id).classList.add('open');
+      if (id === 'modalProducto') {
+        document.getElementById('modalProductoTitulo').textContent = data ? 'Editar Producto' : 'Agregar Producto';
+        if (data) {
+          document.getElementById('prodId').value = data.id;
+          document.getElementById('prodNombre').value = data.nombre;
+          document.getElementById('prodTajadas').value = data.tajadas_por_entero;
+          document.getElementById('prodPrecioT').value = data.precio_tajada;
+          document.getElementById('prodPrecioE').value = data.precio_entero;
+          document.getElementById('prodStock').value = data.stock;
+          document.getElementById('prodReceta').value = JSON.stringify(data.receta);
+        } else {
+          document.getElementById('formProducto').reset();
+          document.getElementById('prodId').value = '';
+        }
+      } else if (id === 'modalInsumo') {
+        document.getElementById('modalInsumoTitulo').textContent = data ? 'Editar Insumo' : 'Agregar Insumo';
+        if (data) {
+          document.getElementById('insumoId').value = data.id;
+          document.getElementById('insumoNombre').value = data.nombre;
+          document.getElementById('insumoUnidad').value = data.unidad;
+          document.getElementById('insumoCosto').value = data.costo_unitario;
+          document.getElementById('insumoStock').value = data.stock;
+          document.getElementById('insumoStockMin').value = data.stock_minimo;
+        } else {
+          document.getElementById('formInsumo').reset();
+          document.getElementById('insumoId').value = '';
+        }
+      }
+    }
+    function cerrarModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    // Formulario Producto
+    document.getElementById('formProducto').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('prodId').value;
+      const data = {
+        nombre: document.getElementById('prodNombre').value,
+        tajadas_por_entero: parseFloat(document.getElementById('prodTajadas').value),
+        precio_tajada: parseFloat(document.getElementById('prodPrecioT').value),
+        precio_entero: parseFloat(document.getElementById('prodPrecioE').value),
+        stock: parseFloat(document.getElementById('prodStock').value) || 0,
+        receta: JSON.parse(document.getElementById('prodReceta').value || '{}')
+      };
+      if (id) { data.id = parseInt(id); }
+      const action = id ? 'editarProducto' : 'agregarProducto';
+      const res = await callBackend(action, data);
+      alert(res.message);
+      cerrarModal('modalProducto');
+      cargarProductos();
+    });
+
+    async function editarProducto(id) {
+      const res = await callBackend('getProductos');
+      if (res.success) {
+        const prod = res.data.find(p => p.id === id);
+        if (prod) mostrarModal('modalProducto', prod);
+      }
+    }
+    async function eliminarProducto(id) {
+      if (confirm('¿Eliminar producto?')) {
+        const res = await callBackend('eliminarProducto', { id });
+        alert(res.message);
+        cargarProductos();
+      }
+    }
+
+    // ================================================================
+    // INSUMOS
+    // ================================================================
+    async function cargarInsumos() {
+      const res = await callBackend('getInsumos');
+      const div = document.getElementById('tablaInsumos');
+      if (res.success) {
+        let html = `<table><tr><th>ID</th><th>Nombre</th><th>Unidad</th><th>Costo unit.</th><th>Stock</th><th>Stock min</th><th>Acciones</th></tr>`;
+        res.data.forEach(p => {
+          html += `<tr>
+            <td>${p.id}</td>
+            <td>${p.nombre}</td>
+            <td>${p.unidad}</td>
+            <td>${p.costo_unitario}</td>
+            <td>${p.stock}</td>
+            <td>${p.stock_minimo}</td>
+            <td>
+              <button class="btn-soft btn-soft-secondary" style="padding:4px 12px;font-size:0.8rem;" onclick="editarInsumo(${p.id})">✏️</button>
+              <button class="btn-soft btn-soft-danger" style="padding:4px 12px;font-size:0.8rem;" onclick="eliminarInsumo(${p.id})">🗑️</button>
+            </td>
+          </tr>`;
+        });
+        html += '</table>';
+        div.innerHTML = html;
+      }
+    }
+
+    document.getElementById('formInsumo').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('insumoId').value;
+      const data = {
+        nombre: document.getElementById('insumoNombre').value,
+        unidad: document.getElementById('insumoUnidad').value || 'unidad',
+        costo_unitario: parseFloat(document.getElementById('insumoCosto').value),
+        stock: parseFloat(document.getElementById('insumoStock').value) || 0,
+        stock_minimo: parseFloat(document.getElementById('insumoStockMin').value) || 0
+      };
+      if (id) { data.id = parseInt(id); }
+      const action = id ? 'editarInsumo' : 'agregarInsumo';
+      const res = await callBackend(action, data);
+      alert(res.message);
+      cerrarModal('modalInsumo');
+      cargarInsumos();
+    });
+
+    async function editarInsumo(id) {
+      const res = await callBackend('getInsumos');
+      if (res.success) {
+        const ins = res.data.find(i => i.id === id);
+        if (ins) mostrarModal('modalInsumo', ins);
+      }
+    }
+    async function eliminarInsumo(id) {
+      if (confirm('¿Eliminar insumo?')) {
+        const res = await callBackend('eliminarInsumo', { id });
+        alert(res.message);
+        cargarInsumos();
+      }
+    }
+
+    // ================================================================
+    // PUNTOS DE VENTA
+    // ================================================================
+    async function cargarPuntos() {
+      const res = await callBackend('getPuntos');
+      const div = document.getElementById('listaPuntos');
+      if (res.success) {
+        let html = '<ul>';
+        res.data.forEach(p => {
+          html += `<li style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #ddd;">
+            ${p.nombre}
+            <span>
+              <button class="btn-soft btn-soft-secondary" style="padding:2px 10px;font-size:0.8rem;" onclick="editarPunto(${p.id}, '${p.nombre}')">✏️</button>
+              <button class="btn-soft btn-soft-danger" style="padding:2px 10px;font-size:0.8rem;" onclick="eliminarPunto(${p.id})">🗑️</button>
+            </span>
+          </li>`;
+        });
+        html += '</ul>';
+        div.innerHTML = html;
+        document.getElementById('modalPuntos').classList.add('open');
+      }
+    }
+
+    async function agregarPunto() {
+      const nombre = document.getElementById('nuevoPuntoInput').value.trim();
+      if (!nombre) return alert('Ingresa un nombre');
+      const res = await callBackend('agregarPunto', { nombre });
+      alert(res.message);
+      document.getElementById('nuevoPuntoInput').value = '';
+      cargarPuntos();
+      cargarSelects();
+    }
+    async function editarPunto(id, nombre) {
+      const nuevo = prompt('Nuevo nombre:', nombre);
+      if (nuevo && nuevo.trim()) {
+        const res = await callBackend('editarPunto', { id, nombre: nuevo.trim() });
+        alert(res.message);
+        cargarPuntos();
+        cargarSelects();
+      }
+    }
+    async function eliminarPunto(id) {
+      if (confirm('¿Eliminar punto?')) {
+        const res = await callBackend('eliminarPunto', { id });
+        alert(res.message);
+        cargarPuntos();
+        cargarSelects();
+      }
+    }
+
+    // ================================================================
+    // SELECTS (Puntos y Productos)
+    // ================================================================
+    async function cargarSelects() {
+      await cargarPuntosSelect('ventaPunto');
+      await cargarProductosSelect('ventaProducto');
+      await cargarProductosSelect('prodProducto');
+    }
+
+    async function cargarPuntosSelect(id) {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      const res = await callBackend('getPuntos');
+      if (res.success) {
+        sel.innerHTML = '<option value="">Selecciona</option>';
+        res.data.forEach(p => {
+          sel.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
+        });
+      }
+    }
+    async function cargarProductosSelect(id) {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      const res = await callBackend('getProductos');
+      if (res.success) {
+        sel.innerHTML = '<option value="">Selecciona</option>';
+        res.data.forEach(p => {
+          sel.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
+        });
+      }
+    }
+    async function cargarSelectInsumos(id) {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      const res = await callBackend('getInsumos');
+      if (res.success) {
+        sel.innerHTML = '<option value="">Selecciona</option>';
+        res.data.forEach(p => {
+          sel.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
+        });
+      }
+    }
+
+    // ================================================================
+    // VENTAS (interruptor puesto/directa)
+    // ================================================================
+    document.querySelectorAll('input[name="tipoVenta"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        if (this.value === 'puesto') {
+          document.getElementById('camposPuesto').style.display = 'block';
+          document.getElementById('camposDirecta').style.display = 'none';
+        } else {
+          document.getElementById('camposPuesto').style.display = 'none';
+          document.getElementById('camposDirecta').style.display = 'block';
+        }
+      });
+    });
+
+    document.getElementById('formVenta').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const tipo = document.querySelector('input[name="tipoVenta"]:checked').value;
+      const id_punto_venta = document.getElementById('ventaPunto').value;
+      const id_producto = document.getElementById('ventaProducto').value;
+      if (!id_punto_venta || !id_producto) return alert('Selecciona punto y producto');
+
+      let data = {
+        id_punto_venta: parseInt(id_punto_venta),
+        id_producto: parseInt(id_producto),
+        tipo_venta: tipo,
+        fecha: new Date().toISOString().split('T')[0]
+      };
+
+      if (tipo === 'puesto') {
+        data.enteros_llevados = parseInt(document.getElementById('el').value) || 0;
+        data.tajadas_llevadas = parseInt(document.getElementById('tl').value) || 0;
+        data.enteros_vendidos = parseInt(document.getElementById('ev').value) || 0;
+        data.tajadas_vendidas = parseInt(document.getElementById('tv').value) || 0;
+      } else {
+        data.enteros_vendidos = parseInt(document.getElementById('evd').value) || 0;
+        data.tajadas_vendidas = parseInt(document.getElementById('tvd').value) || 0;
+        data.enteros_llevados = data.enteros_vendidos;
+        data.tajadas_llevadas = data.tajadas_vendidas;
+      }
+
+      const res = await callBackend('registrarVenta', data);
+      alert(res.message);
+      cargarVentas();
+      cargarDashboard();
+    });
+
+    async function cargarVentas() {
+      const res = await callBackend('getVentas', {});
+      const div = document.getElementById('tablaVentas');
+      if (res.success) {
+        let html = `<table><tr><th>Fecha</th><th>Punto</th><th>Producto</th><th>Llevado</th><th>Vendido</th><th>Devuelto</th><th>Ingreso</th></tr>`;
+        // Obtenemos nombres
+        const prodRes = await callBackend('getProductos');
+        const prodMap = {};
+        if (prodRes.success) prodRes.data.forEach(p => prodMap[p.id] = p.nombre);
+        const puntoRes = await callBackend('getPuntos');
+        const puntoMap = {};
+        if (puntoRes.success) puntoRes.data.forEach(p => puntoMap[p.id] = p.nombre);
+
+        res.data.forEach(v => {
+          html += `<tr>
+            <td>${v.fecha}</td>
+            <td>${puntoMap[v.id_punto] || v.id_punto}</td>
+            <td>${prodMap[v.id_producto] || v.id_producto}</td>
+            <td>${v.total_llevado}</td>
+            <td>${v.total_vendido}</td>
+            <td>${v.total_devuelto}</td>
+            <td>S/ ${v.ingreso.toFixed(2)}</td>
+          </tr>`;
+        });
+        html += '</table>';
+        div.innerHTML = html;
+      }
+    }
+
+    // ================================================================
+    // PRODUCCIÓN
+    // ================================================================
+    document.getElementById('formProduccion').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id_producto = document.getElementById('prodProducto').value;
+      const cantidad_producida = parseFloat(document.getElementById('prodCantidad').value);
+      if (!id_producto || !cantidad_producida) return alert('Completa los datos');
+      const res = await callBackend('registrarProduccion', {
+        id_producto: parseInt(id_producto),
+        cantidad_producida,
+        fecha: new Date().toISOString().split('T')[0]
+      });
+      alert(res.message);
+      cargarProducciones();
+      cargarDashboard();
+    });
+
+    async function cargarProducciones() {
+      const res = await callBackend('getProducciones', {});
+      const div = document.getElementById('tablaProduccion');
+      if (res.success) {
+        let html = `<table><tr><th>Fecha</th><th>Producto</th><th>Cantidad (tajadas)</th><th>Costo</th></tr>`;
+        const prodRes = await callBackend('getProductos');
+        const prodMap = {};
+        if (prodRes.success) prodRes.data.forEach(p => prodMap[p.id] = p.nombre);
+        res.data.forEach(p => {
+          html += `<tr>
+            <td>${p.fecha}</td>
+            <td>${prodMap[p.id_producto] || p.id_producto}</td>
+            <td>${p.cantidad}</td>
+            <td>S/ ${p.costo.toFixed(2)}</td>
+          </tr>`;
+        });
+        html += '</table>';
+        div.innerHTML = html;
+      }
+    }
+
+    // ================================================================
+    // COMPRAS
+    // ================================================================
+    document.getElementById('formCompra').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id_insumo = document.getElementById('compraInsumo').value;
+      const cantidad = parseFloat(document.getElementById('compraCantidad').value);
+      const costo_unitario = parseFloat(document.getElementById('compraCosto').value);
+      const proveedor = document.getElementById('compraProveedor').value;
+      if (!id_insumo || !cantidad || !costo_unitario) return alert('Completa los datos');
+      const res = await callBackend('registrarCompra', {
+        id_insumo: parseInt(id_insumo),
+        cantidad,
+        costo_unitario,
+        proveedor,
+        fecha: new Date().toISOString().split('T')[0]
+      });
+      alert(res.message);
+      cargarCompras();
+      cargarInsumos();
+    });
+
+    async function cargarCompras() {
+      const res = await callBackend('getCompras', {});
+      const div = document.getElementById('tablaCompras');
+      if (res.success) {
+        let html = `<table><tr><th>Fecha</th><th>Insumo</th><th>Cantidad</th><th>Costo unit.</th><th>Total</th><th>Proveedor</th></tr>`;
+        const insRes = await callBackend('getInsumos');
+        const insMap = {};
+        if (insRes.success) insRes.data.forEach(i => insMap[i.id] = i.nombre);
+        res.data.forEach(c => {
+          html += `<tr>
+            <td>${c.fecha}</td>
+            <td>${insMap[c.id_insumo] || c.id_insumo}</td>
+            <td>${c.cantidad}</td>
+            <td>${c.costo_unitario}</td>
+            <td>${c.costo_total}</td>
+            <td>${c.proveedor}</td>
+          </tr>`;
+        });
+        html += '</table>';
+        div.innerHTML = html;
+      }
+    }
+
+    // ================================================================
+    // GASTOS
+    // ================================================================
+    document.getElementById('formGasto').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const concepto = document.getElementById('gastoConcepto').value;
+      const categoria = document.getElementById('gastoCategoria').value || 'General';
+      const monto = parseFloat(document.getElementById('gastoMonto').value);
+      if (!concepto || !monto) return alert('Completa los datos');
+      const res = await callBackend('registrarGasto', {
+        concepto,
+        categoria,
+        monto,
+        fecha: new Date().toISOString().split('T')[0]
+      });
+      alert(res.message);
+      cargarGastos();
+    });
+
+    async function cargarGastos() {
+      const res = await callBackend('getGastos', {});
+      const div = document.getElementById('tablaGastos');
+      if (res.success) {
+        let html = `<table><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Monto</th></tr>`;
+        res.data.forEach(g => {
+          html += `<tr><td>${g.fecha}</td><td>${g.concepto}</td><td>${g.categoria}</td><td>S/ ${g.monto.toFixed(2)}</td></tr>`;
+        });
+        html += '</table>';
+        div.innerHTML = html;
+      }
+    }
+
+    // ================================================================
+    // PÉRDIDAS
+    // ================================================================
+    async function cargarSelectPerdidaItems() {
+      const tipo = document.getElementById('perdidaTipo').value;
+      const sel = document.getElementById('perdidaItem');
+      if (tipo === 'insumo') {
+        const res = await callBackend('getInsumos');
+        if (res.success) {
+          sel.innerHTML = '<option value="">Selecciona</option>';
+          res.data.forEach(i => sel.innerHTML += `<option value="${i.id}">${i.nombre}</option>`);
+        }
+      } else {
+        const res = await callBackend('getProductos');
+        if (res.success) {
+          sel.innerHTML = '<option value="">Selecciona</option>';
+          res.data.forEach(p => sel.innerHTML += `<option value="${p.id}">${p.nombre}</option>`);
+        }
+      }
+    }
+    document.getElementById('perdidaTipo').addEventListener('change', cargarSelectPerdidaItems);
+
+    document.getElementById('formPerdida').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const tipo = document.getElementById('perdidaTipo').value;
+      const id_referencia = document.getElementById('perdidaItem').value;
+      const cantidad = parseFloat(document.getElementById('perdidaCantidad').value);
+      const motivo = document.getElementById('perdidaMotivo').value || '';
+      const valor_perdido = parseFloat(document.getElementById('perdidaValor').value) || 0;
+      if (!id_referencia || !cantidad) return alert('Completa los datos');
+      const res = await callBackend('registrarPerdida', {
+        tipo,
+        id_referencia: parseInt(id_referencia),
+        cantidad,
+        motivo,
+        valor_perdido,
+        fecha: new Date().toISOString().split('T')[0]
+      });
+      alert(res.message);
+      cargarPerdidas();
+      cargarInsumos();
+      cargarProductos();
+    });
+
+    async function cargarPerdidas() {
+      const res = await callBackend('getPerdidas', {});
+      const div = document.getElementById('tablaPerdidas');
+      if (res.success) {
+        let html = `<table><tr><th>Fecha</th><th>Tipo</th><th>Ítem</th><th>Cantidad</th><th>Motivo</th><th>Valor</th></tr>`;
+        const insRes = await callBackend('getInsumos');
+        const prodRes = await callBackend('getProductos');
+        const map = {};
+        if (insRes.success) insRes.data.forEach(i => map['insumo_'+i.id] = i.nombre);
+        if (prodRes.success) prodRes.data.forEach(p => map['producto_'+p.id] = p.nombre);
+        res.data.forEach(p => {
+          const nombre = map[p.tipo+'_'+p.id_referencia] || p.id_referencia;
+          html += `<tr><td>${p.fecha}</td><td>${p.tipo}</td><td>${nombre}</td><td>${p.cantidad}</td><td>${p.motivo}</td><td>S/ ${p.valor.toFixed(2)}</td></tr>`;
+        });
+        html += '</table>';
+        div.innerHTML = html;
+      }
+    }
+
+    // ================================================================
+    // REPORTES
+    // ================================================================
+    async function cargarReporte() {
+      const fechaInicio = document.getElementById('repFechaInicio').value;
+      const fechaFin = document.getElementById('repFechaFin').value;
+      const idPunto = document.getElementById('repPunto').value;
+      const res = await callBackend('getReporteGeneral', { fechaInicio, fechaFin, idPunto: idPunto || null });
+      const div = document.getElementById('reporteResultados');
+      if (res.success) {
+        const d = res.data;
+        let html = `<p>Total ingresos: S/ ${d.totalIngresos.toFixed(2)}</p>
+                    <p>Total vendido (tajadas): ${d.totalVendido}</p>
+                    <p>Total devuelto: ${d.totalDevuelto}</p>
+                    <hr><h4>Detalle de ventas</h4>`;
+        const prodRes = await callBackend('getProductos');
+        const prodMap = {};
+        if (prodRes.success) prodRes.data.forEach(p => prodMap[p.id] = p.nombre);
+        const puntoRes = await callBackend('getPuntos');
+        const puntoMap = {};
+        if (puntoRes.success) puntoRes.data.forEach(p => puntoMap[p.id] = p.nombre);
+        if (d.ventas && d.ventas.length > 0) {
+          html += `<table><tr><th>Fecha</th><th>Punto</th><th>Producto</th><th>Vendido</th><th>Ingreso</th></tr>`;
+          d.ventas.forEach(v => {
+            html += `<tr><td>${v.fecha}</td><td>${puntoMap[v.id_punto] || v.id_punto}</td><td>${prodMap[v.id_producto] || v.id_producto}</td><td>${v.total_vendido}</td><td>S/ ${v.ingreso.toFixed(2)}</td></tr>`;
+          });
+          html += '</table>';
+        } else {
+          html += '<p>No hay ventas en este periodo.</p>';
+        }
+        div.innerHTML = html;
+      } else {
+        div.innerHTML = 'Error al generar reporte';
+      }
+    }
+
+    // ================================================================
+    // INICIALIZACIÓN
+    // ================================================================
+    // Cerrar modales al hacer clic fuera
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+      m.addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('open');
+      });
+    });
+  </script>
 </body>
 </html>
