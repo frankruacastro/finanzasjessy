@@ -28,9 +28,7 @@
       background: #F2F2F2;
       border-radius: 30px;
       padding: 40px 30px;
-      box-shadow: 
-        12px 12px 24px #d1d1d1,
-        -12px -12px 24px #ffffff;
+      box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
       border: 1px solid rgba(255,255,255,0.3);
       transition: all 0.3s;
     }
@@ -61,17 +59,13 @@
       border: none;
       background: #F2F2F2;
       border-radius: 20px;
-      box-shadow: 
-        inset 6px 6px 12px #d1d1d1,
-        inset -6px -6px 12px #ffffff;
+      box-shadow: inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff;
       font-size: 16px;
       outline: none;
       transition: all 0.3s;
     }
     .input-group input:focus {
-      box-shadow: 
-        inset 4px 4px 8px #d1d1d1,
-        inset -4px -4px 8px #ffffff;
+      box-shadow: inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff;
     }
     .btn-login {
       width: 100%;
@@ -83,16 +77,12 @@
       font-size: 18px;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 
-        8px 8px 16px #d1d1d1,
-        -8px -8px 16px #ffffff;
+      box-shadow: 8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff;
       transition: all 0.2s;
       margin-top: 10px;
     }
     .btn-login:active {
-      box-shadow: 
-        inset 6px 6px 12px #d1d1d1,
-        inset -6px -6px 12px #ffffff;
+      box-shadow: inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff;
       transform: scale(0.98);
     }
     .error-msg {
@@ -151,7 +141,7 @@
     </div>
   </div>
 
-  <!-- ========== DASHBOARD (se mostrará tras login) ========== -->
+  <!-- ========== DASHBOARD ========== -->
   <div class="dashboard" id="dashboard">
     <h1>Bienvenido, <span id="userDisplay"></span></h1>
     <p class="mensaje-prueba">✅ Login exitoso. Aquí irán los módulos.</p>
@@ -160,56 +150,32 @@
 
   <script>
     // ============================================================
-    // FRONTEND - Comunicación con Apps Script (CORS bypass)
+    // CONFIGURACIÓN - REEMPLAZA TU URL DE APPS SCRIPT
     // ============================================================
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzikdvXz0s3OC00Rb5q0yhnZ4_9fdodEMs68xxH2c5k5yOl99EIbeU5PpKdlRcDimYpNg/exec'; // <--- CAMBIA ESTA URL POR LA NUEVA
 
-    // --- CONFIGURACIÓN ---
-    // REEMPLAZA ESTA URL CON LA DE TU APPS SCRIPT (termina en /exec)
-    const BACKEND_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://script.google.com/macros/s/AKfycbxfVSbeXhPLZpEgDr03zxtqMMz1BOli0fI36gVaaUnorqwy_86zk2ESG3lHLXFhfas3mA/exec');
+    // Usamos corsproxy.io como proxy para evitar CORS
+    const BACKEND_URL = 'https://corsproxy.io/?' + encodeURIComponent(SCRIPT_URL);
 
-    // --- FUNCIÓN PARA LLAMAR AL BACKEND (con no-cors y parseo manual) ---
+    // --- FUNCIÓN PARA LLAMAR AL BACKEND ---
     async function callBackend(action, data = {}) {
       try {
         const payload = { action, ...data };
-        // Usamos mode: 'no-cors' para evitar el bloqueo de CORS
+        console.log('Enviando petición a:', BACKEND_URL);
+        console.log('Payload:', payload);
+
         const response = await fetch(BACKEND_URL, {
           method: 'POST',
-          mode: 'no-cors', // <--- CLAVE: evita CORS
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
-        // Con no-cors, response es opaca, no podemos leer el body.
-        // Pero Apps Script devuelve un JSON en el body, pero el navegador no nos deja acceder.
-        // SOLUCIÓN: Usar un iframe o usar un servidor proxy, pero lo más sencillo
-        // es cambiar el enfoque: en lugar de fetch con no-cors, usamos JSONP (no funciona con POST)
-        // o usamos un truco: hacemos la petición con un <form> y un iframe oculto.
-        // Pero lo más común es usar el modo 'cors' y configurar el backend.
-        // Vamos a intentar con cors y si falla, usamos no-cors pero el backend debe devolver
-        // un texto plano que podamos leer con response.text()? No, con no-cors no podemos leer.
-        // La solución definitiva: USAR CORS CONFIGURADO EN APPS SCRIPT.
-        // Para eso, en Apps Script debemos agregar:
-        //   ContentService.createTextOutput(JSON.stringify(result))
-        //     .setMimeType(ContentService.MimeType.JSON)
-        //     .setHeader('Access-Control-Allow-Origin', '*');
-        // PERO Google Apps Script NO permite setHeader en ContentService.
-        // Entonces la única forma es que el despliegue esté configurado como "Cualquiera"
-        // y usar fetch con mode: 'cors' (por defecto).
-        // Vamos a probar con mode: 'cors' y si falla, te daremos una alternativa.
-
-        // Por ahora, cambiemos a mode: 'cors' (el valor por defecto)
-        // y aseguramos que el despliegue sea "Cualquiera".
-        // Reintentamos:
-        const response2 = await fetch(BACKEND_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (!response2.ok) {
-          throw new Error(`HTTP error! status: ${response2.status}`);
+        console.log('Respuesta status:', response.status);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const result = await response2.json();
+        const result = await response.json();
+        console.log('Resultado:', result);
         return result;
       } catch (error) {
         console.error('Error en callBackend:', error);
@@ -252,10 +218,12 @@
       document.getElementById('loginError').textContent = '';
     }
 
-    // --- FUNCIÓN PARA CARGAR DATOS INICIALES (ejemplo) ---
+    // --- FUNCIÓN PARA CARGAR DATOS INICIALES ---
     async function cargarDatosIniciales() {
       console.log('Cargando datos iniciales...');
-      // Aquí puedes llamar a getProductos, getPuntos, etc.
+      // Puedes probar otras acciones como getPuntos
+      // const puntos = await callBackend('getPuntos');
+      // console.log('Puntos:', puntos);
     }
 
     // --- PERMITIR ENTER PARA LOGIN ---
