@@ -12,6 +12,7 @@
       box-sizing: border-box;
       font-family: 'Segoe UI', system-ui, sans-serif;
     }
+
     body {
       background: #F2F2F2;
       min-height: 100vh;
@@ -20,39 +21,46 @@
       align-items: center;
       padding: 20px;
     }
+
+    /* ----- Login (se oculta al iniciar sesión) ----- */
     .login-container {
       width: 100%;
       max-width: 400px;
     }
+
     .login-card {
       background: #F2F2F2;
       border-radius: 30px;
       padding: 40px 30px;
       box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
       border: 1px solid rgba(255,255,255,0.3);
-      transition: all 0.3s;
     }
+
     .login-card h1 {
       text-align: center;
       color: #9C8BD9;
       margin-bottom: 10px;
       font-size: 2rem;
     }
+
     .login-card .subtitle {
       text-align: center;
       color: #B4A3D9;
       margin-bottom: 30px;
       font-weight: 300;
     }
+
     .input-group {
       margin-bottom: 20px;
     }
+
     .input-group label {
       display: block;
       margin-bottom: 6px;
       color: #555;
       font-weight: 500;
     }
+
     .input-group input {
       width: 100%;
       padding: 14px 20px;
@@ -64,9 +72,11 @@
       outline: none;
       transition: all 0.3s;
     }
+
     .input-group input:focus {
       box-shadow: inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff;
     }
+
     .btn-login {
       width: 100%;
       padding: 14px;
@@ -81,43 +91,269 @@
       transition: all 0.2s;
       margin-top: 10px;
     }
+
     .btn-login:active {
       box-shadow: inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff;
       transform: scale(0.98);
     }
+
     .error-msg {
       color: #e74c3c;
       text-align: center;
       margin-top: 15px;
       font-size: 14px;
     }
+
+    /* ----- Dashboard (se muestra tras login) ----- */
     .dashboard {
       display: none;
       width: 100%;
-      max-width: 1200px;
-      padding: 20px;
+      max-width: 1400px;
+      gap: 20px;
     }
-    .mensaje-prueba {
-      text-align: center;
-      color: #9C8BD9;
-      margin-top: 30px;
-    }
-    .btn-logout {
-      display: inline-block;
-      padding: 10px 30px;
-      border: none;
+
+    /* Menú lateral */
+    .sidebar {
+      width: 220px;
+      min-height: 80vh;
+      background: #F2F2F2;
       border-radius: 30px;
+      padding: 20px 15px;
+      box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
+      position: sticky;
+      top: 20px;
+      float: left;
+      margin-right: 20px;
+    }
+
+    .sidebar .logo {
+      text-align: center;
+      font-size: 1.5rem;
+      color: #9C8BD9;
+      font-weight: bold;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #d1d1d1;
+    }
+
+    .sidebar .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      margin: 6px 0;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: #555;
+      font-weight: 500;
+      background: #F2F2F2;
+      box-shadow: inset 0 0 0 transparent;
+    }
+
+    .sidebar .menu-item:hover {
+      background: #e8e8e8;
+      box-shadow: inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff;
+    }
+
+    .sidebar .menu-item.active {
+      background: #F2B3D6;
+      color: #fff;
+      box-shadow: 8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff;
+    }
+
+    .sidebar .menu-item .icon {
+      font-size: 1.3rem;
+    }
+
+    .sidebar .menu-item.logout {
+      margin-top: 30px;
+      color: #e74c3c;
+      border-top: 1px solid #d1d1d1;
+      padding-top: 15px;
+    }
+
+    /* Contenido principal */
+    .main-content {
+      margin-left: 260px;
+      padding: 20px;
+      background: #F2F2F2;
+      border-radius: 30px;
+      min-height: 80vh;
+      box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
+    }
+
+    .main-content h2 {
+      color: #9C8BD9;
+      margin-bottom: 20px;
+      font-weight: 300;
+    }
+
+    .card {
+      background: #F2F2F2;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff;
+    }
+
+    .card h3 {
+      color: #555;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
       background: #B4A3D9;
       color: #fff;
-      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
       box-shadow: 8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff;
       transition: all 0.2s;
-      margin-top: 20px;
+      margin: 5px;
     }
-    .btn-logout:active {
+
+    .btn:active {
       box-shadow: inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff;
       transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: #F2B3D6;
+    }
+
+    .btn-success {
+      background: #9C8BD9;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      color: #9C8BD9;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+      font-weight: 500;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      background: #F2F2F2;
+      border-radius: 15px;
+      box-shadow: inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .toggle-switch {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .toggle-switch label {
+      font-weight: 500;
+      color: #555;
+      cursor: pointer;
+    }
+
+    .toggle-switch input[type="radio"] {
+      display: none;
+    }
+
+    .toggle-switch .toggle-option {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: #F2F2F2;
+      box-shadow: inset 2px 2px 4px #d1d1d1, inset -2px -2px 4px #ffffff;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: #555;
+    }
+
+    .toggle-switch .toggle-option.active {
+      background: #F2B3D6;
+      color: #fff;
+      box-shadow: 4px 4px 8px #d1d1d1, -4px -4px 8px #ffffff;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .mensaje-exito {
+      color: #27ae60;
+      font-weight: 500;
+      padding: 10px;
+      background: #d5f5e3;
+      border-radius: 12px;
+      margin: 10px 0;
+    }
+
+    .mensaje-error {
+      color: #e74c3c;
+      font-weight: 500;
+      padding: 10px;
+      background: #fadbd8;
+      border-radius: 12px;
+      margin: 10px 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        float: none;
+        margin-right: 0;
+        min-height: auto;
+        position: relative;
+        top: 0;
+      }
+      .main-content {
+        margin-left: 0;
+        margin-top: 20px;
+      }
+      .form-row {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -141,39 +377,79 @@
     </div>
   </div>
 
-  <!-- ========== DASHBOARD ========== -->
+  <!-- ========== DASHBOARD (con menú lateral) ========== -->
   <div class="dashboard" id="dashboard">
-    <h1>Bienvenido, <span id="userDisplay"></span></h1>
-    <p class="mensaje-prueba">✅ Login exitoso. Aquí irán los módulos.</p>
-    <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+    <div class="sidebar" id="sidebar">
+      <div class="logo">🍰 Postres</div>
+      <div class="menu-item active" data-page="dashboard">
+        <span class="icon">📊</span> Dashboard
+      </div>
+      <div class="menu-item" data-page="puntos">
+        <span class="icon">📍</span> Puntos de Venta
+      </div>
+      <div class="menu-item" data-page="inventario">
+        <span class="icon">📦</span> Inventario
+      </div>
+      <div class="menu-item" data-page="ventas">
+        <span class="icon">🧾</span> Ventas
+      </div>
+      <div class="menu-item" data-page="produccion">
+        <span class="icon">🏭</span> Producción
+      </div>
+      <div class="menu-item" data-page="compras">
+        <span class="icon">📥</span> Compras
+      </div>
+      <div class="menu-item" data-page="gastos">
+        <span class="icon">💸</span> Gastos
+      </div>
+      <div class="menu-item" data-page="perdidas">
+        <span class="icon">⚠️</span> Pérdidas
+      </div>
+      <div class="menu-item" data-page="reportes">
+        <span class="icon">📈</span> Reportes
+      </div>
+      <div class="menu-item logout" onclick="logout()">
+        <span class="icon">🚪</span> Cerrar Sesión
+      </div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+      <!-- Contenido dinámico se cargará aquí -->
+      <div id="pageContent">
+        <h2>📊 Dashboard</h2>
+        <div class="card">
+          <h3>Bienvenido, <span id="userDisplay"></span></h3>
+          <p>Aquí se mostrará un resumen del día: ventas, ingresos, gastos, etc.</p>
+        </div>
+        <div class="card">
+          <h3>Ventas del día</h3>
+          <p id="resumenDia">Cargando...</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
     // ============================================================
-    // CONFIGURACIÓN - REEMPLAZA TU URL DE APPS SCRIPT
+    // CONFIGURACIÓN
     // ============================================================
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzz_b67cTZa76vrmRpMual4dBY1QAHzFO0QvEH-_Z8DR-atf-rIXJlFMy8NCQLbDQ2Kcw/exec'; // <--- CAMBIA ESTA URL POR LA NUEVA
-
-    // Usamos corsproxy.io como proxy para evitar CORS
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzz_b67cTZa76vrmRpMual4dBY1QAHzFO0QvEH-_Z8DR-atf-rIXJlFMy8NCQLbDQ2Kcw/exec';
     const BACKEND_URL = 'https://corsproxy.io/?' + encodeURIComponent(SCRIPT_URL);
 
-    // --- FUNCIÓN PARA LLAMAR AL BACKEND ---
+    // ============================================================
+    // FUNCIONES DE COMUNICACIÓN
+    // ============================================================
     async function callBackend(action, data = {}) {
       try {
         const payload = { action, ...data };
         console.log('Enviando petición a:', BACKEND_URL);
         console.log('Payload:', payload);
-
         const response = await fetch(BACKEND_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-
-        console.log('Respuesta status:', response.status);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const result = await response.json();
         console.log('Resultado:', result);
         return result;
@@ -183,34 +459,632 @@
       }
     }
 
-    // --- LOGIN ---
+    // ============================================================
+    // LOGIN
+    // ============================================================
     document.getElementById('loginBtn').addEventListener('click', async () => {
       const usuario = document.getElementById('username').value.trim();
       const contraseña = document.getElementById('password').value.trim();
       const errorDiv = document.getElementById('loginError');
 
       if (!usuario || !contraseña) {
-        errorDiv.textContent = 'Por favor completa todos los campos';
+        errorDiv.textContent = 'Completa todos los campos';
         return;
       }
 
       errorDiv.textContent = 'Validando...';
-
       const result = await callBackend('login', { usuario, contraseña });
       console.log('Resultado login:', result);
 
       if (result.success) {
         errorDiv.textContent = '';
         document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('dashboard').style.display = 'flex';
         document.getElementById('userDisplay').textContent = result.data.usuario;
         cargarDatosIniciales();
+        // Cargar página por defecto
+        mostrarPagina('dashboard');
       } else {
         errorDiv.textContent = result.message || 'Error al iniciar sesión';
       }
     });
 
-    // --- CERRAR SESIÓN ---
+    // Permite login con Enter
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('loginBtn').click();
+    });
+
+    // ============================================================
+    // NAVEGACIÓN - Menú lateral
+    // ============================================================
+    document.querySelectorAll('.menu-item[data-page]').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.menu-item[data-page]').forEach(el => el.classList.remove('active'));
+        this.classList.add('active');
+        const page = this.dataset.page;
+        mostrarPagina(page);
+      });
+    });
+
+    // ============================================================
+    // FUNCIONES DE CARGA DE PÁGINAS
+    // ============================================================
+    function mostrarPagina(page) {
+      const content = document.getElementById('pageContent');
+      switch(page) {
+        case 'dashboard':
+          content.innerHTML = `
+            <h2>📊 Dashboard</h2>
+            <div class="card">
+              <h3>Bienvenido, <span id="userDisplay2"></span></h3>
+              <p>Resumen del día:</p>
+              <div id="resumenDia">Cargando...</div>
+            </div>
+          `;
+          document.getElementById('userDisplay2').textContent = document.getElementById('userDisplay').textContent;
+          cargarDashboard();
+          break;
+        case 'puntos':
+          content.innerHTML = `
+            <h2>📍 Puntos de Venta</h2>
+            <div class="card">
+              <h3>Registrar Nuevo Punto</h3>
+              <div class="form-group">
+                <label>Nombre del punto:</label>
+                <input type="text" id="nuevoPuntoNombre" placeholder="Ej: Mercado Norte">
+              </div>
+              <button class="btn btn-primary" onclick="registrarPunto()">Agregar Punto</button>
+            </div>
+            <div class="card">
+              <h3>Lista de Puntos</h3>
+              <div id="listaPuntos">Cargando...</div>
+            </div>
+          `;
+          cargarPuntos();
+          break;
+        case 'inventario':
+          content.innerHTML = `
+            <h2>📦 Inventario</h2>
+            <div class="card">
+              <h3>Productos</h3>
+              <div id="listaProductos">Cargando...</div>
+            </div>
+            <div class="card">
+              <h3>Insumos</h3>
+              <div id="listaInsumos">Cargando...</div>
+            </div>
+          `;
+          cargarInventario();
+          break;
+        case 'ventas':
+          content.innerHTML = `
+            <h2>🧾 Registrar Venta</h2>
+            <div class="card">
+              <div class="toggle-switch">
+                <span>Tipo de venta:</span>
+                <label class="toggle-option active" id="togglePuesto" onclick="setTipoVenta('puesto')">📍 Puesto</label>
+                <label class="toggle-option" id="toggleDirecta" onclick="setTipoVenta('directa')">🏠 Directa</label>
+              </div>
+              <div id="formVenta">
+                <div class="form-group">
+                  <label>Punto de venta:</label>
+                  <select id="ventaPunto"><option value="">Seleccionar...</option></select>
+                </div>
+                <div class="form-group">
+                  <label>Producto:</label>
+                  <select id="ventaProducto"><option value="">Seleccionar...</option></select>
+                </div>
+                <div id="camposPuesto" class="form-row">
+                  <div class="form-group">
+                    <label>Enteros Llevados:</label>
+                    <input type="number" id="enterosLlevados" value="0" min="0">
+                  </div>
+                  <div class="form-group">
+                    <label>Tajadas Llevadas:</label>
+                    <input type="number" id="tajadasLlevadas" value="0" min="0">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Enteros Vendidos:</label>
+                    <input type="number" id="enterosVendidos" value="0" min="0">
+                  </div>
+                  <div class="form-group">
+                    <label>Tajadas Vendidas:</label>
+                    <input type="number" id="tajadasVendidas" value="0" min="0">
+                  </div>
+                </div>
+                <div id="infoDevueltos" class="card" style="background: #e8f0fe;">
+                  <p><strong>📦 Devueltos:</strong> <span id="devueltosCalculado">0</span> tajadas</p>
+                  <p><strong>💰 Ingreso estimado:</strong> S/ <span id="ingresoEstimado">0.00</span></p>
+                </div>
+                <button class="btn btn-success" onclick="registrarVenta()">✅ Registrar Venta</button>
+                <div id="mensajeVenta"></div>
+              </div>
+            </div>
+          `;
+          // Cargar selects
+          cargarSelectsVenta();
+          // Eventos para calcular devueltos
+          document.getElementById('enterosLlevados').addEventListener('input', calcularDevueltos);
+          document.getElementById('tajadasLlevadas').addEventListener('input', calcularDevueltos);
+          document.getElementById('enterosVendidos').addEventListener('input', calcularDevueltos);
+          document.getElementById('tajadasVendidas').addEventListener('input', calcularDevueltos);
+          document.getElementById('ventaProducto').addEventListener('change', calcularDevueltos);
+          break;
+        case 'produccion':
+          content.innerHTML = `
+            <h2>🏭 Registrar Producción</h2>
+            <div class="card">
+              <div class="form-group">
+                <label>Producto:</label>
+                <select id="prodProducto"><option value="">Seleccionar...</option></select>
+              </div>
+              <div class="form-group">
+                <label>Cantidad producida (en tajadas):</label>
+                <input type="number" id="prodCantidad" value="0" min="1">
+              </div>
+              <button class="btn btn-success" onclick="registrarProduccion()">✅ Registrar Producción</button>
+              <div id="mensajeProduccion"></div>
+            </div>
+          `;
+          cargarSelectsProduccion();
+          break;
+        case 'compras':
+          content.innerHTML = `
+            <h2>📥 Registrar Compra de Insumos</h2>
+            <div class="card">
+              <div class="form-group">
+                <label>Insumo:</label>
+                <select id="compraInsumo"><option value="">Seleccionar...</option></select>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Cantidad:</label>
+                  <input type="number" id="compraCantidad" value="0" min="1">
+                </div>
+                <div class="form-group">
+                  <label>Costo unitario (S/):</label>
+                  <input type="number" id="compraCosto" value="0" step="0.01" min="0">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Proveedor (opcional):</label>
+                <input type="text" id="compraProveedor" placeholder="Nombre del proveedor">
+              </div>
+              <button class="btn btn-success" onclick="registrarCompra()">✅ Registrar Compra</button>
+              <div id="mensajeCompra"></div>
+            </div>
+          `;
+          cargarSelectsCompra();
+          break;
+        case 'gastos':
+          content.innerHTML = `
+            <h2>💸 Registrar Gasto</h2>
+            <div class="card">
+              <div class="form-group">
+                <label>Concepto:</label>
+                <input type="text" id="gastoConcepto" placeholder="Ej: Luz, agua, gas...">
+              </div>
+              <div class="form-group">
+                <label>Categoría:</label>
+                <input type="text" id="gastoCategoria" placeholder="Ej: Servicios, Movilidad...">
+              </div>
+              <div class="form-group">
+                <label>Monto (S/):</label>
+                <input type="number" id="gastoMonto" value="0" step="0.01" min="0">
+              </div>
+              <button class="btn btn-success" onclick="registrarGasto()">✅ Registrar Gasto</button>
+              <div id="mensajeGasto"></div>
+            </div>
+          `;
+          break;
+        case 'perdidas':
+          content.innerHTML = `
+            <h2>⚠️ Registrar Pérdida</h2>
+            <div class="card">
+              <div class="form-group">
+                <label>Tipo:</label>
+                <select id="perdidaTipo" onchange="cambiarTipoPerdida()">
+                  <option value="insumo">Insumo</option>
+                  <option value="producto">Producto</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Elemento:</label>
+                <select id="perdidaElemento"><option value="">Seleccionar...</option></select>
+              </div>
+              <div class="form-group">
+                <label>Cantidad:</label>
+                <input type="number" id="perdidaCantidad" value="0" min="1">
+              </div>
+              <div class="form-group">
+                <label>Motivo:</label>
+                <input type="text" id="perdidaMotivo" placeholder="Ej: Vencimiento, daño...">
+              </div>
+              <button class="btn btn-danger" onclick="registrarPerdida()">⚠️ Registrar Pérdida</button>
+              <div id="mensajePerdida"></div>
+            </div>
+          `;
+          cargarSelectsPerdida();
+          break;
+        case 'reportes':
+          content.innerHTML = `
+            <h2>📈 Reportes</h2>
+            <div class="card">
+              <div class="form-group">
+                <label>Fecha (YYYY-MM-DD):</label>
+                <input type="date" id="reporteFecha">
+              </div>
+              <button class="btn btn-primary" onclick="cargarReporte()">Consultar</button>
+            </div>
+            <div class="card">
+              <div id="reporteResultado">Selecciona una fecha para ver el reporte.</div>
+            </div>
+          `;
+          break;
+        default:
+          content.innerHTML = `<h2>Página no encontrada</h2>`;
+      }
+    }
+
+    // ============================================================
+    // FUNCIONES DE CADA MÓDULO
+    // ============================================================
+
+    // ---- Dashboard ----
+    async function cargarDashboard() {
+      const hoy = new Date().toISOString().split('T')[0];
+      const result = await callBackend('getReporteDiario', { fecha: hoy });
+      const div = document.getElementById('resumenDia');
+      if (result.success) {
+        div.innerHTML = `
+          <p>📅 Fecha: ${result.data.fecha}</p>
+          <p>💰 Ingresos: S/ ${result.data.totalIngresos.toFixed(2)}</p>
+          <p>🍰 Tajadas vendidas: ${result.data.totalVendido}</p>
+          <p>📦 Tajadas devueltas: ${result.data.totalDevuelto}</p>
+        `;
+      } else {
+        div.innerHTML = `<span class="mensaje-error">${result.message}</span>`;
+      }
+    }
+
+    // ---- Puntos de Venta ----
+    async function cargarPuntos() {
+      const result = await callBackend('getPuntos');
+      const div = document.getElementById('listaPuntos');
+      if (result.success) {
+        let html = `<table><tr><th>ID</th><th>Nombre</th></tr>`;
+        result.data.forEach(p => {
+          html += `<tr><td>${p.id}</td><td>${p.nombre}</td></tr>`;
+        });
+        html += `</table>`;
+        div.innerHTML = html;
+      } else {
+        div.innerHTML = `<span class="mensaje-error">${result.message}</span>`;
+      }
+    }
+
+    async function registrarPunto() {
+      const nombre = document.getElementById('nuevoPuntoNombre').value.trim();
+      if (!nombre) {
+        mostrarMensaje('listaPuntos', 'Ingresa un nombre válido.', 'error');
+        return;
+      }
+      // Nota: Apps Script no tiene función para agregar punto, pero podemos implementarla.
+      // Por ahora, simulamos que se agrega manualmente.
+      alert('Función en desarrollo. Agrega el punto directamente en la hoja "PuntosVenta".');
+    }
+
+    // ---- Inventario ----
+    async function cargarInventario() {
+      // Productos
+      const prodResult = await callBackend('getProductos');
+      const divProd = document.getElementById('listaProductos');
+      if (prodResult.success) {
+        let html = `<table><tr><th>Nombre</th><th>Tajadas/entero</th><th>Precio tajada</th><th>Precio entero</th><th>Stock (tajadas)</th></tr>`;
+        prodResult.data.forEach(p => {
+          html += `<tr><td>${p.nombre}</td><td>${p.tajadas_por_entero}</td><td>S/ ${p.precio_tajada}</td><td>S/ ${p.precio_entero}</td><td>${p.stock}</td></tr>`;
+        });
+        html += `</table>`;
+        divProd.innerHTML = html;
+      } else {
+        divProd.innerHTML = `<span class="mensaje-error">${prodResult.message}</span>`;
+      }
+
+      // Insumos
+      const insResult = await callBackend('getInsumos');
+      const divIns = document.getElementById('listaInsumos');
+      if (insResult.success) {
+        let html = `<table><tr><th>Nombre</th><th>Unidad</th><th>Costo unitario</th><th>Stock</th><th>Stock mínimo</th></tr>`;
+        insResult.data.forEach(i => {
+          html += `<tr><td>${i.nombre}</td><td>${i.unidad}</td><td>S/ ${i.costo_unitario}</td><td>${i.stock}</td><td>${i.stock_minimo}</td></tr>`;
+        });
+        html += `</table>`;
+        divIns.innerHTML = html;
+      } else {
+        divIns.innerHTML = `<span class="mensaje-error">${insResult.message}</span>`;
+      }
+    }
+
+    // ---- Ventas ----
+    let tipoVenta = 'puesto';
+
+    function setTipoVenta(tipo) {
+      tipoVenta = tipo;
+      document.getElementById('togglePuesto').classList.toggle('active', tipo === 'puesto');
+      document.getElementById('toggleDirecta').classList.toggle('active', tipo === 'directa');
+      const camposPuesto = document.getElementById('camposPuesto');
+      if (tipo === 'puesto') {
+        camposPuesto.style.display = 'flex';
+      } else {
+        camposPuesto.style.display = 'none';
+      }
+      calcularDevueltos();
+    }
+
+    async function cargarSelectsVenta() {
+      // Puntos
+      const puntos = await callBackend('getPuntos');
+      if (puntos.success) {
+        const select = document.getElementById('ventaPunto');
+        select.innerHTML = `<option value="">Seleccionar...</option>`;
+        puntos.data.forEach(p => {
+          select.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
+        });
+      }
+      // Productos
+      const prods = await callBackend('getProductos');
+      if (prods.success) {
+        const select = document.getElementById('ventaProducto');
+        select.innerHTML = `<option value="">Seleccionar...</option>`;
+        prods.data.forEach(p => {
+          select.innerHTML += `<option value="${p.id}" data-tajadas="${p.tajadas_por_entero}" data-precio-tajada="${p.precio_tajada}" data-precio-entero="${p.precio_entero}">${p.nombre}</option>`;
+        });
+      }
+    }
+
+    function calcularDevueltos() {
+      const productSelect = document.getElementById('ventaProducto');
+      const selected = productSelect.options[productSelect.selectedIndex];
+      if (!selected || !selected.value) {
+        document.getElementById('devueltosCalculado').textContent = '0';
+        document.getElementById('ingresoEstimado').textContent = '0.00';
+        return;
+      }
+      const tajadasPorEntero = parseFloat(selected.dataset.tajadas) || 0;
+      const precioTajada = parseFloat(selected.dataset.precioTajada) || 0;
+      const precioEntero = parseFloat(selected.dataset.precioEntero) || 0;
+
+      const eLlevados = parseFloat(document.getElementById('enterosLlevados').value) || 0;
+      const tLlevadas = parseFloat(document.getElementById('tajadasLlevadas').value) || 0;
+      const eVendidos = parseFloat(document.getElementById('enterosVendidos').value) || 0;
+      const tVendidas = parseFloat(document.getElementById('tajadasVendidas').value) || 0;
+
+      let totalLlevado = eLlevados * tajadasPorEntero + tLlevadas;
+      let totalVendido = eVendidos * tajadasPorEntero + tVendidas;
+      let devueltos = totalLlevado - totalVendido;
+      if (devueltos < 0) devueltos = 0;
+
+      document.getElementById('devueltosCalculado').textContent = devueltos;
+
+      let ingreso = 0;
+      if (tipoVenta === 'puesto') {
+        ingreso = eVendidos * precioEntero + tVendidas * precioTajada;
+      } else {
+        ingreso = eVendidos * precioEntero + tVendidas * precioTajada;
+      }
+      document.getElementById('ingresoEstimado').textContent = ingreso.toFixed(2);
+    }
+
+    async function registrarVenta() {
+      const idPunto = document.getElementById('ventaPunto').value;
+      const idProducto = document.getElementById('ventaProducto').value;
+      if (!idPunto || !idProducto) {
+        mostrarMensaje('mensajeVenta', 'Selecciona punto y producto.', 'error');
+        return;
+      }
+
+      const data = {
+        id_punto_venta: parseInt(idPunto),
+        id_producto: parseInt(idProducto),
+        tipo_venta: tipoVenta,
+        enteros_llevados: parseFloat(document.getElementById('enterosLlevados').value) || 0,
+        tajadas_llevadas: parseFloat(document.getElementById('tajadasLlevadas').value) || 0,
+        enteros_vendidos: parseFloat(document.getElementById('enterosVendidos').value) || 0,
+        tajadas_vendidas: parseFloat(document.getElementById('tajadasVendidas').value) || 0
+      };
+
+      const result = await callBackend('registrarVenta', data);
+      if (result.success) {
+        mostrarMensaje('mensajeVenta', `✅ Venta registrada. Devueltos: ${result.data.devuelto} tajadas. Ingreso: S/ ${result.data.ingreso.toFixed(2)}`, 'exito');
+        // Limpiar campos
+        document.getElementById('enterosLlevados').value = 0;
+        document.getElementById('tajadasLlevadas').value = 0;
+        document.getElementById('enterosVendidos').value = 0;
+        document.getElementById('tajadasVendidas').value = 0;
+        calcularDevueltos();
+      } else {
+        mostrarMensaje('mensajeVenta', `❌ ${result.message}`, 'error');
+      }
+    }
+
+    // ---- Producción ----
+    async function cargarSelectsProduccion() {
+      const prods = await callBackend('getProductos');
+      if (prods.success) {
+        const select = document.getElementById('prodProducto');
+        select.innerHTML = `<option value="">Seleccionar...</option>`;
+        prods.data.forEach(p => {
+          select.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
+        });
+      }
+    }
+
+    async function registrarProduccion() {
+      const idProducto = document.getElementById('prodProducto').value;
+      const cantidad = parseFloat(document.getElementById('prodCantidad').value);
+      if (!idProducto || cantidad <= 0) {
+        mostrarMensaje('mensajeProduccion', 'Selecciona producto y cantidad válida.', 'error');
+        return;
+      }
+      const data = {
+        id_producto: parseInt(idProducto),
+        cantidad_producida: cantidad
+      };
+      const result = await callBackend('registrarProduccion', data);
+      if (result.success) {
+        mostrarMensaje('mensajeProduccion', `✅ Producción registrada. Costo: S/ ${result.data.costo.toFixed(2)}`, 'exito');
+        document.getElementById('prodCantidad').value = 0;
+      } else {
+        mostrarMensaje('mensajeProduccion', `❌ ${result.message}`, 'error');
+      }
+    }
+
+    // ---- Compras ----
+    async function cargarSelectsCompra() {
+      const insumos = await callBackend('getInsumos');
+      if (insumos.success) {
+        const select = document.getElementById('compraInsumo');
+        select.innerHTML = `<option value="">Seleccionar...</option>`;
+        insumos.data.forEach(i => {
+          select.innerHTML += `<option value="${i.id}">${i.nombre}</option>`;
+        });
+      }
+    }
+
+    async function registrarCompra() {
+      const idInsumo = document.getElementById('compraInsumo').value;
+      const cantidad = parseFloat(document.getElementById('compraCantidad').value);
+      const costoUnitario = parseFloat(document.getElementById('compraCosto').value);
+      const proveedor = document.getElementById('compraProveedor').value.trim();
+      if (!idInsumo || cantidad <= 0 || costoUnitario <= 0) {
+        mostrarMensaje('mensajeCompra', 'Completa todos los campos correctamente.', 'error');
+        return;
+      }
+      const data = {
+        id_insumo: parseInt(idInsumo),
+        cantidad: cantidad,
+        costo_unitario: costoUnitario,
+        proveedor: proveedor
+      };
+      const result = await callBackend('registrarCompra', data);
+      if (result.success) {
+        mostrarMensaje('mensajeCompra', '✅ Compra registrada.', 'exito');
+        document.getElementById('compraCantidad').value = 0;
+        document.getElementById('compraCosto').value = 0;
+        document.getElementById('compraProveedor').value = '';
+      } else {
+        mostrarMensaje('mensajeCompra', `❌ ${result.message}`, 'error');
+      }
+    }
+
+    // ---- Gastos ----
+    async function registrarGasto() {
+      const concepto = document.getElementById('gastoConcepto').value.trim();
+      const categoria = document.getElementById('gastoCategoria').value.trim();
+      const monto = parseFloat(document.getElementById('gastoMonto').value);
+      if (!concepto || monto <= 0) {
+        mostrarMensaje('mensajeGasto', 'Ingresa concepto y monto válido.', 'error');
+        return;
+      }
+      const data = {
+        concepto: concepto,
+        categoria: categoria || 'General',
+        monto: monto
+      };
+      const result = await callBackend('registrarGasto', data);
+      if (result.success) {
+        mostrarMensaje('mensajeGasto', '✅ Gasto registrado.', 'exito');
+        document.getElementById('gastoConcepto').value = '';
+        document.getElementById('gastoCategoria').value = '';
+        document.getElementById('gastoMonto').value = 0;
+      } else {
+        mostrarMensaje('mensajeGasto', `❌ ${result.message}`, 'error');
+      }
+    }
+
+    // ---- Pérdidas ----
+    async function cargarSelectsPerdida() {
+      cambiarTipoPerdida();
+    }
+
+    async function cambiarTipoPerdida() {
+      const tipo = document.getElementById('perdidaTipo').value;
+      const select = document.getElementById('perdidaElemento');
+      select.innerHTML = `<option value="">Seleccionar...</option>`;
+      if (tipo === 'insumo') {
+        const insumos = await callBackend('getInsumos');
+        if (insumos.success) {
+          insumos.data.forEach(i => {
+            select.innerHTML += `<option value="${i.id}">${i.nombre}</option>`;
+          });
+        }
+      } else {
+        const prods = await callBackend('getProductos');
+        if (prods.success) {
+          prods.data.forEach(p => {
+            select.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
+          });
+        }
+      }
+    }
+
+    async function registrarPerdida() {
+      const tipo = document.getElementById('perdidaTipo').value;
+      const idRef = document.getElementById('perdidaElemento').value;
+      const cantidad = parseFloat(document.getElementById('perdidaCantidad').value);
+      const motivo = document.getElementById('perdidaMotivo').value.trim();
+      if (!idRef || cantidad <= 0) {
+        mostrarMensaje('mensajePerdida', 'Selecciona elemento y cantidad válida.', 'error');
+        return;
+      }
+      const data = {
+        tipo: tipo,
+        id_referencia: parseInt(idRef),
+        cantidad: cantidad,
+        motivo: motivo || 'Sin especificar'
+      };
+      const result = await callBackend('registrarPerdida', data);
+      if (result.success) {
+        mostrarMensaje('mensajePerdida', '✅ Pérdida registrada.', 'exito');
+        document.getElementById('perdidaCantidad').value = 0;
+        document.getElementById('perdidaMotivo').value = '';
+      } else {
+        mostrarMensaje('mensajePerdida', `❌ ${result.message}`, 'error');
+      }
+    }
+
+    // ---- Reportes ----
+    async function cargarReporte() {
+      const fecha = document.getElementById('reporteFecha').value;
+      if (!fecha) {
+        document.getElementById('reporteResultado').innerHTML = '<span class="mensaje-error">Selecciona una fecha.</span>';
+        return;
+      }
+      const result = await callBackend('getReporteDiario', { fecha });
+      const div = document.getElementById('reporteResultado');
+      if (result.success) {
+        div.innerHTML = `
+          <h3>Reporte del día ${result.data.fecha}</h3>
+          <p>💰 Ingresos: S/ ${result.data.totalIngresos.toFixed(2)}</p>
+          <p>🍰 Tajadas vendidas: ${result.data.totalVendido}</p>
+          <p>📦 Tajadas devueltas: ${result.data.totalDevuelto}</p>
+        `;
+      } else {
+        div.innerHTML = `<span class="mensaje-error">${result.message}</span>`;
+      }
+    }
+
+    // ---- Utilidades ----
+    function mostrarMensaje(id, texto, tipo) {
+      const div = document.getElementById(id);
+      const className = tipo === 'exito' ? 'mensaje-exito' : 'mensaje-error';
+      div.innerHTML = `<div class="${className}">${texto}</div>`;
+      setTimeout(() => { div.innerHTML = ''; }, 5000);
+    }
+
+    // ---- Cerrar Sesión ----
     function logout() {
       document.getElementById('dashboard').style.display = 'none';
       document.getElementById('loginContainer').style.display = 'flex';
@@ -218,18 +1092,11 @@
       document.getElementById('loginError').textContent = '';
     }
 
-    // --- FUNCIÓN PARA CARGAR DATOS INICIALES ---
+    // ---- Cargar datos iniciales (después del login) ----
     async function cargarDatosIniciales() {
       console.log('Cargando datos iniciales...');
-      // Puedes probar otras acciones como getPuntos
-      // const puntos = await callBackend('getPuntos');
-      // console.log('Puntos:', puntos);
+      // Puedes precargar algo si lo deseas
     }
-
-    // --- PERMITIR ENTER PARA LOGIN ---
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') document.getElementById('loginBtn').click();
-    });
   </script>
 
 </body>
