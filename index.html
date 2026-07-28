@@ -811,7 +811,7 @@
     function getBackendUrl() {
       const t = new Date().getTime(); // timestamp actual en milisegundos
       // Usar corsproxy.io con timestamp para evitar caché
-      return 'https://corsproxy.io/?' + encodeURIComponent(SCRIPT_URL) + '&_t=' + t;
+      return 'https://corsproxy.io/?url=' + encodeURIComponent(SCRIPT_URL) + '&_t=' + t;
     }
 
     // Modifica callBackend para usar siempre la URL fresca
