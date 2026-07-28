@@ -8,6 +8,41 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
+        /* ---------- VARIABLES (Modo claro/oscuro) ---------- */
+        :root {
+            --bg: #F2F2F2;
+            --card-bg: #F2F2F2;
+            --text: #333;
+            --text-light: #666;
+            --shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.7);
+            --shadow-inset: inset 3px 3px 8px rgba(0, 0, 0, 0.05), inset -3px -3px 8px rgba(255, 255, 255, 0.8);
+            --rosa: #F2B3D6;
+            --morado-claro: #B4A3D9;
+            --morado: #9C8BD9;
+            --amarillo: #F2E9BB;
+            --blanco: #F2F2F2;
+            --input-bg: #f0f0f0;
+            --border: #ddd;
+            --radius: 20px;
+            --transition: 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text: #e0e0e0;
+            --text-light: #aaa;
+            --shadow: 6px 6px 12px rgba(0, 0, 0, 0.5), -6px -6px 12px rgba(50, 50, 80, 0.3);
+            --shadow-inset: inset 3px 3px 8px rgba(0, 0, 0, 0.3), inset -3px -3px 8px rgba(80, 80, 120, 0.2);
+            --input-bg: #2a2a4a;
+            --border: #444;
+            --blanco: #1e2a4a;
+            --rosa: #c084b0;
+            --morado-claro: #8a7abf;
+            --morado: #7a6ab0;
+            --amarillo: #c4b87a;
+        }
+
         /* ---------- RESET Y ESTILOS GLOBALES ---------- */
         * {
             margin: 0;
@@ -16,34 +51,22 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
         }
         body {
-            background: #F2F2F2;
+            background: var(--bg);
             display: flex;
             min-height: 100vh;
-            color: #333;
-        }
-        :root {
-            --rosa: #F2B3D6;
-            --morado-claro: #B4A3D9;
-            --morado: #9C8BD9;
-            --amarillo: #F2E9BB;
-            --blanco: #F2F2F2;
-            --sombra: 6px 6px 12px rgba(0, 0, 0, 0.08),
-                -6px -6px 12px rgba(255, 255, 255, 0.7);
-            --sombra-inset: inset 3px 3px 8px rgba(0, 0, 0, 0.05),
-                inset -3px -3px 8px rgba(255, 255, 255, 0.8);
-            --radius: 20px;
-            --transition: 0.3s ease;
+            color: var(--text);
+            transition: background var(--transition), color var(--transition);
         }
 
         /* ---------- MENÚ LATERAL ---------- */
         .sidebar {
             width: 240px;
-            background: var(--blanco);
-            box-shadow: var(--sombra);
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
             padding: 20px 0;
             display: flex;
             flex-direction: column;
-            transition: transform var(--transition);
+            transition: transform var(--transition), background var(--transition);
             position: sticky;
             top: 0;
             height: 100vh;
@@ -62,15 +85,12 @@
             color: var(--rosa);
             margin-right: 8px;
         }
-        .sidebar nav {
-            flex: 1;
-        }
         .sidebar nav a {
             display: flex;
             align-items: center;
             gap: 12px;
             padding: 12px 24px;
-            color: #555;
+            color: var(--text-light);
             text-decoration: none;
             border-radius: 12px;
             margin: 4px 12px;
@@ -85,14 +105,14 @@
         .sidebar nav a:hover,
         .sidebar nav a.active {
             background: var(--amarillo);
-            box-shadow: var(--sombra-inset);
-            color: #222;
+            box-shadow: var(--shadow-inset);
+            color: var(--text);
         }
         .sidebar .user-info {
             padding: 16px 24px;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid var(--border);
             font-size: 0.9rem;
-            color: #666;
+            color: var(--text-light);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -101,21 +121,22 @@
             color: var(--morado);
         }
 
-        /* ---------- BOTÓN HAMBURGUESA (móvil) ---------- */
+        /* ---------- BOTÓN HAMBURGUESA ---------- */
         .hamburger {
             display: none;
             position: fixed;
             top: 16px;
             left: 16px;
             z-index: 1100;
-            background: var(--blanco);
+            background: var(--card-bg);
             border: none;
             font-size: 1.8rem;
             padding: 6px 12px;
             border-radius: 12px;
-            box-shadow: var(--sombra);
+            box-shadow: var(--shadow);
             cursor: pointer;
             color: var(--morado);
+            transition: background var(--transition);
         }
 
         /* ---------- CONTENIDO PRINCIPAL ---------- */
@@ -141,41 +162,50 @@
         .main .header .user-actions {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
         .main .header .user-actions span {
-            background: var(--blanco);
+            background: var(--card-bg);
             padding: 8px 16px;
             border-radius: 30px;
-            box-shadow: var(--sombra);
+            box-shadow: var(--shadow);
             font-weight: 500;
+            color: var(--text);
         }
         .main .header .user-actions button {
-            background: var(--blanco);
+            background: var(--card-bg);
             border: none;
             border-radius: 30px;
             padding: 8px 14px;
-            box-shadow: var(--sombra);
+            box-shadow: var(--shadow);
             cursor: pointer;
             transition: var(--transition);
             font-size: 0.9rem;
+            color: var(--text);
         }
         .main .header .user-actions button:hover {
-            box-shadow: var(--sombra-inset);
+            box-shadow: var(--shadow-inset);
+        }
+        .theme-toggle {
+            background: var(--card-bg) !important;
+            box-shadow: var(--shadow) !important;
+            border-radius: 30px !important;
+            padding: 8px 14px !important;
+            font-size: 1.1rem !important;
         }
 
-        /* ---------- TARJETAS (neumorphism) ---------- */
+        /* ---------- TARJETAS ---------- */
         .card {
-            background: var(--blanco);
+            background: var(--card-bg);
             border-radius: var(--radius);
             padding: 20px 24px;
-            box-shadow: var(--sombra);
+            box-shadow: var(--shadow);
             margin-bottom: 24px;
-            transition: var(--transition);
+            transition: background var(--transition), box-shadow var(--transition);
         }
         .card:hover {
-            box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.1),
-                -8px -8px 16px rgba(255, 255, 255, 0.8);
+            box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.1), -8px -8px 16px rgba(255, 255, 255, 0.8);
         }
         .card h2,
         .card h3 {
@@ -196,7 +226,7 @@
             display: block;
             font-weight: 500;
             margin-bottom: 4px;
-            color: #555;
+            color: var(--text-light);
         }
         .card input,
         .card select {
@@ -204,33 +234,34 @@
             padding: 10px 14px;
             border: none;
             border-radius: 30px;
-            background: #f0f0f0;
-            box-shadow: var(--sombra-inset);
+            background: var(--input-bg);
+            box-shadow: var(--shadow-inset);
             outline: none;
             font-size: 0.95rem;
             transition: var(--transition);
+            color: var(--text);
         }
         .card input:focus,
         .card select:focus {
-            background: #fff;
+            background: var(--card-bg);
             box-shadow: 0 0 0 2px var(--morado-claro);
         }
         .card button {
-            background: var(--blanco);
+            background: var(--card-bg);
             border: none;
             border-radius: 30px;
             padding: 10px 20px;
-            box-shadow: var(--sombra);
+            box-shadow: var(--shadow);
             cursor: pointer;
             transition: var(--transition);
             font-weight: 500;
-            color: #333;
+            color: var(--text);
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
         .card button:hover {
-            box-shadow: var(--sombra-inset);
+            box-shadow: var(--shadow-inset);
             background: var(--amarillo);
         }
         .card button.primary {
@@ -260,12 +291,12 @@
         .card table th {
             text-align: left;
             padding: 10px 6px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--border);
             color: var(--morado);
         }
         .card table td {
             padding: 10px 6px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border);
             vertical-align: middle;
         }
         .card table .actions {
@@ -278,13 +309,13 @@
             font-size: 0.75rem;
             border-radius: 20px;
             box-shadow: none;
-            background: #f0f0f0;
+            background: var(--input-bg);
         }
         .card table .actions button:hover {
             background: var(--amarillo);
         }
 
-        /* ---------- OCULTAR SECCIONES ---------- */
+        /* ---------- SECCIONES ---------- */
         .section {
             display: none;
         }
@@ -307,26 +338,24 @@
         .toast {
             padding: 14px 20px;
             border-radius: 16px;
-            box-shadow: var(--sombra);
-            background: var(--blanco);
+            box-shadow: var(--shadow);
+            background: var(--card-bg);
             transform: translateX(120%);
             animation: slideIn 0.4s forwards;
             display: flex;
             align-items: center;
             gap: 10px;
             font-weight: 500;
+            color: var(--text);
         }
         .toast.success {
             border-left: 6px solid #2e7d32;
-            color: #1e4620;
         }
         .toast.error {
             border-left: 6px solid #c62828;
-            color: #7f1d1d;
         }
         .toast.warning {
             border-left: 6px solid #f9a825;
-            color: #5d4e0b;
         }
         .toast i {
             font-size: 1.4rem;
@@ -364,7 +393,7 @@
             }
         }
 
-        /* ---------- MODAL ---------- */
+        /* ---------- MODALES ---------- */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -379,7 +408,7 @@
             display: flex;
         }
         .modal {
-            background: var(--blanco);
+            background: var(--card-bg);
             border-radius: var(--radius);
             padding: 28px 32px;
             max-width: 700px;
@@ -387,6 +416,7 @@
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            color: var(--text);
         }
         .modal .close-modal {
             float: right;
@@ -394,10 +424,10 @@
             border: none;
             font-size: 1.6rem;
             cursor: pointer;
-            color: #999;
+            color: var(--text-light);
         }
         .modal .close-modal:hover {
-            color: #333;
+            color: var(--text);
         }
 
         /* ---------- RESPONSIVE ---------- */
@@ -484,7 +514,7 @@
             width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #eee;
+            background: var(--input-bg);
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
@@ -514,7 +544,7 @@
         <div class="user-info">
             <i class="fas fa-user-circle"></i>
             <span id="sidebarUser">admin</span>
-            <span style="font-size:0.7rem; color:#999;">(admin)</span>
+            <span style="font-size:0.7rem; color:var(--text-light);">(admin)</span>
         </div>
     </aside>
 
@@ -526,6 +556,7 @@
             <h1 id="pageTitle">Dashboard</h1>
             <div class="user-actions">
                 <span id="headerUser"><i class="fas fa-user"></i> admin</span>
+                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
                 <button onclick="openProfile()"><i class="fas fa-user-edit"></i> Perfil</button>
                 <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
             </div>
@@ -913,8 +944,8 @@
         let puntosVenta = [];
         let pendientes = [];
         let productosLlevados = []; // temporal para el Paso 1
-        let editandoVentaId = null; // para editar retorno
-        let fiadoVentaId = null; // para pago de fiado
+        let editandoVentaId = null;
+        let fiadoVentaId = null;
 
         // ---------- INICIALIZACIÓN ----------
         document.addEventListener('DOMContentLoaded', function() {
@@ -937,7 +968,6 @@
                     e.preventDefault();
                     const section = this.dataset.section;
                     cambiarSeccion(section);
-                    // cerrar menú móvil
                     document.getElementById('sidebar').classList.remove('open');
                 });
             });
@@ -947,11 +977,33 @@
                     if (e.target === this) this.classList.remove('active');
                 });
             });
-            // Fecha por defecto
+            // Fechas por defecto
             const hoy = new Date().toISOString().slice(0, 10);
             document.getElementById('ventaFecha').value = hoy;
             document.getElementById('gastoFecha').value = hoy;
             document.getElementById('invFecha').value = hoy;
+            // Tema oscuro
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', function() {
+                const html = document.documentElement;
+                if (html.getAttribute('data-theme') === 'dark') {
+                    html.removeAttribute('data-theme');
+                    this.innerHTML = '<i class="fas fa-moon"></i>';
+                } else {
+                    html.setAttribute('data-theme', 'dark');
+                    this.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+            });
+            // Restaurar tema
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            // Guardar preferencia de tema
+            document.querySelector('#themeToggle').addEventListener('click', function() {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            });
         });
 
         // ---------- LOCALSTORAGE ----------
@@ -966,7 +1018,6 @@
                 pendientes = data.pendientes || [];
                 currentUser = data.currentUser || null;
             } else {
-                // Datos por defecto
                 ventas = [];
                 gastos = [];
                 inventario = [];
@@ -995,10 +1046,6 @@
                     { id: 1, nombre: 'Administrador', usuario: 'admin', password: 'admin123', rol: 'admin' }
                 ];
                 localStorage.setItem('reposteriaUsuarios', JSON.stringify(usuarios));
-            }
-            // Si no hay currentUser, intentar el primero
-            if (!currentUser && usuarios.length) {
-                // No autologin, mostrar login
             }
         }
 
@@ -1060,7 +1107,6 @@
             document.getElementById('section-' + id).classList.add('active');
             document.querySelector('.sidebar nav a[data-section="' + id + '"]').classList.add('active');
             document.getElementById('pageTitle').textContent = titulos[id] || id;
-            // Renderizar contenido específico
             if (id === 'dashboard') updateDashboard();
             if (id === 'ventas') actualizarVentasUI();
             if (id === 'historial') renderHistorial();
@@ -1070,15 +1116,12 @@
         }
 
         function inicializarUI() {
-            // Poblar selects de puntos
             actualizarSelectPuntos();
             actualizarSelectVentasPendientes();
-            // Fechas
             const hoy = new Date().toISOString().slice(0, 10);
             document.getElementById('ventaFecha').value = hoy;
             document.getElementById('gastoFecha').value = hoy;
             document.getElementById('invFecha').value = hoy;
-            // Meses
             const mesActual = hoy.slice(0, 7);
             document.getElementById('dashMonth').value = mesActual;
             document.getElementById('evolMonth').value = mesActual;
@@ -1251,7 +1294,6 @@
                     </tr>
                 `;
             });
-            // Actualizar gráfico de gastos
             actualizarGraficoGastos();
         }
 
@@ -1292,7 +1334,6 @@
         }
 
         function actualizarGraficoGastos() {
-            // Agrupar gastos por día (últimos 30 días)
             const hoy = new Date();
             const fechas = [];
             for (let i = 29; i >= 0; i--) {
@@ -1320,7 +1361,10 @@
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { display: true } }
+                    plugins: { legend: { display: true } },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
                 }
             });
         }
@@ -1334,7 +1378,6 @@
             if (!nombre || cantidad <= 0 || precio <= 0) {
                 return mostrarToast('Completa nombre, cantidad y precio de venta', 'warning');
             }
-            // Si no se ingresó costo, intentar buscarlo en inventario
             let costoFinal = costo;
             if (costoFinal === 0) {
                 const inv = inventario.find(item => item.producto.toLowerCase() === nombre.toLowerCase());
@@ -1346,7 +1389,6 @@
             document.getElementById('ventaProdCant').value = '1';
             document.getElementById('ventaProdPrecio').value = '';
             document.getElementById('ventaProdCosto').value = '';
-            // Autocompletar costo si existe en inventario (para próxima)
             const inv = inventario.find(item => item.producto.toLowerCase() === nombre.toLowerCase());
             if (inv) document.getElementById('ventaProdCosto').value = inv.precio;
         }
@@ -1390,7 +1432,6 @@
                         precio: p.precio_venta,
                         costo: p.costo
                     });
-                    // Eliminar de pendientes
                     pendientes = pendientes.filter(x => x.id !== id);
                 }
             });
@@ -1421,12 +1462,12 @@
             const container = document.getElementById('pendientesContainer');
             container.innerHTML = '';
             if (pendientes.length === 0) {
-                container.innerHTML = '<span style="color:#999;">No hay productos pendientes</span>';
+                container.innerHTML = '<span style="color:var(--text-light);">No hay productos pendientes</span>';
                 return;
             }
             pendientes.forEach(p => {
                 container.innerHTML += `
-                    <label style="display:flex;align-items:center;gap:6px;background:#f0f0f0;padding:4px 10px;border-radius:30px;">
+                    <label style="display:flex;align-items:center;gap:6px;background:var(--input-bg);padding:4px 10px;border-radius:30px;">
                         <input type="checkbox" class="pendiente-check" data-id="${p.id}" />
                         ${p.nombre} (${p.cantidad}) S/${p.precio_venta.toFixed(2)}
                     </label>
@@ -1497,7 +1538,6 @@
             const venta = ventas.find(v => v.id === id);
             if (!venta) return mostrarToast('Venta no encontrada', 'error');
             editandoVentaId = id;
-            // Llenar modal
             const container = document.getElementById('retornoDatos');
             container.innerHTML = `
                 <p><strong>Fecha:</strong> ${venta.fecha}</p>
@@ -1505,13 +1545,11 @@
                 <p><strong>Fondo:</strong> S/${venta.fondo.toFixed(2)}</p>
                 <p><strong>Total productos:</strong> S/${venta.productos.reduce((s,p) => s + p.cantidad * p.precio, 0).toFixed(2)}</p>
             `;
-            // Llenar campos de retorno (si ya tiene datos)
             document.getElementById('retYape').value = venta.retorno.yape || 0;
             document.getElementById('retEfectivo').value = venta.retorno.efectivo || 0;
             document.getElementById('retFiado').value = venta.retorno.fiado || 0;
             document.getElementById('retDescuento').value = venta.retorno.descuento || 0;
             document.getElementById('retMovilidad').value = venta.retorno.movilidad || 0;
-            // Productos no vendidos
             const containerNV = document.getElementById('retNoVendidosContainer');
             containerNV.innerHTML = '';
             venta.productos.forEach((p, idx) => {
@@ -1523,7 +1561,6 @@
                     </div>
                 `;
             });
-            // Eventos para recalcular
             document.querySelectorAll('#retNoVendidosContainer .nv-cant').forEach(inp => {
                 inp.addEventListener('input', calcularRetorno);
             });
@@ -1532,7 +1569,6 @@
             document.getElementById('retFiado').addEventListener('input', calcularRetorno);
             document.getElementById('retDescuento').addEventListener('input', calcularRetorno);
             document.getElementById('retMovilidad').addEventListener('input', calcularRetorno);
-            // Abrir modal
             document.getElementById('retornoModal').classList.add('active');
             calcularRetorno();
         }
@@ -1547,7 +1583,6 @@
             const fiado = parseFloat(document.getElementById('retFiado').value) || 0;
             const descuento = parseFloat(document.getElementById('retDescuento').value) || 0;
             const movilidad = parseFloat(document.getElementById('retMovilidad').value) || 0;
-            // No vendidos
             const inputsNV = document.querySelectorAll('#retNoVendidosContainer .nv-cant');
             const noVendidos = [];
             let totalNoVendido = 0;
@@ -1563,9 +1598,7 @@
             const totalVenta = venta.productos.reduce((s, p) => s + p.cantidad * p.precio, 0);
             const totalVendido = totalVenta - totalNoVendido;
             const ingresos = yape + efectivo + fiado;
-            // Diferencia en caja: (efectivo + yape) - (totalVendido - descuento - movilidad)
             const diferencia = (efectivo + yape) - (totalVendido - descuento - movilidad);
-            // Ganancia: ingresos - (costo de productos vendidos + movilidad + descuento)
             const costoVendido = venta.productos.reduce((s, p) => {
                 const vendidos = p.cantidad - (noVendidos.find(nv => nv.nombre === p.nombre)?.cantidad || 0);
                 return s + vendidos * p.costo;
@@ -1575,7 +1608,6 @@
             document.getElementById('retTotalNoVendido').textContent = totalNoVendido.toFixed(2);
             document.getElementById('retDiferencia').textContent = diferencia.toFixed(2);
             document.getElementById('retGanancia').textContent = ganancia.toFixed(2);
-            // Guardar en objeto temporal para luego guardar
             window._retornoData = { yape, efectivo, fiado, descuento, movilidad, noVendidos, totalVenta, totalNoVendido,
                 diferencia, ganancia };
         }
@@ -1587,7 +1619,6 @@
             if (!venta) return mostrarToast('Venta no encontrada', 'error');
             const data = window._retornoData;
             if (!data) return mostrarToast('Calcula primero', 'warning');
-            // Actualizar retorno
             venta.retorno.yape = data.yape;
             venta.retorno.efectivo = data.efectivo;
             venta.retorno.fiado = data.fiado;
@@ -1599,7 +1630,6 @@
             venta.retorno.diferencia = data.diferencia;
             venta.retorno.ganancia = data.ganancia;
             venta.estado = 'completado';
-            // Agregar productos no vendidos a la lista de pendientes
             data.noVendidos.forEach(nv => {
                 pendientes.push({
                     id: 'pnd' + Date.now() + Math.random(),
@@ -1621,7 +1651,6 @@
         function renderHistorial() {
             const filtro = document.getElementById('histFiltro').value;
             let list = ventas.filter(v => filtrarPorPeriodo(v.fecha, filtro));
-            // Ordenar por fecha descendente
             list.sort((a, b) => b.fecha.localeCompare(a.fecha));
             const tbody = document.getElementById('cuerpoHistorial');
             tbody.innerHTML = '';
@@ -1648,12 +1677,10 @@
                     </tr>
                 `;
             });
-            // Actualizar gráfico de historial
             actualizarGraficoHistorial(list);
         }
 
         function completarRetornoDesdeHistorial(id) {
-            // Seleccionar la venta en el select y abrir modal
             const select = document.getElementById('selectVentaPendiente');
             select.value = id;
             cargarRetornoModal();
@@ -1662,13 +1689,10 @@
         function editarVenta(id) {
             const venta = ventas.find(v => v.id === id);
             if (!venta) return mostrarToast('Venta no encontrada', 'error');
-            // Si está pendiente, redirigir a completar retorno
             if (venta.estado === 'pendiente') {
                 return completarRetornoDesdeHistorial(id);
             }
-            // Si está completado, permitir editar campos del retorno
             editandoVentaId = id;
-            // Llenar modal igual que retorno pero con datos existentes
             const container = document.getElementById('retornoDatos');
             container.innerHTML = `
                 <p><strong>Fecha:</strong> ${venta.fecha}</p>
@@ -1703,11 +1727,9 @@
             document.getElementById('retMovilidad').addEventListener('input', calcularRetorno);
             document.getElementById('retornoModal').classList.add('active');
             calcularRetorno();
-            // Cambiar texto del botón
             const btn = document.querySelector('#retornoModal .primary');
             btn.textContent = 'Actualizar Retorno';
             btn.onclick = function() {
-                // Reutilizar guardarRetorno pero actualizando en lugar de cambiar estado
                 const idEdit = editandoVentaId;
                 const ventaEdit = ventas.find(v => v.id === idEdit);
                 if (!ventaEdit) return;
@@ -1723,7 +1745,6 @@
                 ventaEdit.retorno.total_no_vendido = data.totalNoVendido;
                 ventaEdit.retorno.diferencia = data.diferencia;
                 ventaEdit.retorno.ganancia = data.ganancia;
-                // Actualizar pendientes: eliminar los anteriores de esta venta y agregar los nuevos
                 pendientes = pendientes.filter(p => p.ventaId !== ventaEdit.id);
                 data.noVendidos.forEach(nv => {
                     pendientes.push({
@@ -1740,7 +1761,6 @@
                 renderHistorial();
                 actualizarVentasUI();
                 mostrarToast('Retorno actualizado', 'success');
-                // Restaurar botón
                 btn.textContent = 'Completar Retorno';
                 btn.onclick = guardarRetorno;
             };
@@ -1748,7 +1768,6 @@
 
         function eliminarVenta(id) {
             if (!confirm('¿Eliminar esta venta?')) return;
-            // Eliminar pendientes asociados
             pendientes = pendientes.filter(p => p.ventaId !== id);
             ventas = ventas.filter(v => v.id !== id);
             guardarDatos();
@@ -1786,7 +1805,6 @@
 
         // ---------- GRÁFICO HISTORIAL ----------
         function actualizarGraficoHistorial(list) {
-            // Agrupar por día (últimos 30 días)
             const hoy = new Date();
             const fechas = [];
             for (let i = 29; i >= 0; i--) {
@@ -1815,7 +1833,10 @@
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { display: true } }
+                    plugins: { legend: { display: true } },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
                 }
             });
         }
@@ -1833,22 +1854,18 @@
             });
             const totalVentas = ventasFiltradas.reduce((s, v) => s + v.retorno.yape + v.retorno.efectivo + v.retorno.fiado,
             0);
+            const gastosGeneralesMes = gastos.filter(g => {
+                const f = new Date(g.fecha);
+                return f >= inicio && f <= fin;
+            }).reduce((s, g) => s + g.precio, 0);
             const totalGastos = ventasFiltradas.reduce((s, v) => s + v.retorno.movilidad + v.retorno.descuento, 0) +
-                gastos.filter(g => {
-                    const f = new Date(g.fecha);
-                    return f >= inicio && f <= fin;
-                }).reduce((s, g) => s + g.precio, 0);
-            const utilidad = ventasFiltradas.reduce((s, v) => s + v.retorno.ganancia, 0) -
-                gastos.filter(g => {
-                    const f = new Date(g.fecha);
-                    return f >= inicio && f <= fin;
-                }).reduce((s, g) => s + g.precio, 0);
+                gastosGeneralesMes;
+            const utilidad = ventasFiltradas.reduce((s, v) => s + v.retorno.ganancia, 0) - gastosGeneralesMes;
             const numVentas = ventasFiltradas.length;
             document.getElementById('dashTotalVentas').textContent = totalVentas.toFixed(2);
             document.getElementById('dashTotalGastos').textContent = totalGastos.toFixed(2);
             document.getElementById('dashUtilidad').textContent = utilidad.toFixed(2);
             document.getElementById('dashNumVentas').textContent = numVentas;
-            // Actualizar gráficos de evolución y productos por punto
             updateEvolChart();
             updateProdPuntoChart();
         }
@@ -1865,10 +1882,8 @@
                 const f = new Date(v.fecha);
                 return f >= inicio && f <= fin && v.estado === 'completado';
             });
-            // Agrupar por período
             let grupos = [];
             if (periodo === 'semanal') {
-                // 4 semanas aprox
                 const dias = Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
                 const semanas = Math.ceil(dias / 7);
                 for (let i = 0; i < semanas; i++) {
@@ -1885,7 +1900,7 @@
                     { label: '1-15', start: new Date(inicio), end: new Date(mitad) },
                     { label: '16-30/31', start: new Date(mitad.getFullYear(), mitad.getMonth(), 16), end: new Date(fin) }
                 ];
-            } else { // mensual
+            } else {
                 grupos = [{ label: mes, start: new Date(inicio), end: new Date(fin) }];
             }
             const labels = grupos.map(g => g.label);
@@ -1931,12 +1946,15 @@
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { display: true } }
+                    plugins: { legend: { display: true } },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
                 }
             });
         }
 
-        // ---------- GRÁFICO PRODUCTOS POR PUNTO DE VENTA ----------
+        // ---------- GRÁFICO PRODUCTOS POR PUNTO ----------
         function updateProdPuntoChart() {
             const periodo = document.getElementById('prodPuntoPeriod').value;
             const ahora = new Date();
@@ -1949,7 +1967,7 @@
                 inicio = new Date(ahora);
                 inicio.setDate(inicio.getDate() - 15);
                 fin = new Date(ahora);
-            } else { // mes
+            } else {
                 inicio = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
                 fin = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0);
             }
@@ -1957,12 +1975,10 @@
                 const f = new Date(v.fecha);
                 return f >= inicio && f <= fin && v.estado === 'completado';
             });
-            // Agrupar por punto de venta
             const mapa = {};
             ventasFiltradas.forEach(v => {
                 const key = v.puntoNombre;
                 if (!mapa[key]) mapa[key] = 0;
-                // Sumar cantidades vendidas (total llevado - no vendido)
                 v.productos.forEach(p => {
                     const nv = v.retorno.productos_no_vendidos.find(n => n.nombre === p.nombre);
                     const vendidos = p.cantidad - (nv ? nv.cantidad : 0);
@@ -1987,7 +2003,10 @@
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { display: false } }
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
                 }
             });
         }
@@ -2028,7 +2047,6 @@
             const usuarios = getUsuarios();
             const idx = usuarios.findIndex(u => u.id === currentUser.id);
             if (idx === -1) return mostrarToast('Usuario no encontrado', 'error');
-            // Verificar que el nuevo usuario no exista en otro registro
             const duplicado = usuarios.some((u, i) => i !== idx && u.usuario === usuario);
             if (duplicado) return mostrarToast('Ese nombre de usuario ya está en uso', 'warning');
             usuarios[idx].nombre = nombre;
@@ -2096,6 +2114,7 @@
         window.calcularRetorno = calcularRetorno;
         window.eliminarProductoLlevado = eliminarProductoLlevado;
         window.actualizarVentasUI = actualizarVentasUI;
+
         // Inicializar
         setTimeout(() => {
             if (currentUser) {
