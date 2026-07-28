@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,6 +13,7 @@
       box-sizing: border-box;
       font-family: 'Segoe UI', system-ui, sans-serif;
     }
+
     body {
       background: #F2F2F2;
       min-height: 100vh;
@@ -24,14 +26,16 @@
       background: #F2F2F2;
       border-radius: 30px;
       box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
-      border: 1px solid rgba(255,255,255,0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       transition: all 0.2s;
     }
+
     .neumorph-inset {
       background: #F2F2F2;
       border-radius: 20px;
       box-shadow: inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff;
     }
+
     .btn-soft {
       display: inline-block;
       padding: 12px 24px;
@@ -46,16 +50,20 @@
       transition: all 0.15s;
       text-align: center;
     }
+
     .btn-soft:active {
       box-shadow: inset 6px 6px 12px #d1d1d1, inset -6px -6px 12px #ffffff;
       transform: scale(0.96);
     }
+
     .btn-soft-secondary {
       background: #B4A3D9;
     }
+
     .btn-soft-danger {
       background: #e74c3c;
     }
+
     .btn-soft-success {
       background: #2ecc71;
     }
@@ -68,31 +76,38 @@
       min-height: 100vh;
       padding: 20px;
     }
+
     .login-card {
       width: 100%;
       max-width: 400px;
       padding: 40px 30px;
     }
+
     .login-card h1 {
       text-align: center;
       color: #9C8BD9;
       font-size: 2.2rem;
     }
+
     .login-card .subtitle {
       text-align: center;
       color: #B4A3D9;
       margin-bottom: 30px;
     }
+
     .input-group {
       margin-bottom: 20px;
     }
+
     .input-group label {
       display: block;
       margin-bottom: 6px;
       color: #555;
       font-weight: 500;
     }
-    .input-group input, .input-group select {
+
+    .input-group input,
+    .input-group select {
       width: 100%;
       padding: 14px 20px;
       border: none;
@@ -103,9 +118,12 @@
       outline: none;
       transition: all 0.3s;
     }
-    .input-group input:focus, .input-group select:focus {
+
+    .input-group input:focus,
+    .input-group select:focus {
       box-shadow: inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff;
     }
+
     .error-msg {
       color: #e74c3c;
       text-align: center;
@@ -129,15 +147,17 @@
       height: 100%;
       background: #F2F2F2;
       padding: 20px 15px;
-      box-shadow: 4px 0 16px rgba(0,0,0,0.05);
+      box-shadow: 4px 0 16px rgba(0, 0, 0, 0.05);
       transition: transform 0.3s ease;
       z-index: 1000;
       overflow-y: auto;
       transform: translateX(-100%);
     }
+
     .sidebar.open {
       transform: translateX(0);
     }
+
     .sidebar .brand {
       display: flex;
       align-items: center;
@@ -148,9 +168,11 @@
       margin-bottom: 30px;
       padding-left: 10px;
     }
+
     .sidebar .brand span {
       font-size: 1.8rem;
     }
+
     .sidebar .menu-item {
       display: flex;
       align-items: center;
@@ -164,15 +186,18 @@
       transition: all 0.2s;
       background: transparent;
     }
+
     .sidebar .menu-item:hover {
       background: rgba(180, 163, 217, 0.2);
       box-shadow: inset 2px 2px 6px #d1d1d1, inset -2px -2px 6px #ffffff;
     }
+
     .sidebar .menu-item.active {
       background: #F2B3D6;
       color: #fff;
       box-shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
     }
+
     .sidebar .menu-item .icon {
       font-size: 1.4rem;
       width: 30px;
@@ -186,6 +211,7 @@
       transition: margin-left 0.3s;
       flex: 1;
     }
+
     .topbar {
       display: flex;
       align-items: center;
@@ -194,6 +220,7 @@
       flex-wrap: wrap;
       gap: 10px;
     }
+
     .topbar .hamburger {
       font-size: 2rem;
       cursor: pointer;
@@ -202,11 +229,13 @@
       color: #9C8BD9;
       padding: 6px 12px;
     }
+
     .topbar .user-info {
       display: flex;
       align-items: center;
       gap: 15px;
     }
+
     .topbar .user-info .logout-btn {
       background: #e74c3c;
       padding: 8px 18px;
@@ -222,9 +251,11 @@
     .page {
       display: none;
     }
+
     .page.active {
       display: block;
     }
+
     .page-title {
       font-size: 1.8rem;
       color: #9C8BD9;
@@ -237,10 +268,11 @@
       border-radius: 30px;
       padding: 20px;
       box-shadow: 12px 12px 24px #d1d1d1, -12px -12px 24px #ffffff;
-      border: 1px solid rgba(255,255,255,0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       margin-bottom: 20px;
       overflow-x: auto;
     }
+
     .card-header {
       display: flex;
       justify-content: space-between;
@@ -249,23 +281,29 @@
       gap: 10px;
       margin-bottom: 15px;
     }
+
     .card-header h3 {
       color: #555;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.9rem;
     }
-    th, td {
+
+    th,
+    td {
       padding: 10px 8px;
       text-align: left;
       border-bottom: 1px solid #ddd;
     }
+
     th {
       color: #9C8BD9;
       font-weight: 600;
     }
+
     tr:hover {
       background: rgba(180, 163, 217, 0.1);
     }
@@ -278,15 +316,17 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0, 0, 0, 0.4);
       z-index: 2000;
       justify-content: center;
       align-items: center;
       padding: 20px;
     }
+
     .modal-overlay.open {
       display: flex;
     }
+
     .modal-card {
       background: #F2F2F2;
       border-radius: 30px;
@@ -295,20 +335,24 @@
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 20px 20px 40px rgba(0,0,0,0.2);
-      border: 1px solid rgba(255,255,255,0.4);
+      box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
     }
+
     .modal-card h3 {
       color: #9C8BD9;
       margin-bottom: 20px;
     }
+
     .modal-card .input-group {
       margin-bottom: 16px;
     }
+
     .modal-card .btn-soft {
       width: 100%;
       margin-top: 10px;
     }
+
     .modal-card .close-modal {
       float: right;
       background: none;
@@ -325,6 +369,7 @@
       align-items: center;
       margin: 15px 0;
     }
+
     .switch-container label {
       display: flex;
       align-items: center;
@@ -332,16 +377,19 @@
       cursor: pointer;
       font-weight: 500;
     }
+
     .switch-container input[type="radio"] {
       accent-color: #F2B3D6;
       width: 18px;
       height: 18px;
     }
+
     .campo-doble {
       display: flex;
       gap: 15px;
       flex-wrap: wrap;
     }
+
     .campo-doble .input-group {
       flex: 1;
       min-width: 120px;
@@ -356,57 +404,73 @@
         height: 100vh;
         flex-shrink: 0;
       }
+
       .main-content {
         margin-left: 260px;
       }
+
       .topbar .hamburger {
         display: none;
       }
     }
+
     @media (max-width: 767px) {
       .sidebar {
         width: 280px;
       }
+
       .main-content {
         margin-left: 0;
         padding: 15px;
       }
+
       .topbar {
         flex-direction: row;
       }
+
       .topbar .hamburger {
         display: block;
       }
+
       .campo-doble {
         flex-direction: column;
       }
+
       .modal-card {
         padding: 20px;
         margin: 10px;
       }
+
       table {
         font-size: 0.75rem;
       }
-      th, td {
+
+      th,
+      td {
         padding: 6px 4px;
       }
+
       .card {
         padding: 12px;
       }
     }
+
     @media (max-width: 480px) {
       .login-card {
         padding: 25px 18px;
       }
+
       .page-title {
         font-size: 1.4rem;
       }
+
       .sidebar .brand {
         font-size: 1.2rem;
       }
     }
   </style>
 </head>
+
 <body>
 
   <!-- ===================== LOGIN ===================== -->
@@ -441,7 +505,8 @@
       <div class="menu-item" data-page="gastosPage"><span class="icon">💸</span> Gastos</div>
       <div class="menu-item" data-page="perdidasPage"><span class="icon">⚠️</span> Pérdidas</div>
       <div class="menu-item" data-page="reportesPage"><span class="icon">📈</span> Reportes</div>
-      <div class="menu-item" style="margin-top:30px;" onclick="logout()"><span class="icon">🚪</span> Cerrar Sesión</div>
+      <div class="menu-item" style="margin-top:30px;" onclick="logout()"><span class="icon">🚪</span> Cerrar Sesión
+      </div>
     </nav>
 
     <!-- CONTENIDO -->
@@ -459,11 +524,15 @@
       <div id="dashboardPage" class="page active">
         <div class="page-title">📊 Dashboard</div>
         <div class="card">
-          <div class="card-header"><h3>Resumen del día</h3></div>
+          <div class="card-header">
+            <h3>Resumen del día</h3>
+          </div>
           <div id="dashboardResumen">Cargando...</div>
         </div>
         <div class="card">
-          <div class="card-header"><h3>Productos con bajo stock</h3></div>
+          <div class="card-header">
+            <h3>Productos con bajo stock</h3>
+          </div>
           <div id="bajoStock"></div>
         </div>
       </div>
@@ -472,15 +541,20 @@
         <div class="page-title">📦 Inventario</div>
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
           <button class="btn-soft" onclick="mostrarModal('modalProducto', null)">➕ Agregar Producto</button>
-          <button class="btn-soft btn-soft-secondary" onclick="mostrarModal('modalInsumo', null)">➕ Agregar Insumo</button>
+          <button class="btn-soft btn-soft-secondary" onclick="mostrarModal('modalInsumo', null)">➕ Agregar
+            Insumo</button>
           <button class="btn-soft btn-soft-secondary" onclick="cargarPuntos()">📍 Gestionar Puntos</button>
         </div>
         <div class="card">
-          <div class="card-header"><h3>Productos</h3></div>
+          <div class="card-header">
+            <h3>Productos</h3>
+          </div>
           <div id="tablaProductos"></div>
         </div>
         <div class="card">
-          <div class="card-header"><h3>Insumos</h3></div>
+          <div class="card-header">
+            <h3>Insumos</h3>
+          </div>
           <div id="tablaInsumos"></div>
         </div>
       </div>
@@ -488,7 +562,9 @@
       <div id="ventasPage" class="page">
         <div class="page-title">🧾 Ventas</div>
         <div class="card">
-          <div class="card-header"><h3>Registrar Venta</h3></div>
+          <div class="card-header">
+            <h3>Registrar Venta</h3>
+          </div>
           <form id="formVenta">
             <div class="input-group">
               <label>📌 Punto de Venta</label>
@@ -504,25 +580,33 @@
             </div>
             <div id="camposPuesto">
               <div class="campo-doble">
-                <div class="input-group"><label>Enteros llevados</label><input type="number" id="el" value="0" step="1"></div>
-                <div class="input-group"><label>Tajadas llevadas</label><input type="number" id="tl" value="0" step="1"></div>
+                <div class="input-group"><label>Enteros llevados</label><input type="number" id="el" value="0" step="1">
+                </div>
+                <div class="input-group"><label>Tajadas llevadas</label><input type="number" id="tl" value="0" step="1">
+                </div>
               </div>
               <div class="campo-doble">
-                <div class="input-group"><label>Enteros vendidos</label><input type="number" id="ev" value="0" step="1"></div>
-                <div class="input-group"><label>Tajadas vendidas</label><input type="number" id="tv" value="0" step="1"></div>
+                <div class="input-group"><label>Enteros vendidos</label><input type="number" id="ev" value="0" step="1">
+                </div>
+                <div class="input-group"><label>Tajadas vendidas</label><input type="number" id="tv" value="0" step="1">
+                </div>
               </div>
             </div>
             <div id="camposDirecta" style="display:none;">
               <div class="campo-doble">
-                <div class="input-group"><label>Enteros vendidos</label><input type="number" id="evd" value="0" step="1"></div>
-                <div class="input-group"><label>Tajadas vendidas</label><input type="number" id="tvd" value="0" step="1"></div>
+                <div class="input-group"><label>Enteros vendidos</label><input type="number" id="evd" value="0"
+                    step="1"></div>
+                <div class="input-group"><label>Tajadas vendidas</label><input type="number" id="tvd" value="0"
+                    step="1"></div>
               </div>
             </div>
             <button type="submit" class="btn-soft" style="width:100%;">Registrar Venta</button>
           </form>
         </div>
         <div class="card">
-          <div class="card-header"><h3>Historial de Ventas</h3></div>
+          <div class="card-header">
+            <h3>Historial de Ventas</h3>
+          </div>
           <div id="tablaVentas"></div>
         </div>
       </div>
@@ -530,15 +614,20 @@
       <div id="produccionPage" class="page">
         <div class="page-title">🏭 Producción</div>
         <div class="card">
-          <div class="card-header"><h3>Registrar Producción</h3></div>
+          <div class="card-header">
+            <h3>Registrar Producción</h3>
+          </div>
           <form id="formProduccion">
             <div class="input-group"><label>🍰 Producto</label><select id="prodProducto" required></select></div>
-            <div class="input-group"><label>Cantidad producida (en tajadas)</label><input type="number" id="prodCantidad" required step="1"></div>
+            <div class="input-group"><label>Cantidad producida (en tajadas)</label><input type="number"
+                id="prodCantidad" required step="1"></div>
             <button type="submit" class="btn-soft" style="width:100%;">Registrar Producción</button>
           </form>
         </div>
         <div class="card">
-          <div class="card-header"><h3>Historial de Producción</h3></div>
+          <div class="card-header">
+            <h3>Historial de Producción</h3>
+          </div>
           <div id="tablaProduccion"></div>
         </div>
       </div>
@@ -546,17 +635,24 @@
       <div id="comprasPage" class="page">
         <div class="page-title">📥 Compras</div>
         <div class="card">
-          <div class="card-header"><h3>Registrar Compra</h3></div>
+          <div class="card-header">
+            <h3>Registrar Compra</h3>
+          </div>
           <form id="formCompra">
             <div class="input-group"><label>📦 Insumo</label><select id="compraInsumo" required></select></div>
-            <div class="input-group"><label>Cantidad</label><input type="number" id="compraCantidad" required step="1"></div>
-            <div class="input-group"><label>Costo unitario</label><input type="number" id="compraCosto" required step="0.01"></div>
-            <div class="input-group"><label>Proveedor</label><input type="text" id="compraProveedor" placeholder="Opcional"></div>
+            <div class="input-group"><label>Cantidad</label><input type="number" id="compraCantidad" required step="1">
+            </div>
+            <div class="input-group"><label>Costo unitario</label><input type="number" id="compraCosto" required
+                step="0.01"></div>
+            <div class="input-group"><label>Proveedor</label><input type="text" id="compraProveedor"
+                placeholder="Opcional"></div>
             <button type="submit" class="btn-soft" style="width:100%;">Registrar Compra</button>
           </form>
         </div>
         <div class="card">
-          <div class="card-header"><h3>Historial de Compras</h3></div>
+          <div class="card-header">
+            <h3>Historial de Compras</h3>
+          </div>
           <div id="tablaCompras"></div>
         </div>
       </div>
@@ -564,16 +660,22 @@
       <div id="gastosPage" class="page">
         <div class="page-title">💸 Gastos</div>
         <div class="card">
-          <div class="card-header"><h3>Registrar Gasto</h3></div>
+          <div class="card-header">
+            <h3>Registrar Gasto</h3>
+          </div>
           <form id="formGasto">
             <div class="input-group"><label>Concepto</label><input type="text" id="gastoConcepto" required></div>
-            <div class="input-group"><label>Categoría</label><input type="text" id="gastoCategoria" placeholder="Ej: Servicios, Movilidad"></div>
-            <div class="input-group"><label>Monto</label><input type="number" id="gastoMonto" required step="0.01"></div>
+            <div class="input-group"><label>Categoría</label><input type="text" id="gastoCategoria"
+                placeholder="Ej: Servicios, Movilidad"></div>
+            <div class="input-group"><label>Monto</label><input type="number" id="gastoMonto" required step="0.01">
+            </div>
             <button type="submit" class="btn-soft" style="width:100%;">Registrar Gasto</button>
           </form>
         </div>
         <div class="card">
-          <div class="card-header"><h3>Historial de Gastos</h3></div>
+          <div class="card-header">
+            <h3>Historial de Gastos</h3>
+          </div>
           <div id="tablaGastos"></div>
         </div>
       </div>
@@ -581,7 +683,9 @@
       <div id="perdidasPage" class="page">
         <div class="page-title">⚠️ Pérdidas</div>
         <div class="card">
-          <div class="card-header"><h3>Registrar Pérdida</h3></div>
+          <div class="card-header">
+            <h3>Registrar Pérdida</h3>
+          </div>
           <form id="formPerdida">
             <div class="input-group"><label>Tipo</label>
               <select id="perdidaTipo" required>
@@ -590,14 +694,19 @@
               </select>
             </div>
             <div class="input-group"><label>Ítem</label><select id="perdidaItem" required></select></div>
-            <div class="input-group"><label>Cantidad</label><input type="number" id="perdidaCantidad" required step="1"></div>
-            <div class="input-group"><label>Motivo</label><input type="text" id="perdidaMotivo" placeholder="Ej: Vencimiento, Daño"></div>
-            <div class="input-group"><label>Valor perdido (opcional)</label><input type="number" id="perdidaValor" step="0.01"></div>
+            <div class="input-group"><label>Cantidad</label><input type="number" id="perdidaCantidad" required step="1">
+            </div>
+            <div class="input-group"><label>Motivo</label><input type="text" id="perdidaMotivo"
+                placeholder="Ej: Vencimiento, Daño"></div>
+            <div class="input-group"><label>Valor perdido (opcional)</label><input type="number" id="perdidaValor"
+                step="0.01"></div>
             <button type="submit" class="btn-soft" style="width:100%;">Registrar Pérdida</button>
           </form>
         </div>
         <div class="card">
-          <div class="card-header"><h3>Historial de Pérdidas</h3></div>
+          <div class="card-header">
+            <h3>Historial de Pérdidas</h3>
+          </div>
           <div id="tablaPerdidas"></div>
         </div>
       </div>
@@ -605,16 +714,22 @@
       <div id="reportesPage" class="page">
         <div class="page-title">📈 Reportes</div>
         <div class="card">
-          <div class="card-header"><h3>Filtros</h3></div>
+          <div class="card-header">
+            <h3>Filtros</h3>
+          </div>
           <div style="display:flex; flex-wrap:wrap; gap:15px; align-items:end;">
             <div class="input-group"><label>Fecha inicio</label><input type="date" id="repFechaInicio"></div>
             <div class="input-group"><label>Fecha fin</label><input type="date" id="repFechaFin"></div>
-            <div class="input-group"><label>Punto</label><select id="repPunto"><option value="">Todos</option></select></div>
+            <div class="input-group"><label>Punto</label><select id="repPunto">
+                <option value="">Todos</option>
+              </select></div>
             <button class="btn-soft" onclick="cargarReporte()">Generar</button>
           </div>
         </div>
         <div class="card">
-          <div class="card-header"><h3>Resultados</h3></div>
+          <div class="card-header">
+            <h3>Resultados</h3>
+          </div>
           <div id="reporteResultados"></div>
         </div>
       </div>
@@ -631,11 +746,16 @@
       <form id="formProducto">
         <input type="hidden" id="prodId">
         <div class="input-group"><label>Nombre</label><input type="text" id="prodNombre" required></div>
-        <div class="input-group"><label>Tajadas por entero</label><input type="number" id="prodTajadas" step="1" required></div>
-        <div class="input-group"><label>Precio tajada</label><input type="number" id="prodPrecioT" step="0.01" required></div>
-        <div class="input-group"><label>Precio entero</label><input type="number" id="prodPrecioE" step="0.01" required></div>
-        <div class="input-group"><label>Stock inicial</label><input type="number" id="prodStock" step="1" value="0"></div>
-        <div class="input-group"><label>Receta (JSON: {"id_insumo": cantidad_por_tajada})</label><input type="text" id="prodReceta" placeholder='{"1":0.5, "2":0.2}'></div>
+        <div class="input-group"><label>Tajadas por entero</label><input type="number" id="prodTajadas" step="1"
+            required></div>
+        <div class="input-group"><label>Precio tajada</label><input type="number" id="prodPrecioT" step="0.01" required>
+        </div>
+        <div class="input-group"><label>Precio entero</label><input type="number" id="prodPrecioE" step="0.01" required>
+        </div>
+        <div class="input-group"><label>Stock inicial</label><input type="number" id="prodStock" step="1" value="0">
+        </div>
+        <div class="input-group"><label>Receta (JSON: {"id_insumo": cantidad_por_tajada})</label><input type="text"
+            id="prodReceta" placeholder='{"1":0.5, "2":0.2}'></div>
         <button type="submit" class="btn-soft">Guardar</button>
       </form>
     </div>
@@ -649,10 +769,14 @@
       <form id="formInsumo">
         <input type="hidden" id="insumoId">
         <div class="input-group"><label>Nombre</label><input type="text" id="insumoNombre" required></div>
-        <div class="input-group"><label>Unidad</label><input type="text" id="insumoUnidad" placeholder="kg, litro, unidad"></div>
-        <div class="input-group"><label>Costo unitario</label><input type="number" id="insumoCosto" step="0.01" required></div>
-        <div class="input-group"><label>Stock actual</label><input type="number" id="insumoStock" step="1" value="0"></div>
-        <div class="input-group"><label>Stock mínimo</label><input type="number" id="insumoStockMin" step="1" value="0"></div>
+        <div class="input-group"><label>Unidad</label><input type="text" id="insumoUnidad"
+            placeholder="kg, litro, unidad"></div>
+        <div class="input-group"><label>Costo unitario</label><input type="number" id="insumoCosto" step="0.01"
+            required></div>
+        <div class="input-group"><label>Stock actual</label><input type="number" id="insumoStock" step="1" value="0">
+        </div>
+        <div class="input-group"><label>Stock mínimo</label><input type="number" id="insumoStockMin" step="1" value="0">
+        </div>
         <button type="submit" class="btn-soft">Guardar</button>
       </form>
     </div>
@@ -665,7 +789,8 @@
       <h3>Gestionar Puntos de Venta</h3>
       <div id="listaPuntos"></div>
       <div style="display:flex; gap:10px; margin-top:15px;">
-        <input type="text" id="nuevoPuntoInput" placeholder="Nuevo punto" style="flex:1; padding:10px; border-radius:20px; border:1px solid #ddd;">
+        <input type="text" id="nuevoPuntoInput" placeholder="Nuevo punto"
+          style="flex:1; padding:10px; border-radius:20px; border:1px solid #ddd;">
         <button class="btn-soft" onclick="agregarPunto()">Agregar</button>
       </div>
     </div>
@@ -676,36 +801,38 @@
     // CONFIGURACIÓN - REEMPLAZA CON TU URL DE APPS SCRIPT
     // ================================================================
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyAs6OTmTziZ7eZA0B4pb_DReyaBLnCkWj34KMdEn3i6FNna6uIpgpkdNE1e1R4Ha6/exec';
-    const BACKEND_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(SCRIPT_URL) + '&_t=' + t;
+
 
     // ================================================================
     // UTILIDADES DE COMUNICACIÓN
     // ================================================================
-// Función para obtener la URL con timestamp anti-caché
-function getBackendUrl() {
-  const t = new Date().getTime(); // timestamp actual en milisegundos
-  return 'https://corsproxy.io/?' + encodeURIComponent(SCRIPT_URL) + '&_t=' + t;
-}
 
-// Modifica callBackend para usar siempre la URL fresca
-async function callBackend(action, data = {}) {
-  try {
-    const payload = { action, ...data };
-    const url = getBackendUrl(); // cada vez una URL diferente
-    console.log('📤 Enviando a:', url);
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    if (!response.ok) throw new Error('HTTP error ' + response.status);
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error('callBackend error:', error);
-    return { success: false, message: error.message };
-  }
-}
+    // Función para obtener la URL con timestamp anti-caché
+    function getBackendUrl() {
+      const t = new Date().getTime(); // timestamp actual en milisegundos
+      // Usar corsproxy.io con timestamp para evitar caché
+      return 'https://corsproxy.io/?' + encodeURIComponent(SCRIPT_URL) + '&_t=' + t;
+    }
+
+    // Modifica callBackend para usar siempre la URL fresca
+    async function callBackend(action, data = {}) {
+      try {
+        const payload = { action, ...data };
+        const url = getBackendUrl(); // cada vez una URL diferente
+        console.log('📤 Enviando a:', url);
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error('HTTP error ' + response.status);
+        const result = await response.json();
+        return result;
+      } catch (error) {
+        console.error('callBackend error:', error);
+        return { success: false, message: error.message };
+      }
+    }
 
     // ================================================================
     // LOGIN
@@ -751,7 +878,7 @@ async function callBackend(action, data = {}) {
       document.getElementById('sidebar').classList.toggle('open');
     });
     document.querySelectorAll('.sidebar .menu-item[data-page]').forEach(el => {
-      el.addEventListener('click', function() {
+      el.addEventListener('click', function () {
         const page = this.dataset.page;
         mostrarPagina(page);
         if (window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open');
@@ -1074,7 +1201,7 @@ async function callBackend(action, data = {}) {
     // VENTAS (interruptor puesto/directa)
     // ================================================================
     document.querySelectorAll('input[name="tipoVenta"]').forEach(radio => {
-      radio.addEventListener('change', function() {
+      radio.addEventListener('change', function () {
         if (this.value === 'puesto') {
           document.getElementById('camposPuesto').style.display = 'block';
           document.getElementById('camposDirecta').style.display = 'none';
@@ -1314,10 +1441,10 @@ async function callBackend(action, data = {}) {
         const insRes = await callBackend('getInsumos');
         const prodRes = await callBackend('getProductos');
         const map = {};
-        if (insRes.success) insRes.data.forEach(i => map['insumo_'+i.id] = i.nombre);
-        if (prodRes.success) prodRes.data.forEach(p => map['producto_'+p.id] = p.nombre);
+        if (insRes.success) insRes.data.forEach(i => map['insumo_' + i.id] = i.nombre);
+        if (prodRes.success) prodRes.data.forEach(p => map['producto_' + p.id] = p.nombre);
         res.data.forEach(p => {
-          const nombre = map[p.tipo+'_'+p.id_referencia] || p.id_referencia;
+          const nombre = map[p.tipo + '_' + p.id_referencia] || p.id_referencia;
           html += `<tr><td>${p.fecha}</td><td>${p.tipo}</td><td>${nombre}</td><td>${p.cantidad}</td><td>${p.motivo}</td><td>S/ ${p.valor.toFixed(2)}</td></tr>`;
         });
         html += '</table>';
@@ -1366,10 +1493,11 @@ async function callBackend(action, data = {}) {
     // ================================================================
     // Cerrar modales al hacer clic fuera
     document.querySelectorAll('.modal-overlay').forEach(m => {
-      m.addEventListener('click', function(e) {
+      m.addEventListener('click', function (e) {
         if (e.target === this) this.classList.remove('open');
       });
     });
   </script>
 </body>
+
 </html>
