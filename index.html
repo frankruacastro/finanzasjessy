@@ -681,22 +681,31 @@
     // ================================================================
     // UTILIDADES DE COMUNICACIÓN
     // ================================================================
-    async function callBackend(action, data = {}) {
-      try {
-        const payload = { action, ...data };
-        const response = await fetch(BACKEND_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (!response.ok) throw new Error('HTTP error ' + response.status);
-        const result = await response.json();
-        return result;
-      } catch (error) {
-        console.error('callBackend error:', error);
-        return { success: false, message: error.message };
-      }
-    }
+// Función para obtener la URL con timestamp anti-caché
+function getBackendUrl() {
+  const t = new Date().getTime(); // timestamp actual en milisegundos
+  return 'https://corsproxy.io/?' + encodeURIComponent(SCRIPT_URL) + '&_t=' + t;
+}
+
+// Modifica callBackend para usar siempre la URL fresca
+async function callBackend(action, data = {}) {
+  try {
+    const payload = { action, ...data };
+    const url = getBackendUrl(); // cada vez una URL diferente
+    console.log('📤 Enviando a:', url);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) throw new Error('HTTP error ' + response.status);
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('callBackend error:', error);
+    return { success: false, message: error.message };
+  }
+}
 
     // ================================================================
     // LOGIN
