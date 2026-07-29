@@ -1,1904 +1,2539 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión Repostería</title>
-  <!-- Chart.js y Font Awesome desde CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    /* ---------- RESET Y BASE ---------- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-    }
-    body {
-      background: #F2F2F2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 12px;
-    }
-    #app {
-      width: 100%;
-      max-width: 1440px;
-      min-height: 90vh;
-      background: #F2F2F2;
-      border-radius: 48px;
-      box-shadow: 20px 20px 60px #d0d0d0, -20px -20px 60px #ffffff;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repostería - Gestión Financiera</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #F2F2F2;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s;
+        }
 
-    /* ---------- SOFT UI / NEUMORPHISM ---------- */
-    .neu {
-      background: #F2F2F2;
-      border-radius: 32px;
-      box-shadow: 12px 12px 24px #d0d0d0, -12px -12px 24px #ffffff;
-      padding: 20px;
-      transition: all 0.2s ease;
-    }
-    .neu-inset {
-      background: #F2F2F2;
-      border-radius: 32px;
-      box-shadow: inset 6px 6px 12px #d0d0d0, inset -6px -6px 12px #ffffff;
-      padding: 16px;
-    }
-    .btn-neu {
-      background: #F2F2F2;
-      border: none;
-      border-radius: 40px;
-      padding: 10px 24px;
-      font-weight: 600;
-      color: #4a3b6b;
-      box-shadow: 6px 6px 14px #d0d0d0, -6px -6px 14px #ffffff;
-      cursor: pointer;
-      transition: 0.15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.95rem;
-    }
-    .btn-neu:active {
-      box-shadow: inset 6px 6px 14px #d0d0d0, inset -6px -6px 14px #ffffff;
-      transform: scale(0.97);
-    }
-    .btn-neu-primary {
-      background: #B4A3D9;
-      color: #2d1f4a;
-      box-shadow: 6px 6px 14px #a094b5, -6px -6px 14px #f2ecff;
-    }
-    .btn-neu-primary:active {
-      box-shadow: inset 6px 6px 14px #8f7db3, inset -6px -6px 14px #d9cfff;
-    }
-    .btn-neu-danger {
-      background: #f7b2b2;
-      color: #7a2e2e;
-    }
-    .btn-neu-success {
-      background: #b2e0b2;
-      color: #1f5a1f;
-    }
-    .btn-neu-warning {
-      background: #f7e8a1;
-      color: #6b5a1a;
-    }
-    .btn-neu-sm {
-      padding: 6px 16px;
-      font-size: 0.8rem;
-    }
+        /* ----- PALETA DE COLORES ----- */
+        :root {
+            --rosa: #F2B3D6;
+            --morado-claro: #B4A3D9;
+            --morado-oscuro: #9C8BD9;
+            --amarillo: #F2E9BB;
+            --blanco: #F2F2F2;
+            --sombra-neum: 8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff;
+            --sombra-neum-inset: inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff;
+            --radio: 24px;
+            --transition: 0.25s ease;
+        }
 
-    input, select {
-      background: #F2F2F2;
-      border: none;
-      border-radius: 40px;
-      padding: 12px 20px;
-      box-shadow: inset 4px 4px 10px #d0d0d0, inset -4px -4px 10px #ffffff;
-      font-size: 0.95rem;
-      width: 100%;
-      transition: 0.15s;
-      outline: none;
-    }
-    input:focus, select:focus {
-      box-shadow: inset 4px 4px 10px #b8b8b8, inset -4px -4px 10px #ffffff;
-    }
-    label {
-      font-weight: 500;
-      color: #4a3b6b;
-      margin-bottom: 4px;
-      display: block;
-    }
-    .form-group {
-      margin-bottom: 16px;
-    }
+        /* ----- LOGIN ----- */
+        #loginPage {
+            width: 100%;
+            max-width: 420px;
+            padding: 2rem 1.5rem;
+            background: var(--blanco);
+            border-radius: var(--radio);
+            box-shadow: var(--sombra-neum);
+            text-align: center;
+            margin: 1rem;
+        }
+        #loginPage h1 {
+            color: var(--morado-oscuro);
+            font-weight: 600;
+            font-size: 2rem;
+            margin-bottom: 0.25rem;
+        }
+        #loginPage p {
+            color: #888;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        #loginPage .input-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+        #loginPage .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 0.3rem;
+        }
+        #loginPage .input-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: none;
+            background: var(--blanco);
+            border-radius: 40px;
+            box-shadow: var(--sombra-neum-inset);
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+        #loginPage .input-group input:focus {
+            box-shadow: 0 0 0 3px var(--morado-claro);
+        }
+        #loginBtn {
+            width: 100%;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 40px;
+            background: var(--morado-claro);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: var(--sombra-neum);
+            transition: var(--transition);
+        }
+        #loginBtn:hover {
+            background: var(--morado-oscuro);
+            transform: scale(1.02);
+        }
+        #loginError {
+            color: #c0392b;
+            margin-top: 0.8rem;
+            min-height: 1.5rem;
+        }
 
-    /* ---------- LAYOUT ---------- */
-    .app-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px 8px 24px;
-      margin-bottom: 24px;
-      background: #F2F2F2;
-      border-radius: 80px;
-      box-shadow: 8px 8px 20px #d0d0d0, -8px -8px 20px #ffffff;
-    }
-    .app-header .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #6b4f8a;
-    }
-    .app-header .brand i {
-      color: #F2B3D6;
-    }
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .user-info span {
-      font-weight: 500;
-      color: #4a3b6b;
-    }
-    .user-info .btn-neu {
-      padding: 8px 16px;
-      font-size: 0.85rem;
-    }
+        /* ----- APP PRINCIPAL ----- */
+        #app {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            background: var(--blanco);
+            position: relative;
+        }
 
-    /* Menu hamburguesa */
-    .menu-toggle {
-      display: none;
-      background: transparent;
-      border: none;
-      font-size: 1.8rem;
-      color: #4a3b6b;
-      cursor: pointer;
-    }
-    .sidebar {
-      width: 260px;
-      flex-shrink: 0;
-      background: #F2F2F2;
-      border-radius: 40px;
-      padding: 24px 16px;
-      box-shadow: 12px 12px 24px #d0d0d0, -12px -12px 24px #ffffff;
-      transition: transform 0.3s ease;
-    }
-    .sidebar ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .sidebar ul li a {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 14px 20px;
-      border-radius: 40px;
-      color: #4a3b6b;
-      text-decoration: none;
-      font-weight: 500;
-      transition: 0.15s;
-      box-shadow: 4px 4px 10px #d0d0d0, -4px -4px 10px #ffffff;
-      background: #F2F2F2;
-      cursor: pointer;
-    }
-    .sidebar ul li a:hover {
-      box-shadow: inset 4px 4px 10px #d0d0d0, inset -4px -4px 10px #ffffff;
-    }
-    .sidebar ul li a.active {
-      background: #B4A3D9;
-      color: #2d1f4a;
-      box-shadow: inset 4px 4px 10px #8f7db3, inset -4px -4px 10px #d9cfff;
-    }
-    .sidebar ul li a i {
-      width: 24px;
-      text-align: center;
-    }
+        /* ----- BARRA SUPERIOR ----- */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1.5rem;
+            background: var(--blanco);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .topbar .brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--morado-oscuro);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .topbar .brand i {
+            color: var(--rosa);
+        }
+        .topbar .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .topbar .user-info span {
+            font-weight: 500;
+            color: #555;
+        }
+        .topbar .user-info .role {
+            background: var(--amarillo);
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #7d6b3a;
+        }
+        .topbar .user-info .profile-icon {
+            font-size: 1.6rem;
+            color: var(--morado-claro);
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--blanco);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--sombra-neum);
+        }
+        .topbar .user-info .profile-icon:hover {
+            color: var(--morado-oscuro);
+            transform: scale(1.05);
+        }
+        .topbar .user-info .logout-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 0.3rem 0.6rem;
+            border-radius: 40px;
+        }
+        .topbar .user-info .logout-btn:hover {
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
 
-    .main-content {
-      flex: 1;
-      padding-left: 24px;
-      min-width: 0;
-    }
-    .content-wrapper {
-      display: flex;
-      gap: 24px;
-    }
-    .page {
-      display: none;
-      animation: fadeIn 0.25s ease;
-    }
-    .page.active {
-      display: block;
-    }
+        /* ----- MENU HAMBURGUESA ----- */
+        .hamburger {
+            display: none;
+            font-size: 1.8rem;
+            background: none;
+            border: none;
+            color: var(--morado-oscuro);
+            cursor: pointer;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+        .hamburger:hover {
+            background: rgba(156, 139, 217, 0.1);
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+        /* ----- LAYOUT ----- */
+        .app-layout {
+            display: flex;
+            min-height: calc(100vh - 72px);
+        }
+        .sidebar {
+            width: 240px;
+            background: var(--blanco);
+            padding: 1.5rem 0.8rem;
+            box-shadow: inset -4px 0 12px rgba(0, 0, 0, 0.02), 4px 0 12px rgba(0, 0, 0, 0.02);
+            transition: var(--transition);
+            flex-shrink: 0;
+            overflow-y: auto;
+            height: calc(100vh - 72px);
+            position: sticky;
+            top: 72px;
+        }
+        .sidebar .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            padding: 0.8rem 1.2rem;
+            margin: 0.3rem 0.4rem;
+            border-radius: 40px;
+            color: #555;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            background: transparent;
+            border: none;
+            width: 100%;
+            font-size: 1rem;
+        }
+        .sidebar .menu-item i {
+            width: 1.4rem;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--morado-claro);
+        }
+        .sidebar .menu-item:hover {
+            background: rgba(180, 163, 217, 0.15);
+            color: var(--morado-oscuro);
+        }
+        .sidebar .menu-item.active {
+            background: var(--morado-claro);
+            color: #fff;
+            box-shadow: var(--sombra-neum);
+        }
+        .sidebar .menu-item.active i {
+            color: #fff;
+        }
 
-    /* ---------- LOGIN ---------- */
-    #loginPage {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 70vh;
-    }
-    .login-card {
-      max-width: 420px;
-      width: 100%;
-      padding: 40px;
-      text-align: center;
-    }
-    .login-card h1 {
-      color: #6b4f8a;
-      margin-bottom: 8px;
-    }
-    .login-card p {
-      color: #7a6b8a;
-      margin-bottom: 24px;
-    }
+        .main-content {
+            flex: 1;
+            padding: 1.8rem 2rem 3rem;
+            background: var(--blanco);
+            overflow-x: auto;
+        }
 
-    /* ---------- CARDS / TABLAS ---------- */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-    .stat-card {
-      text-align: center;
-      padding: 20px 16px;
-    }
-    .stat-card .number {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #4a3b6b;
-    }
-    .stat-card .label {
-      color: #7a6b8a;
-      font-weight: 500;
-    }
+        /* ----- SECCIONES ----- */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .page-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    .filter-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      align-items: end;
-      margin-bottom: 20px;
-    }
-    .filter-bar .form-group {
-      margin-bottom: 0;
-      flex: 1 1 180px;
-    }
-    .filter-bar .btn-neu {
-      flex: 0 0 auto;
-    }
+        /* ----- TARJETAS ----- */
+        .card {
+            background: var(--blanco);
+            border-radius: var(--radio);
+            box-shadow: var(--sombra-neum);
+            padding: 1.5rem 1.8rem;
+            margin-bottom: 1.8rem;
+            transition: var(--transition);
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--morado-oscuro);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .card-title i {
+            color: var(--rosa);
+        }
 
-    .table-responsive {
-      overflow-x: auto;
-      margin-top: 16px;
-    }
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 8px;
-    }
-    th {
-      text-align: left;
-      padding: 12px 16px;
-      color: #4a3b6b;
-      font-weight: 600;
-    }
-    td {
-      padding: 12px 16px;
-      background: #F2F2F2;
-      border-radius: 20px;
-      box-shadow: 4px 4px 12px #d0d0d0, -4px -4px 12px #ffffff;
-      vertical-align: middle;
-    }
-    td .actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .badge {
-      display: inline-block;
-      padding: 4px 14px;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-    .badge-pendiente { background: #f7e8a1; color: #6b5a1a; }
-    .badge-completado { background: #b2e0b2; color: #1f5a1f; }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
 
-    /* ---------- MODAL ---------- */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.3);
-      backdrop-filter: blur(4px);
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 20px;
-    }
-    .modal-overlay.open {
-      display: flex;
-    }
-    .modal-box {
-      max-width: 600px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      background: #F2F2F2;
-      border-radius: 48px;
-      padding: 32px;
-      box-shadow: 30px 30px 60px #bebebe, -30px -30px 60px #ffffff;
-      animation: modalIn 0.25s ease;
-    }
-    @keyframes modalIn {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    .modal-box h2 {
-      color: #4a3b6b;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .modal-box .close-modal {
-      margin-left: auto;
-      background: none;
-      border: none;
-      font-size: 1.6rem;
-      cursor: pointer;
-      color: #7a6b8a;
-    }
+        /* ----- ESTADÍSTICAS ----- */
+        .stat-card {
+            background: var(--blanco);
+            border-radius: var(--radio);
+            padding: 1.2rem 1.5rem;
+            box-shadow: var(--sombra-neum);
+            text-align: center;
+        }
+        .stat-card .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--morado-oscuro);
+        }
+        .stat-card .stat-label {
+            color: #888;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--rosa);
+            margin-bottom: 0.2rem;
+        }
 
-    /* ---------- TOAST ---------- */
-    .toast-container {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 2000;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .toast {
-      padding: 16px 24px;
-      border-radius: 40px;
-      background: #F2F2F2;
-      box-shadow: 12px 12px 24px #bebebe, -12px -12px 24px #ffffff;
-      font-weight: 500;
-      max-width: 360px;
-      animation: slideIn 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-left: 6px solid;
-    }
-    .toast.success { border-color: #4caf50; }
-    .toast.error { border-color: #f44336; }
-    .toast.warning { border-color: #ff9800; }
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    .toast.hide {
-      animation: slideOut 0.3s ease forwards;
-    }
-    @keyframes slideOut {
-      to { transform: translateX(100%); opacity: 0; }
-    }
+        /* ----- FORMULARIOS ----- */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: none;
+            background: var(--blanco);
+            border-radius: 40px;
+            box-shadow: var(--sombra-neum-inset);
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            box-shadow: 0 0 0 3px var(--morado-claro);
+        }
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .form-row .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
 
-    /* ---------- RESPONSIVE ---------- */
-    @media (max-width: 992px) {
-      .content-wrapper {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        display: none;
-        margin-bottom: 16px;
-      }
-      .sidebar.open {
-        display: block;
-      }
-      .menu-toggle {
-        display: block;
-      }
-      .main-content {
-        padding-left: 0;
-      }
-      .app-header {
-        padding: 8px 16px;
-      }
-      .user-info span { display: none; }
-    }
-    @media (max-width: 576px) {
-      #app { padding: 12px; border-radius: 32px; }
-      .modal-box { padding: 20px; }
-      .card-grid { grid-template-columns: 1fr 1fr; }
-      .stat-card .number { font-size: 1.6rem; }
-      .filter-bar { flex-direction: column; align-items: stretch; }
-    }
+        .btn {
+            padding: 0.6rem 1.6rem;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--sombra-neum);
+            background: var(--blanco);
+            color: #555;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-primary {
+            background: var(--morado-claro);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: var(--morado-oscuro);
+            transform: scale(1.02);
+        }
+        .btn-success {
+            background: #6fcf97;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #27ae60;
+        }
+        .btn-danger {
+            background: #f28b82;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #e74c3c;
+        }
+        .btn-warning {
+            background: var(--amarillo);
+            color: #7d6b3a;
+        }
+        .btn-warning:hover {
+            background: #e6d48a;
+        }
+        .btn-outline {
+            background: transparent;
+            box-shadow: none;
+            border: 2px solid var(--morado-claro);
+            color: var(--morado-claro);
+        }
+        .btn-outline:hover {
+            background: var(--morado-claro);
+            color: #fff;
+        }
+        .btn-sm {
+            padding: 0.3rem 0.9rem;
+            font-size: 0.8rem;
+        }
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
 
-    /* utilidades */
-    .flex { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-    .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-    .gap-8 { gap: 8px; }
-    .mt-16 { margin-top: 16px; }
-    .mb-16 { margin-bottom: 16px; }
-    .w-full { width: 100%; }
-    .text-center { text-align: center; }
-    .text-muted { color: #7a6b8a; }
+        /* ----- TABLAS ----- */
+        .table-wrap {
+            overflow-x: auto;
+            margin-top: 0.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        th {
+            text-align: left;
+            padding: 0.7rem 0.5rem;
+            color: #555;
+            font-weight: 600;
+            border-bottom: 2px solid #eee;
+        }
+        td {
+            padding: 0.7rem 0.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+        tr:hover td {
+            background: rgba(180, 163, 217, 0.04);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: var(--amarillo);
+            color: #7d6b3a;
+        }
+        .badge-success {
+            background: #6fcf97;
+            color: #fff;
+        }
+        .badge-danger {
+            background: #f28b82;
+            color: #fff;
+        }
 
-    /* Estilos para lista de productos en venta */
-    .product-list-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 16px;
-      background: #F2F2F2;
-      border-radius: 40px;
-      box-shadow: inset 3px 3px 8px #d0d0d0, inset -3px -3px 8px #ffffff;
-      margin-bottom: 6px;
-    }
-    .product-list-item .info {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .product-list-item .info span {
-      font-weight: 500;
-    }
-  </style>
+        /* ----- LISTAS DE PRODUCTOS (ventas) ----- */
+        .product-list {
+            background: var(--blanco);
+            border-radius: 20px;
+            padding: 0.8rem 1rem;
+            box-shadow: var(--sombra-neum-inset);
+            margin: 0.5rem 0 1rem;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+        .product-list .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        .product-list .item:last-child {
+            border-bottom: none;
+        }
+        .product-list .item .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .product-list .item .actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            transition: var(--transition);
+        }
+        .product-list .item .actions button:hover {
+            color: var(--morado-oscuro);
+        }
+
+        /* ----- PENDIENTES ----- */
+        .pendientes-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0.5rem 0 1rem;
+        }
+        .pendientes-grid .pend-item {
+            background: var(--blanco);
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            box-shadow: var(--sombra-neum-inset);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .pendientes-grid .pend-item button {
+            background: none;
+            border: none;
+            color: var(--morado-claro);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* ----- FILTROS ----- */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+        .filters select,
+        .filters input {
+            padding: 0.4rem 1rem;
+            border: none;
+            border-radius: 40px;
+            background: var(--blanco);
+            box-shadow: var(--sombra-neum-inset);
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        /* ----- MODAL PERFIL / EDICIÓN ----- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-overlay.open {
+            display: flex;
+        }
+        .modal-content {
+            background: var(--blanco);
+            border-radius: var(--radio);
+            padding: 2rem;
+            max-width: 600px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--sombra-neum);
+            animation: fadeIn 0.25s ease;
+        }
+        .modal-content h2 {
+            color: var(--morado-oscuro);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        /* ----- TOASTS ----- */
+        #toastContainer {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            max-width: 380px;
+            width: 100%;
+            pointer-events: none;
+        }
+        .toast {
+            background: var(--blanco);
+            padding: 0.9rem 1.2rem;
+            border-radius: 20px;
+            box-shadow: var(--sombra-neum);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 500;
+            transform: translateX(120%);
+            animation: slideIn 0.4s forwards, slideOut 0.4s 3s forwards;
+            pointer-events: auto;
+            border-left: 6px solid var(--morado-claro);
+        }
+        .toast.success {
+            border-left-color: #27ae60;
+        }
+        .toast.error {
+            border-left-color: #e74c3c;
+        }
+        .toast.warning {
+            border-left-color: #f39c12;
+        }
+        .toast i {
+            font-size: 1.4rem;
+        }
+        .toast.success i {
+            color: #27ae60;
+        }
+        .toast.error i {
+            color: #e74c3c;
+        }
+        .toast.warning i {
+            color: #f39c12;
+        }
+        @keyframes slideIn {
+            0% {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 1024px) {
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+            .sidebar {
+                position: fixed;
+                top: 72px;
+                left: -280px;
+                width: 260px;
+                height: calc(100vh - 72px);
+                z-index: 999;
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
+                transition: left 0.3s ease;
+                padding-top: 1rem;
+            }
+            .sidebar.open {
+                left: 0;
+            }
+            .main-content {
+                padding: 1.2rem 1rem 2rem;
+            }
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .topbar .brand span {
+                display: none;
+            }
+            .form-row {
+                flex-direction: column;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .topbar {
+                padding: 0.5rem 1rem;
+            }
+            .topbar .user-info span {
+                font-size: 0.8rem;
+            }
+            .stat-card .stat-number {
+                font-size: 1.6rem;
+            }
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ----- UTILIDADES ----- */
+        .mt-1 {
+            margin-top: 0.8rem;
+        }
+        .mb-1 {
+            margin-bottom: 0.8rem;
+        }
+        .flex {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .text-muted {
+            color: #888;
+            font-size: 0.85rem;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .w-full {
+            width: 100%;
+        }
+        .gap-1 {
+            gap: 0.5rem;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .chart-container {
+            position: relative;
+            height: 240px;
+            max-width: 100%;
+        }
+        .chart-container-sm {
+            height: 180px;
+        }
+    </style>
 </head>
 <body>
-<div id="app">
 
-  <!-- ============ HEADER ============ -->
-  <header class="app-header">
-    <div class="brand">
-      <i class="fas fa-cake"></i>
-      <span>Dulce Gestión</span>
+    <!-- ===== LOGIN ===== -->
+    <div id="loginPage">
+        <h1><i class="fas fa-cake" style="color:var(--rosa);"></i> Repostería</h1>
+        <p>Gestión financiera de tus ventas</p>
+        <div class="input-group">
+            <label><i class="fas fa-user"></i> Usuario</label>
+            <input type="text" id="loginUser" value="admin" placeholder="admin">
+        </div>
+        <div class="input-group">
+            <label><i class="fas fa-lock"></i> Contraseña</label>
+            <input type="password" id="loginPass" value="admin123" placeholder="••••••">
+        </div>
+        <button id="loginBtn"><i class="fas fa-sign-in-alt"></i> Ingresar</button>
+        <div id="loginError"></div>
     </div>
-    <button class="menu-toggle" id="menuToggle" aria-label="Menú">
-      <i class="fas fa-bars"></i>
-    </button>
-    <div class="user-info" id="userInfo">
-      <span id="userNameDisplay">Usuario</span>
-      <button class="btn-neu btn-neu-sm" id="profileBtn"><i class="fas fa-user-circle"></i> Perfil</button>
-      <button class="btn-neu btn-neu-sm btn-neu-danger" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Salir</button>
-    </div>
-  </header>
 
-  <!-- ============ CONTENT WRAPPER ============ -->
-  <div class="content-wrapper">
-    <!-- SIDEBAR -->
-    <nav class="sidebar" id="sidebar">
-      <ul>
-        <li><a class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
-        <li><a data-page="ventas"><i class="fas fa-cash-register"></i> Ventas</a></li>
-        <li><a data-page="gastos"><i class="fas fa-coins"></i> Gastos</a></li>
-        <li><a data-page="inventario"><i class="fas fa-boxes"></i> Inventario</a></li>
-        <li><a data-page="puntos"><i class="fas fa-map-pin"></i> Puntos de Venta</a></li>
-      </ul>
-    </nav>
+    <!-- ===== APP PRINCIPAL ===== -->
+    <div id="app">
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
-      <!-- ===== LOGIN PAGE ===== -->
-      <div id="loginPage" class="page active">
-        <div class="login-card neu">
-          <h1><i class="fas fa-cake" style="color:#F2B3D6;"></i> Bienvenido</h1>
-          <p>Inicia sesión para administrar tu negocio</p>
-          <form id="loginForm">
-            <div class="form-group">
-              <label>Usuario</label>
-              <input type="text" id="loginUser" value="admin" required>
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="brand">
+                <i class="fas fa-cake"></i>
+                <span>Repostería</span>
             </div>
-            <div class="form-group">
-              <label>Contraseña</label>
-              <input type="password" id="loginPass" value="admin123" required>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menú">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="user-info">
+                <span id="topbarNombre">Admin</span>
+                <span class="role" id="topbarRol">admin</span>
+                <div class="profile-icon" id="profileIcon" title="Perfil">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <button class="logout-btn" id="logoutBtn" title="Cerrar sesión">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
             </div>
-            <button type="submit" class="btn-neu btn-neu-primary w-full" style="justify-content:center;">Ingresar</button>
-          </form>
-        </div>
-      </div>
+        </header>
 
-      <!-- ===== DASHBOARD ===== -->
-      <div id="dashboardPage" class="page">
-        <h2><i class="fas fa-chart-pie" style="color:#B4A3D9;"></i> Dashboard</h2>
-        <!-- Filtros -->
-        <div class="filter-bar neu-inset" style="padding:16px 20px;">
-          <div class="form-group">
-            <label>Mes</label>
-            <input type="month" id="dashMonth" value="">
-          </div>
-          <div class="form-group">
-            <label>Vista</label>
-            <select id="dashView"><option value="semanal">Semanal</option><option value="quincenal">Quincenal</option><option value="mensual">Mensual</option></select>
-          </div>
-          <button class="btn-neu btn-neu-primary" id="dashFilterBtn"><i class="fas fa-sync"></i> Actualizar</button>
-        </div>
-        <!-- Stats -->
-        <div class="card-grid" id="dashStats">
-          <div class="stat-card neu"><div class="number" id="dashTotalVentas">0</div><div class="label">Total Ventas</div></div>
-          <div class="stat-card neu"><div class="number" id="dashTotalGastos">0</div><div class="label">Total Gastos</div></div>
-          <div class="stat-card neu"><div class="number" id="dashUtilidad">0</div><div class="label">Utilidad</div></div>
-          <div class="stat-card neu"><div class="number" id="dashNumVentas">0</div><div class="label">Nº Ventas</div></div>
-        </div>
-        <!-- Gráficos -->
-        <div class="neu" style="margin-bottom:20px;">
-          <h4>Evolución Ventas & Gastos</h4>
-          <canvas id="dashChartVentasGastos" height="180"></canvas>
-        </div>
-        <div class="neu">
-          <h4>Productos vendidos por punto de venta</h4>
-          <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:12px;">
-            <select id="dashProdView" class="form-group" style="flex:1; min-width:140px;">
-              <option value="semanal">Semanal</option><option value="quincenal">Quincenal</option><option value="mensual">Mensual</option>
-            </select>
-            <button class="btn-neu btn-neu-primary" id="dashProdFilterBtn"><i class="fas fa-sync"></i> Actualizar</button>
-          </div>
-          <canvas id="dashChartProductosPunto" height="180"></canvas>
-        </div>
-      </div>
+        <!-- LAYOUT -->
+        <div class="app-layout">
 
-      <!-- ===== VENTAS ===== -->
-      <div id="ventasPage" class="page">
-        <h2><i class="fas fa-cash-register" style="color:#F2B3D6;"></i> Ventas</h2>
-        <div class="flex mb-16">
-          <button class="btn-neu btn-neu-primary" id="btnNuevaVenta"><i class="fas fa-plus"></i> Nueva Venta</button>
-          <button class="btn-neu" id="btnVerHistorial"><i class="fas fa-history"></i> Historial</button>
-        </div>
-        <!-- Contenedor para paso 1, paso 2, historial -->
-        <div id="ventasContent">
-          <!-- Se renderiza dinámicamente -->
-        </div>
-      </div>
+            <!-- SIDEBAR -->
+            <nav class="sidebar" id="sidebar">
+                <button class="menu-item active" data-section="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+                <button class="menu-item" data-section="ventas"><i class="fas fa-shopping-cart"></i> Ventas</button>
+                <button class="menu-item" data-section="historial"><i class="fas fa-history"></i> Historial</button>
+                <button class="menu-item" data-section="gastos"><i class="fas fa-coins"></i> Gastos</button>
+                <button class="menu-item" data-section="inventario"><i class="fas fa-boxes"></i> Inventario</button>
+                <button class="menu-item" data-section="puntos"><i class="fas fa-map-pin"></i> Puntos de Venta</button>
+            </nav>
 
-      <!-- ===== GASTOS ===== -->
-      <div id="gastosPage" class="page">
-        <h2><i class="fas fa-coins" style="color:#9C8BD9;"></i> Gastos</h2>
-        <div class="flex mb-16">
-          <button class="btn-neu btn-neu-primary" id="btnNuevoGasto"><i class="fas fa-plus"></i> Nuevo Gasto</button>
-        </div>
-        <div class="filter-bar neu-inset" style="padding:12px 16px;">
-          <div class="form-group"><label>Buscar</label><input type="text" id="gastoSearch" placeholder="Producto..."></div>
-          <div class="form-group"><label>Período</label><select id="gastoPeriodo"><option value="semana">Semana</option><option value="mes">Mes</option></select></div>
-          <button class="btn-neu" id="gastoFilterBtn"><i class="fas fa-filter"></i> Filtrar</button>
-        </div>
-        <div id="gastosList" class="table-responsive"></div>
-        <div class="neu mt-16" style="padding:16px;">
-          <h4>Evolución de Gastos</h4>
-          <canvas id="gastosChart" height="150"></canvas>
-        </div>
-      </div>
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
 
-      <!-- ===== INVENTARIO ===== -->
-      <div id="inventarioPage" class="page">
-        <h2><i class="fas fa-boxes" style="color:#B4A3D9;"></i> Inventario</h2>
-        <div class="flex mb-16">
-          <button class="btn-neu btn-neu-primary" id="btnNuevoInventario"><i class="fas fa-plus"></i> Nuevo Producto</button>
-        </div>
-        <div class="filter-bar neu-inset" style="padding:12px 16px;">
-          <div class="form-group"><label>Buscar</label><input type="text" id="invSearch" placeholder="Producto..."></div>
-          <div class="form-group"><label>Tipo</label><select id="invTipo"><option value="">Todos</option><option value="Insumo">Insumo</option><option value="Utensilio">Utensilio</option><option value="Envase">Envase</option><option value="Adorno">Adorno</option></select></div>
-          <button class="btn-neu" id="invFilterBtn"><i class="fas fa-filter"></i> Filtrar</button>
-        </div>
-        <div id="inventarioList" class="table-responsive"></div>
-      </div>
+                <!-- ====== DASHBOARD ====== -->
+                <section id="section-dashboard" class="page-section active">
+                    <h2><i class="fas fa-chart-pie" style="color:var(--morado-claro);"></i> Panel de Control</h2>
 
-      <!-- ===== PUNTOS DE VENTA ===== -->
-      <div id="puntosPage" class="page">
-        <h2><i class="fas fa-map-pin" style="color:#F2E9BB;"></i> Puntos de Venta</h2>
-        <div class="flex mb-16">
-          <button class="btn-neu btn-neu-primary" id="btnNuevoPunto"><i class="fas fa-plus"></i> Nuevo Punto</button>
+                    <!-- Filtros Dashboard -->
+                    <div class="filters">
+                        <label>Mes: <input type="month" id="dashboardMes" value=""></label>
+                        <label>Período: 
+                            <select id="dashboardPeriodo">
+                                <option value="semana">Semana</option>
+                                <option value="quincena">Quincena</option>
+                                <option value="mes" selected>Mes</option>
+                            </select>
+                        </label>
+                        <button class="btn btn-sm btn-primary" id="dashboardActualizar"><i class="fas fa-sync"></i> Actualizar</button>
+                    </div>
+
+                    <!-- Resumen del mes seleccionado -->
+                    <div class="grid-4" id="statsResumen">
+                        <div class="stat-card"><i class="fas fa-dollar-sign"></i><div class="stat-number" id="statVentas">0</div><div class="stat-label">Total Ventas (mes)</div></div>
+                        <div class="stat-card"><i class="fas fa-receipt"></i><div class="stat-number" id="statGastos">0</div><div class="stat-label">Total Gastos (mes)</div></div>
+                        <div class="stat-card"><i class="fas fa-chart-line"></i><div class="stat-number" id="statUtilidad">0</div><div class="stat-label">Utilidad (mes)</div></div>
+                        <div class="stat-card"><i class="fas fa-tags"></i><div class="stat-number" id="statVentasCount">0</div><div class="stat-label">N° Ventas (mes)</div></div>
+                    </div>
+
+                    <!-- Resumen últimos 7 días -->
+                    <div class="grid-4" id="statsUltimos7Dias">
+                        <div class="stat-card"><i class="fas fa-dollar-sign"></i><div class="stat-number" id="statVentas7">0</div><div class="stat-label">Ventas (7 días)</div></div>
+                        <div class="stat-card"><i class="fas fa-receipt"></i><div class="stat-number" id="statGastos7">0</div><div class="stat-label">Gastos (7 días)</div></div>
+                        <div class="stat-card"><i class="fas fa-chart-line"></i><div class="stat-number" id="statUtilidad7">0</div><div class="stat-label">Utilidad (7 días)</div></div>
+                        <div class="stat-card"><i class="fas fa-tags"></i><div class="stat-number" id="statVentasCount7">0</div><div class="stat-label">N° Ventas (7 días)</div></div>
+                    </div>
+
+                    <!-- Gráfico evolución ventas/gastos -->
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-calendar-alt"></i> Evolución de Ventas y Gastos</div>
+                        <div class="chart-container"><canvas id="chartEvolucion"></canvas></div>
+                    </div>
+
+                    <!-- Gráfico ventas por punto -->
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-store"></i> Ventas por Punto de Venta</div>
+                        <div class="filters">
+                            <select id="dashboardPuntoPeriodo">
+                                <option value="semana">Semana</option>
+                                <option value="quincena">Quincena</option>
+                                <option value="mes" selected>Mes</option>
+                            </select>
+                        </div>
+                        <div class="chart-container"><canvas id="chartPuntos"></canvas></div>
+                    </div>
+                </section>
+
+                <!-- ====== VENTAS ====== -->
+                <section id="section-ventas" class="page-section">
+                    <h2><i class="fas fa-shopping-cart" style="color:var(--morado-claro);"></i> Registrar Venta</h2>
+
+                    <!-- Paso 1: Llevar -->
+                    <div class="card" id="paso1">
+                        <div class="card-title"><i class="fas fa-box"></i> Paso 1: Lo que llevo</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Fecha</label>
+                                <input type="date" id="ventaFecha" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Fondo de caja (S/)</label>
+                                <input type="number" id="ventaFondo" step="0.01" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Punto de venta</label>
+                                <select id="ventaPunto"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Producto</label>
+                                <input type="text" id="ventaProdNombre" placeholder="Nombre">
+                            </div>
+                            <div class="form-group">
+                                <label>Cantidad</label>
+                                <input type="number" id="ventaProdCant" value="1" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Precio unitario (S/)</label>
+                                <input type="number" id="ventaProdPrecio" step="0.01" value="0">
+                            </div>
+                            <div class="form-group" style="display:flex;align-items:flex-end;">
+                                <button class="btn btn-primary" id="agregarProductoBtn"><i class="fas fa-plus"></i> Agregar</button>
+                            </div>
+                        </div>
+
+                        <div><strong>Productos agregados:</strong></div>
+                        <div class="product-list" id="productosAgregadosList"></div>
+
+                        <div><strong>Productos pendientes disponibles:</strong></div>
+                        <div class="pendientes-grid" id="pendientesGrid"></div>
+                        <div class="flex">
+                            <button class="btn btn-sm btn-primary" id="cargarTodosPendientes"><i class="fas fa-arrow-right"></i> Agregar todos</button>
+                        </div>
+
+                        <div class="flex">
+                            <button class="btn btn-success" id="registrarLlevarBtn"><i class="fas fa-save"></i> Registrar Llevar</button>
+                            <span class="text-muted">Total: S/ <span id="totalLlevar">0.00</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Paso 2: Retorno -->
+                    <div class="card" id="paso2">
+                        <div class="card-title"><i class="fas fa-undo-alt"></i> Paso 2: Registrar Retorno</div>
+                        <div class="form-group">
+                            <label>Seleccionar venta pendiente</label>
+                            <select id="retornoVentaSelect"></select>
+                        </div>
+                        <div id="retornoResumen" class="text-muted mb-1"></div>
+
+                        <div class="form-row">
+                            <div class="form-group"><label>Yape / Plin (S/)</label><input type="number" id="retYape" step="0.01" value="0"></div>
+                            <div class="form-group"><label>Efectivo (S/)</label><input type="number" id="retEfectivo" step="0.01" value="0"></div>
+                            <div class="form-group"><label>Deben / Fiado (S/)</label><input type="number" id="retFiado" step="0.01" value="0"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Descuento / Pérdida (S/)</label><input type="number" id="retDescuento" step="0.01" value="0"></div>
+                            <div class="form-group"><label>Movilidad (S/)</label><input type="number" id="retMovilidad" step="0.01" value="0"></div>
+                        </div>
+
+                        <div><strong>Productos no vendidos:</strong></div>
+                        <div id="retornoProductosNoVendidos"></div>
+
+                        <div class="flex">
+                            <button class="btn btn-success" id="completarRetornoBtn"><i class="fas fa-check"></i> Completar Retorno</button>
+                            <span class="text-muted">Total no vendido: S/ <span id="totalNoVendido">0.00</span></span>
+                            <span class="text-muted">Diferencia caja: S/ <span id="diferenciaCaja">0.00</span></span>
+                            <span class="text-muted">Ganancia día: S/ <span id="gananciaDia">0.00</span></span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ====== HISTORIAL ====== -->
+                <section id="section-historial" class="page-section">
+                    <h2><i class="fas fa-history" style="color:var(--morado-claro);"></i> Historial de Ventas</h2>
+                    <div class="filters">
+                        <select id="historialPeriodo">
+                            <option value="semana">Semana</option>
+                            <option value="mes" selected>Mes</option>
+                        </select>
+                        <button class="btn btn-sm btn-outline" id="historialRefresh"><i class="fas fa-sync"></i> Actualizar</button>
+                    </div>
+                    <div class="card">
+                        <div class="table-wrap">
+                            <table>
+                                <thead><tr><th>Fecha</th><th>Punto</th><th>Productos</th><th>Total</th><th>Falta</th><th>Ganancia</th><th>Fiado</th><th>Movilidad</th><th>Estado</th><th>Acciones</th></tr></thead>
+                                <tbody id="historialBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-chart-line"></i> Evolución de Ventas</div>
+                        <div class="chart-container"><canvas id="chartHistorial"></canvas></div>
+                    </div>
+                </section>
+
+                <!-- ====== GASTOS ====== -->
+                <section id="section-gastos" class="page-section">
+                    <h2><i class="fas fa-coins" style="color:var(--morado-claro);"></i> Gastos</h2>
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-plus-circle"></i> Nuevo Gasto</div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Fecha</label><input type="date" id="gastoFecha" readonly></div>
+                            <div class="form-group"><label>Producto / Concepto</label><input type="text" id="gastoProducto" placeholder="Ej: Harina"></div>
+                            <div class="form-group"><label>Precio (S/)</label><input type="number" id="gastoPrecio" step="0.01" value="0"></div>
+                            <div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn btn-primary" id="agregarGastoBtn"><i class="fas fa-save"></i> Agregar</button></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="flex-between">
+                            <div class="card-title"><i class="fas fa-list"></i> Lista de Gastos</div>
+                            <div class="filters">
+                                <input type="text" id="gastoBuscador" placeholder="Buscar producto...">
+                                <select id="gastoPeriodo">
+                                    <option value="semana">Semana</option>
+                                    <option value="mes" selected>Mes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-wrap">
+                            <table><thead><tr><th>Fecha</th><th>Producto</th><th>Precio</th><th>Acciones</th></tr></thead><tbody id="gastosBody"></tbody></table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-chart-line"></i> Evolución de Gastos</div>
+                        <div class="chart-container"><canvas id="chartGastos"></canvas></div>
+                    </div>
+                </section>
+
+                <!-- ====== INVENTARIO ====== -->
+                <section id="section-inventario" class="page-section">
+                    <h2><i class="fas fa-boxes" style="color:var(--morado-claro);"></i> Inventario</h2>
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-plus-circle"></i> Nuevo Producto</div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Fecha</label><input type="date" id="invFecha" readonly></div>
+                            <div class="form-group"><label>Producto</label><input type="text" id="invNombre" placeholder="Nombre"></div>
+                            <div class="form-group"><label>Cantidad</label><input type="number" id="invCantidad" value="1" min="1"></div>
+                            <div class="form-group"><label>Precio (S/)</label><input type="number" id="invPrecio" step="0.01" value="0"></div>
+                            <div class="form-group"><label>Tipo</label>
+                                <select id="invTipo">
+                                    <option value="Insumo">Insumo</option>
+                                    <option value="Utensilio">Utensilio</option>
+                                    <option value="Envase">Envase</option>
+                                    <option value="Adorno">Adorno</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn btn-primary" id="agregarInvBtn"><i class="fas fa-save"></i> Agregar</button></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="flex-between">
+                            <div class="card-title"><i class="fas fa-list"></i> Lista de Inventario</div>
+                            <div class="filters">
+                                <input type="text" id="invBuscador" placeholder="Buscar...">
+                                <select id="invFiltroTipo"><option value="">Todos</option><option value="Insumo">Insumo</option><option value="Utensilio">Utensilio</option><option value="Envase">Envase</option><option value="Adorno">Adorno</option></select>
+                            </div>
+                        </div>
+                        <div class="table-wrap">
+                            <table><thead><tr><th>Fecha</th><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Tipo</th><th>Acciones</th></tr></thead><tbody id="inventarioBody"></tbody></table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ====== PUNTOS DE VENTA ====== -->
+                <section id="section-puntos" class="page-section">
+                    <h2><i class="fas fa-map-pin" style="color:var(--morado-claro);"></i> Puntos de Venta</h2>
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-plus-circle"></i> Nuevo Punto</div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Nombre / Ubicación</label><input type="text" id="puntoNombre" placeholder="Ej: Plaza Mayor"></div>
+                            <div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn btn-primary" id="agregarPuntoBtn"><i class="fas fa-save"></i> Agregar</button></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-list"></i> Lista de Puntos</div>
+                        <div class="table-wrap">
+                            <table><thead><tr><th>Nombre / Ubicación</th><th>Acciones</th></tr></thead><tbody id="puntosBody"></tbody></table>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
         </div>
-        <div id="puntosList" class="table-responsive"></div>
-      </div>
-
-    </div><!-- /main-content -->
-  </div><!-- /content-wrapper -->
-
-  <!-- ============ MODAL GENÉRICO ============ -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal-box" id="modalBox">
-      <div class="flex-between">
-        <h2 id="modalTitle"><i class="fas fa-pen"></i> Título</h2>
-        <button class="close-modal" id="modalCloseBtn"><i class="fas fa-times"></i></button>
-      </div>
-      <div id="modalBody"></div>
     </div>
-  </div>
 
-  <!-- ============ TOAST CONTAINER ============ -->
-  <div class="toast-container" id="toastContainer"></div>
-
-</div><!-- /app -->
-
-<script>
-// ============================================================
-//  APLICACIÓN COMPLETA
-// ============================================================
-(function() {
-  'use strict';
-
-  // ---------- COLORES ----------
-  const COLORS = ['#F2B3D6', '#B4A3D9', '#9C8BD9', '#F2E9BB', '#F2F2F2'];
-
-  // ---------- DATOS POR DEFECTO ----------
-  const DEFAULT_USERS = [
-    { id: 'u1', nombre: 'Administrador', usuario: 'admin', password: 'admin123', rol: 'Admin' }
-  ];
-
-  // ---------- ESTADO ----------
-  let state = {
-    users: [],
-    ventas: [],
-    gastos: [],
-    inventario: [],
-    puntosVenta: [],
-    productosPendientes: [], // productos no vendidos que pueden cargarse en nuevas ventas
-    currentUser: null,
-    // Para filtros
-    dashMonth: '',
-    dashView: 'semanal',
-    gastoPeriodo: 'semana',
-    // Para ventas
-    ventaEnCurso: null, // objeto temporal para paso 1
-    ventaRetornoSeleccionada: null,
-  };
-
-  // ---------- REFERENCIAS DOM ----------
-  const $ = id => document.getElementById(id);
-  const $$ = sel => document.querySelectorAll(sel);
-
-  const loginPage = $('loginPage');
-  const sidebar = $('sidebar');
-  const menuToggle = $('menuToggle');
-  const userInfo = $('userInfo');
-  const userNameDisplay = $('userNameDisplay');
-  const logoutBtn = $('logoutBtn');
-  const profileBtn = $('profileBtn');
-  const modalOverlay = $('modalOverlay');
-  const modalBox = $('modalBox');
-  const modalTitle = $('modalTitle');
-  const modalBody = $('modalBody');
-  const modalCloseBtn = $('modalCloseBtn');
-  const toastContainer = $('toastContainer');
-
-  // ---------- UTILIDADES ----------
-  function generarId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
-
-  function formatearFecha(fechaStr) {
-    const d = new Date(fechaStr);
-    return d.toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric' });
-  }
-
-  function formatearMoneda(valor) {
-    return 'S/ ' + Number(valor).toFixed(2);
-  }
-
-  function esMismoMes(fechaStr, mesAnio) {
-    // mesAnio = '2026-07'
-    const d = new Date(fechaStr);
-    const m = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
-    return m === mesAnio;
-  }
-
-  function obtenerDiasMes(mesAnio) {
-    const [year, month] = mesAnio.split('-').map(Number);
-    return new Date(year, month, 0).getDate();
-  }
-
-  function dentroDeRango(fechaStr, inicio, fin) {
-    const d = new Date(fechaStr);
-    return d >= inicio && d <= fin;
-  }
-
-  function toast(mensaje, tipo = 'success') {
-    const el = document.createElement('div');
-    el.className = `toast ${tipo}`;
-    const iconos = { success:'fa-check-circle', error:'fa-exclamation-circle', warning:'fa-exclamation-triangle' };
-    el.innerHTML = `<i class="fas ${iconos[tipo] || 'fa-info-circle'}"></i> ${mensaje}`;
-    toastContainer.appendChild(el);
-    setTimeout(() => {
-      el.classList.add('hide');
-      setTimeout(() => el.remove(), 300);
-    }, 3000);
-  }
-
-  // ---------- PERSISTENCIA ----------
-  function guardarState() {
-    const data = {
-      users: state.users,
-      ventas: state.ventas,
-      gastos: state.gastos,
-      inventario: state.inventario,
-      puntosVenta: state.puntosVenta,
-      productosPendientes: state.productosPendientes,
-    };
-    localStorage.setItem('reposteriaData', JSON.stringify(data));
-  }
-
-  function cargarState() {
-    const raw = localStorage.getItem('reposteriaData');
-    if (raw) {
-      try {
-        const data = JSON.parse(raw);
-        state.users = data.users || [];
-        state.ventas = data.ventas || [];
-        state.gastos = data.gastos || [];
-        state.inventario = data.inventario || [];
-        state.puntosVenta = data.puntosVenta || [];
-        state.productosPendientes = data.productosPendientes || [];
-      } catch(e) { console.warn('Error al cargar datos', e); }
-    }
-    // Si no hay usuarios, precargar
-    if (!state.users.length) {
-      state.users = DEFAULT_USERS.map(u => ({...u}));
-      guardarState();
-    }
-  }
-
-  // ---------- LOGIN ----------
-  function login(usuario, password) {
-    const user = state.users.find(u => u.usuario === usuario && u.password === password);
-    if (!user) {
-      toast('Usuario o contraseña incorrectos', 'error');
-      return false;
-    }
-    state.currentUser = user;
-    localStorage.setItem('reposteriaCurrentUser', JSON.stringify(user));
-    mostrarApp();
-    toast(`Bienvenido ${user.nombre}`, 'success');
-    return true;
-  }
-
-  function logout() {
-    state.currentUser = null;
-    localStorage.removeItem('reposteriaCurrentUser');
-    mostrarLogin();
-    toast('Sesión cerrada', 'warning');
-  }
-
-  function mostrarLogin() {
-    loginPage.style.display = 'flex';
-    document.querySelectorAll('.page:not(#loginPage)').forEach(p => p.classList.remove('active'));
-    sidebar.style.display = 'none';
-    userInfo.style.display = 'none';
-  }
-
-  function mostrarApp() {
-    loginPage.style.display = 'none';
-    userInfo.style.display = 'flex';
-    userNameDisplay.textContent = state.currentUser.nombre + ' (' + state.currentUser.rol + ')';
-    // Mostrar dashboard por defecto
-    navegar('dashboard');
-    // Cargar datos
-    actualizarDashboard();
-    renderizarVentas();
-    renderizarGastos();
-    renderizarInventario();
-    renderizarPuntos();
-    // Sidebar visible en escritorio
-    if (window.innerWidth > 992) sidebar.style.display = 'block';
-    else sidebar.style.display = 'none';
-  }
-
-  // ---------- NAVEGACIÓN ----------
-  function navegar(pagina) {
-    // ocultar todas las páginas
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    const target = document.getElementById(pagina + 'Page');
-    if (target) target.classList.add('active');
-    // actualizar sidebar
-    $$('.sidebar ul li a').forEach(a => {
-      a.classList.toggle('active', a.dataset.page === pagina);
-    });
-    // cerrar sidebar en móvil
-    if (window.innerWidth <= 992) sidebar.classList.remove('open');
-    // disparar render específico
-    if (pagina === 'dashboard') actualizarDashboard();
-    if (pagina === 'ventas') renderizarVentas();
-    if (pagina === 'gastos') renderizarGastos();
-    if (pagina === 'inventario') renderizarInventario();
-    if (pagina === 'puntos') renderizarPuntos();
-  }
-
-  // ---------- RENDER: DASHBOARD ----------
-  let chartVentasGastos = null;
-  let chartProductosPunto = null;
-
-  function actualizarDashboard() {
-    // mes por defecto: actual
-    const now = new Date();
-    const mesDefault = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-    if (!$('dashMonth').value) $('dashMonth').value = mesDefault;
-    const mes = $('dashMonth').value;
-    const view = $('dashView').value;
-
-    // Filtrar ventas del mes
-    const ventasMes = state.ventas.filter(v => esMismoMes(v.fecha, mes));
-    const gastosMes = state.gastos.filter(g => esMismoMes(g.fecha, mes));
-
-    const totalVentas = ventasMes.reduce((sum, v) => sum + (v.total || 0), 0);
-    const totalGastos = gastosMes.reduce((sum, g) => sum + (g.precio || 0), 0);
-    const utilidad = totalVentas - totalGastos;
-
-    $('dashTotalVentas').textContent = formatearMoneda(totalVentas);
-    $('dashTotalGastos').textContent = formatearMoneda(totalGastos);
-    $('dashUtilidad').textContent = formatearMoneda(utilidad);
-    $('dashNumVentas').textContent = ventasMes.length;
-
-    // Gráfico evolución
-    actualizarGraficoVentasGastos(mes, view);
-    // Gráfico productos por punto
-    actualizarGraficoProductosPunto(mes, $('dashProdView').value);
-  }
-
-  function actualizarGraficoVentasGastos(mes, view) {
-    const ctx = document.getElementById('dashChartVentasGastos').getContext('2d');
-    if (chartVentasGastos) chartVentasGastos.destroy();
-
-    // Generar etiquetas según vista
-    let labels = [];
-    let ventasData = [];
-    let gastosData = [];
-    const diasMes = obtenerDiasMes(mes);
-    const [year, month] = mes.split('-').map(Number);
-
-    if (view === 'semanal') {
-      // 4 semanas aprox
-      const semanas = [];
-      for (let i = 1; i <= diasMes; i += 7) {
-        const fin = Math.min(i+6, diasMes);
-        semanas.push({ inicio: i, fin });
-      }
-      labels = semanas.map((s, idx) => `Sem ${idx+1}`);
-      semanas.forEach(s => {
-        let totalV = 0, totalG = 0;
-        state.ventas.forEach(v => {
-          if (esMismoMes(v.fecha, mes)) {
-            const d = new Date(v.fecha);
-            if (d.getDate() >= s.inicio && d.getDate() <= s.fin) totalV += v.total || 0;
-          }
-        });
-        state.gastos.forEach(g => {
-          if (esMismoMes(g.fecha, mes)) {
-            const d = new Date(g.fecha);
-            if (d.getDate() >= s.inicio && d.getDate() <= s.fin) totalG += g.precio || 0;
-          }
-        });
-        ventasData.push(totalV);
-        gastosData.push(totalG);
-      });
-    } else if (view === 'quincenal') {
-      const q1 = { inicio:1, fin:15 };
-      const q2 = { inicio:16, fin:diasMes };
-      labels = ['1-15', '16-'+diasMes];
-      [q1,q2].forEach(q => {
-        let totalV=0, totalG=0;
-        state.ventas.forEach(v => {
-          if (esMismoMes(v.fecha, mes)) {
-            const d = new Date(v.fecha);
-            if (d.getDate() >= q.inicio && d.getDate() <= q.fin) totalV += v.total || 0;
-          }
-        });
-        state.gastos.forEach(g => {
-          if (esMismoMes(g.fecha, mes)) {
-            const d = new Date(g.fecha);
-            if (d.getDate() >= q.inicio && d.getDate() <= q.fin) totalG += g.precio || 0;
-          }
-        });
-        ventasData.push(totalV);
-        gastosData.push(totalG);
-      });
-    } else { // mensual: cada día
-      labels = Array.from({length: diasMes}, (_, i) => String(i+1));
-      for (let d=1; d<=diasMes; d++) {
-        let totalV=0, totalG=0;
-        state.ventas.forEach(v => {
-          if (esMismoMes(v.fecha, mes)) {
-            const dia = new Date(v.fecha).getDate();
-            if (dia === d) totalV += v.total || 0;
-          }
-        });
-        state.gastos.forEach(g => {
-          if (esMismoMes(g.fecha, mes)) {
-            const dia = new Date(g.fecha).getDate();
-            if (dia === d) totalG += g.precio || 0;
-          }
-        });
-        ventasData.push(totalV);
-        gastosData.push(totalG);
-      }
-    }
-
-    chartVentasGastos = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          { label: 'Ventas', data: ventasData, borderColor: '#F2B3D6', backgroundColor: 'rgba(242,179,214,0.2)', tension: 0.3, fill: true },
-          { label: 'Gastos', data: gastosData, borderColor: '#9C8BD9', backgroundColor: 'rgba(156,139,217,0.2)', tension: 0.3, fill: true }
-        ]
-      },
-      options: { responsive: true, plugins: { legend: { position: 'top' } } }
-    });
-  }
-
-  function actualizarGraficoProductosPunto(mes, view) {
-    const ctx = document.getElementById('dashChartProductosPunto').getContext('2d');
-    if (chartProductosPunto) chartProductosPunto.destroy();
-
-    // Filtrar ventas del mes
-    let ventasFiltradas = state.ventas.filter(v => esMismoMes(v.fecha, mes));
-    // Si view es semanal, tomar solo la última semana? o la semana actual. Simplificamos: tomamos todas las ventas del mes y agrupamos por punto.
-    // Podríamos filtrar por período, pero para este gráfico usaremos todas las ventas del mes con vista de período (similar al dashboard)
-    // Aplicar filtro de vista (semanal, quincenal, mensual) sobre las ventas del mes.
-    // Usamos la misma lógica de semanas/quincenas.
-    const [year, month] = mes.split('-').map(Number);
-    const diasMes = obtenerDiasMes(mes);
-    let ventasPeriodo = [];
-    if (view === 'semanal') {
-      // Tomar la última semana completa del mes
-      const ultimaSemana = [];
-      let inicio = Math.max(1, diasMes - 6);
-      let fin = diasMes;
-      ventasPeriodo = state.ventas.filter(v => {
-        if (!esMismoMes(v.fecha, mes)) return false;
-        const d = new Date(v.fecha);
-        return d.getDate() >= inicio && d.getDate() <= fin;
-      });
-    } else if (view === 'quincenal') {
-      // Tomar segunda quincena
-      const inicio = 16, fin = diasMes;
-      ventasPeriodo = state.ventas.filter(v => {
-        if (!esMismoMes(v.fecha, mes)) return false;
-        const d = new Date(v.fecha);
-        return d.getDate() >= inicio && d.getDate() <= fin;
-      });
-    } else {
-      ventasPeriodo = ventasFiltradas;
-    }
-
-    // Agrupar por punto de venta
-    const map = new Map();
-    ventasPeriodo.forEach(v => {
-      const key = v.puntoVenta || 'Sin punto';
-      if (!map.has(key)) map.set(key, { total: 0, productos: {} });
-      const entry = map.get(key);
-      entry.total += v.total || 0;
-      // contar productos
-      if (v.productos) {
-        v.productos.forEach(p => {
-          const cantVendida = p.cantidad - (p.noVendido || 0);
-          if (cantVendida > 0) {
-            entry.productos[p.nombre] = (entry.productos[p.nombre] || 0) + cantVendida;
-          }
-        });
-      }
-    });
-
-    const labels = Array.from(map.keys());
-    const data = labels.map(l => map.get(l).total);
-
-    chartProductosPunto = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{ label: 'Ventas (S/)', data, backgroundColor: ['#F2B3D6','#B4A3D9','#9C8BD9','#F2E9BB'] }]
-      },
-      options: { responsive: true, plugins: { legend: { display: false } } }
-    });
-  }
-
-  // ---------- RENDER: VENTAS ----------
-  function renderizarVentas() {
-    const container = $('ventasContent');
-    // Mostrar opciones: nueva venta o historial
-    // Por defecto mostramos el paso 1 para nueva venta si no hay en curso
-    if (!state.ventaEnCurso) {
-      // Mostrar formulario paso 1
-      container.innerHTML = renderPaso1();
-      // Agregar eventos
-      document.getElementById('btnAgregarProducto').addEventListener('click', agregarProductoAVenta);
-      document.getElementById('btnCargarPendientes').addEventListener('click', mostrarPendientes);
-      document.getElementById('btnRegistrarVenta').addEventListener('click', registrarVenta);
-      document.getElementById('btnAgregarTodosPendientes').addEventListener('click', agregarTodosPendientes);
-      // Cargar puntos de venta en select
-      llenarSelectPuntos('puntoVentaSelect');
-      actualizarListaProductosVenta();
-      actualizarTotalVenta();
-      // Cargar pendientes en la lista
-      renderizarPendientesEnVenta();
-    } else {
-      // Mostrar paso 2 (retorno) para la venta en curso
-      container.innerHTML = renderPaso2(state.ventaEnCurso);
-      // Eventos
-      document.getElementById('btnCompletarRetorno').addEventListener('click', completarRetorno);
-      // Calcular diferencias
-      document.querySelectorAll('.noVendidoInput').forEach(inp => {
-        inp.addEventListener('input', calcularRetorno);
-      });
-      document.querySelectorAll('.retornoInput').forEach(inp => {
-        inp.addEventListener('input', calcularRetorno);
-      });
-      calcularRetorno();
-    }
-  }
-
-  function renderPaso1() {
-    return `
-      <div class="neu" style="padding:24px;">
-        <h3>Paso 1: Registrar Llevar</h3>
-        <div class="form-group"><label>Fecha</label><input type="date" id="fechaLlevar" value="${new Date().toISOString().split('T')[0]}" disabled></div>
-        <div class="form-group"><label>Fondo de caja (S/)</label><input type="number" id="fondoCaja" step="0.01" value="0"></div>
-        <div class="form-group"><label>Punto de venta</label><select id="puntoVentaSelect"></select></div>
-        <hr class="mt-16 mb-16">
-        <h4>Agregar producto</h4>
-        <div class="flex">
-          <div class="form-group" style="flex:2;"><label>Producto</label><input type="text" id="prodNombre" placeholder="Nombre"></div>
-          <div class="form-group" style="flex:1;"><label>Cantidad</label><input type="number" id="prodCantidad" value="1" min="1"></div>
-          <div class="form-group" style="flex:1;"><label>Precio unitario</label><input type="number" id="prodPrecio" step="0.01" value="0"></div>
-          <div class="form-group" style="flex:0;"><button class="btn-neu btn-neu-primary" id="btnAgregarProducto" style="margin-top:22px;"><i class="fas fa-plus"></i></button></div>
+    <!-- ===== MODAL PERFIL ===== -->
+    <div class="modal-overlay" id="perfilModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-user-edit"></i> Perfil</h2>
+            <div class="form-group"><label>Nombre</label><input type="text" id="perfilNombre" value="Administrador"></div>
+            <div class="form-group"><label>Usuario</label><input type="text" id="perfilUsuario" value="admin"></div>
+            <div class="form-group"><label>Nueva Contraseña (dejar vacío para mantener)</label><input type="password" id="perfilPass" placeholder="Nueva contraseña"></div>
+            <div class="flex" style="justify-content:flex-end;gap:1rem;">
+                <button class="btn btn-outline" id="perfilCancelar">Cancelar</button>
+                <button class="btn btn-primary" id="perfilGuardar"><i class="fas fa-save"></i> Guardar</button>
+            </div>
         </div>
-        <div class="flex"><button class="btn-neu" id="btnCargarPendientes"><i class="fas fa-list"></i> Cargar pendientes</button></div>
-        <div id="pendientesContainer" style="display:none; margin-top:12px;" class="neu-inset">
-          <h5>Productos pendientes</h5>
-          <div id="pendientesLista"></div>
-          <button class="btn-neu btn-neu-sm" id="btnAgregarTodosPendientes"><i class="fas fa-check-double"></i> Agregar todos</button>
+    </div>
+
+    <!-- ===== MODAL EDICIÓN DE VENTA ===== -->
+    <div class="modal-overlay" id="editarVentaModal">
+        <div class="modal-content" style="max-width:700px;">
+            <h2><i class="fas fa-edit"></i> Editar Venta</h2>
+            <div id="editarVentaForm">
+                <!-- se llena dinámicamente -->
+            </div>
+            <div class="flex" style="justify-content:flex-end;gap:1rem;margin-top:1rem;">
+                <button class="btn btn-outline" id="editarVentaCancelar">Cancelar</button>
+                <button class="btn btn-primary" id="editarVentaGuardar"><i class="fas fa-save"></i> Guardar Cambios</button>
+            </div>
         </div>
-        <hr class="mt-16 mb-16">
-        <h4>Productos llevados</h4>
-        <div id="listaProductosVenta"></div>
-        <div class="flex-between mt-16">
-          <span><strong>Total: </strong><span id="totalVentaDisplay">S/ 0.00</span></span>
-          <button class="btn-neu btn-neu-success" id="btnRegistrarVenta"><i class="fas fa-save"></i> Registrar Venta (Pendiente)</button>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderPaso2(venta) {
-    // venta es el objeto con productos y datos
-    let productosHtml = '';
-    venta.productos.forEach((p, idx) => {
-      productosHtml += `
-        <div class="product-list-item">
-          <div class="info">
-            <span>${p.nombre}</span>
-            <span>Cant: ${p.cantidad}</span>
-            <span>Precio: ${formatearMoneda(p.precioUnitario)}</span>
-            <span>Total: ${formatearMoneda(p.cantidad * p.precioUnitario)}</span>
-          </div>
-          <div>
-            <label style="display:inline; font-size:0.8rem;">No vendidos</label>
-            <input type="number" class="noVendidoInput" data-idx="${idx}" value="0" min="0" max="${p.cantidad}" style="width:70px; display:inline-block;">
-          </div>
-        </div>
-      `;
-    });
-
-    return `
-      <div class="neu" style="padding:24px;">
-        <h3>Paso 2: Completar Retorno</h3>
-        <div class="flex-between">
-          <div><strong>Fecha:</strong> ${formatearFecha(venta.fecha)}</div>
-          <div><strong>Punto:</strong> ${venta.puntoVenta || 'N/A'}</div>
-          <div><strong>Total llevado:</strong> ${formatearMoneda(venta.total)}</div>
-        </div>
-        <hr class="mt-16 mb-16">
-        <div class="form-group"><label>Yape / Plin (S/)</label><input type="number" id="retornoYape" class="retornoInput" step="0.01" value="0"></div>
-        <div class="form-group"><label>Efectivo (S/)</label><input type="number" id="retornoEfectivo" class="retornoInput" step="0.01" value="0"></div>
-        <div class="form-group"><label>Deben / Fiado (S/)</label><input type="number" id="retornoFiado" class="retornoInput" step="0.01" value="0"></div>
-        <div class="form-group"><label>Descuento / Pérdida (S/)</label><input type="number" id="retornoDescuento" class="retornoInput" step="0.01" value="0"></div>
-        <div class="form-group"><label>Movilidad (S/)</label><input type="number" id="retornoMovilidad" class="retornoInput" step="0.01" value="0"></div>
-        <hr class="mt-16 mb-16">
-        <h4>Productos no vendidos</h4>
-        ${productosHtml}
-        <div class="flex-between mt-16">
-          <div><strong>Total no vendidos:</strong> <span id="totalNoVendidos">S/ 0.00</span></div>
-          <div><strong>Diferencia caja:</strong> <span id="diferenciaCaja">S/ 0.00</span></div>
-          <div><strong>Ganancia del día:</strong> <span id="gananciaDia">S/ 0.00</span></div>
-        </div>
-        <button class="btn-neu btn-neu-success mt-16" id="btnCompletarRetorno"><i class="fas fa-check-circle"></i> Completar Retorno</button>
-      </div>
-    `;
-  }
-
-  // Lógica de ventas
-  function llenarSelectPuntos(id) {
-    const sel = document.getElementById(id);
-    if (!sel) return;
-    sel.innerHTML = '<option value="">Seleccionar punto</option>';
-    state.puntosVenta.forEach(p => {
-      sel.innerHTML += `<option value="${p.nombre}">${p.nombre}</option>`;
-    });
-  }
-
-  let listaProductosVenta = []; // temporal para paso 1
-
-  function agregarProductoAVenta() {
-    const nombre = document.getElementById('prodNombre').value.trim();
-    const cantidad = parseInt(document.getElementById('prodCantidad').value) || 0;
-    const precio = parseFloat(document.getElementById('prodPrecio').value) || 0;
-    if (!nombre || cantidad <= 0 || precio <= 0) {
-      toast('Complete todos los campos del producto', 'warning');
-      return;
-    }
-    // Verificar si ya existe y sumar
-    const existente = listaProductosVenta.find(p => p.nombre === nombre);
-    if (existente) {
-      existente.cantidad += cantidad;
-      // mantiene precio
-    } else {
-      listaProductosVenta.push({ nombre, cantidad, precioUnitario: precio });
-    }
-    document.getElementById('prodNombre').value = '';
-    document.getElementById('prodCantidad').value = '1';
-    document.getElementById('prodPrecio').value = '0';
-    actualizarListaProductosVenta();
-    actualizarTotalVenta();
-    toast('Producto agregado', 'success');
-  }
-
-  function actualizarListaProductosVenta() {
-    const container = document.getElementById('listaProductosVenta');
-    if (!container) return;
-    if (!listaProductosVenta.length) {
-      container.innerHTML = '<p class="text-muted">No hay productos agregados.</p>';
-      return;
-    }
-    let html = '';
-    listaProductosVenta.forEach((p, idx) => {
-      const total = p.cantidad * p.precioUnitario;
-      html += `
-        <div class="product-list-item">
-          <div class="info">
-            <span>${p.nombre}</span>
-            <span>Cant: ${p.cantidad}</span>
-            <span>Precio: ${formatearMoneda(p.precioUnitario)}</span>
-            <span>Total: ${formatearMoneda(total)}</span>
-          </div>
-          <button class="btn-neu btn-neu-danger btn-neu-sm" onclick="eliminarProductoVenta(${idx})"><i class="fas fa-trash"></i></button>
-        </div>
-      `;
-    });
-    container.innerHTML = html;
-  }
-
-  window.eliminarProductoVenta = function(idx) {
-    listaProductosVenta.splice(idx, 1);
-    actualizarListaProductosVenta();
-    actualizarTotalVenta();
-  };
-
-  function actualizarTotalVenta() {
-    const total = listaProductosVenta.reduce((sum, p) => sum + p.cantidad * p.precioUnitario, 0);
-    const el = document.getElementById('totalVentaDisplay');
-    if (el) el.textContent = formatearMoneda(total);
-  }
-
-  function registrarVenta() {
-    const punto = document.getElementById('puntoVentaSelect').value;
-    const fondo = parseFloat(document.getElementById('fondoCaja').value) || 0;
-    if (!punto) { toast('Seleccione un punto de venta', 'warning'); return; }
-    if (!listaProductosVenta.length) { toast('Agregue al menos un producto', 'warning'); return; }
-
-    const venta = {
-      id: generarId(),
-      fecha: new Date().toISOString().split('T')[0],
-      puntoVenta: punto,
-      fondo: fondo,
-      productos: listaProductosVenta.map(p => ({ ...p })),
-      total: listaProductosVenta.reduce((sum, p) => sum + p.cantidad * p.precioUnitario, 0),
-      estado: 'pendiente',
-      retorno: null
-    };
-    state.ventas.push(venta);
-    guardarState();
-    listaProductosVenta = [];
-    toast('Venta registrada como pendiente', 'success');
-    renderizarVentas();
-    // También podríamos mostrar el paso 2 automáticamente
-    // Para eso, establecemos ventaEnCurso y renderizamos
-    state.ventaEnCurso = venta;
-    renderizarVentas();
-  }
-
-  // Productos pendientes
-  function renderizarPendientesEnVenta() {
-    const container = document.getElementById('pendientesLista');
-    if (!container) return;
-    const pendientes = state.productosPendientes;
-    if (!pendientes.length) {
-      container.innerHTML = '<p class="text-muted">No hay productos pendientes.</p>';
-      return;
-    }
-    let html = '';
-    pendientes.forEach((p, idx) => {
-      html += `
-        <div class="product-list-item">
-          <div class="info">
-            <span>${p.nombre}</span>
-            <span>Cant: ${p.cantidad}</span>
-            <span>Precio: ${formatearMoneda(p.precioUnitario)}</span>
-          </div>
-          <button class="btn-neu btn-neu-sm" onclick="agregarPendienteAUnaVenta(${idx})"><i class="fas fa-plus"></i> Agregar</button>
-        </div>
-      `;
-    });
-    container.innerHTML = html;
-  }
-
-  window.agregarPendienteAUnaVenta = function(idx) {
-    const p = state.productosPendientes[idx];
-    if (!p) return;
-    // Agregar a listaProductosVenta
-    const existente = listaProductosVenta.find(item => item.nombre === p.nombre);
-    if (existente) {
-      existente.cantidad += p.cantidad;
-    } else {
-      listaProductosVenta.push({ nombre: p.nombre, cantidad: p.cantidad, precioUnitario: p.precioUnitario });
-    }
-    // Eliminar de pendientes
-    state.productosPendientes.splice(idx, 1);
-    guardarState();
-    actualizarListaProductosVenta();
-    actualizarTotalVenta();
-    renderizarPendientesEnVenta();
-    toast('Producto pendiente agregado', 'success');
-  };
-
-  window.agregarTodosPendientes = function() {
-    if (!state.productosPendientes.length) { toast('No hay pendientes', 'warning'); return; }
-    // Agregar todos
-    state.productosPendientes.forEach(p => {
-      const existente = listaProductosVenta.find(item => item.nombre === p.nombre);
-      if (existente) {
-        existente.cantidad += p.cantidad;
-      } else {
-        listaProductosVenta.push({ nombre: p.nombre, cantidad: p.cantidad, precioUnitario: p.precioUnitario });
-      }
-    });
-    state.productosPendientes = [];
-    guardarState();
-    actualizarListaProductosVenta();
-    actualizarTotalVenta();
-    renderizarPendientesEnVenta();
-    toast('Todos los pendientes agregados', 'success');
-  };
-
-  function mostrarPendientes() {
-    const cont = document.getElementById('pendientesContainer');
-    if (cont) {
-      cont.style.display = cont.style.display === 'none' ? 'block' : 'none';
-      renderizarPendientesEnVenta();
-    }
-  }
-
-  // Retorno
-  function calcularRetorno() {
-    const inputsNoVendidos = document.querySelectorAll('.noVendidoInput');
-    let totalNoVendido = 0;
-    const venta = state.ventaEnCurso;
-    if (!venta) return;
-    venta.productos.forEach((p, idx) => {
-      const cantNoVendida = parseInt(inputsNoVendidos[idx]?.value) || 0;
-      p.noVendido = Math.min(cantNoVendida, p.cantidad);
-      totalNoVendido += p.noVendido * p.precioUnitario;
-    });
-    document.getElementById('totalNoVendidos').textContent = formatearMoneda(totalNoVendido);
-
-    const yape = parseFloat(document.getElementById('retornoYape').value) || 0;
-    const efectivo = parseFloat(document.getElementById('retornoEfectivo').value) || 0;
-    const fiado = parseFloat(document.getElementById('retornoFiado').value) || 0;
-    const descuento = parseFloat(document.getElementById('retornoDescuento').value) || 0;
-    const movilidad = parseFloat(document.getElementById('retornoMovilidad').value) || 0;
-
-    const totalVendido = venta.total - totalNoVendido;
-    const ingresos = yape + efectivo + fiado;
-    // Diferencia en caja: lo que debería haber (totalVendido - descuento - movilidad) vs lo que hay (yape + efectivo)
-    const deberiaHaber = totalVendido - descuento - movilidad;
-    const diferencia = (yape + efectivo) - deberiaHaber;
-    document.getElementById('diferenciaCaja').textContent = formatearMoneda(diferencia);
-    // Ganancia del día: (yape + efectivo) - descuento - movilidad - totalNoVendido? O mejor totalVendido - descuento - movilidad
-    const ganancia = totalVendido - descuento - movilidad;
-    document.getElementById('gananciaDia').textContent = formatearMoneda(ganancia);
-
-    // Guardar en venta para luego usar en completar
-    venta._temp = { totalNoVendido, yape, efectivo, fiado, descuento, movilidad, diferencia, ganancia };
-  }
-
-  function completarRetorno() {
-    const venta = state.ventaEnCurso;
-    if (!venta) return;
-    // Recoger datos de inputs
-    const inputsNoVendidos = document.querySelectorAll('.noVendidoInput');
-    const noVendidos = [];
-    venta.productos.forEach((p, idx) => {
-      const cant = parseInt(inputsNoVendidos[idx]?.value) || 0;
-      const cantReal = Math.min(cant, p.cantidad);
-      if (cantReal > 0) {
-        noVendidos.push({ nombre: p.nombre, cantidad: cantReal, precioUnitario: p.precioUnitario });
-      }
-      p.noVendido = cantReal;
-    });
-
-    const yape = parseFloat(document.getElementById('retornoYape').value) || 0;
-    const efectivo = parseFloat(document.getElementById('retornoEfectivo').value) || 0;
-    const fiado = parseFloat(document.getElementById('retornoFiado').value) || 0;
-    const descuento = parseFloat(document.getElementById('retornoDescuento').value) || 0;
-    const movilidad = parseFloat(document.getElementById('retornoMovilidad').value) || 0;
-
-    const totalNoVendido = noVendidos.reduce((sum, p) => sum + p.cantidad * p.precioUnitario, 0);
-    const totalVendido = venta.total - totalNoVendido;
-    const ganancia = totalVendido - descuento - movilidad;
-    const diferencia = (yape + efectivo) - (totalVendido - descuento - movilidad);
-
-    venta.retorno = {
-      yape, efectivo, fiado, descuento, movilidad,
-      noVendidos: noVendidos,
-      totalNoVendido,
-      totalVendido,
-      ganancia,
-      diferencia
-    };
-    venta.estado = 'completado';
-
-    // Agregar productos no vendidos a pendientes
-    noVendidos.forEach(p => {
-      state.productosPendientes.push({ ...p });
-    });
-
-    guardarState();
-    state.ventaEnCurso = null;
-    toast('Retorno completado', 'success');
-    renderizarVentas();
-  }
-
-  // Historial de ventas
-  function mostrarHistorial() {
-    const container = $('ventasContent');
-    let html = `
-      <div class="neu" style="padding:20px;">
-        <h3>Historial de Ventas</h3>
-        <div class="flex mb-16">
-          <button class="btn-neu" id="btnVolverVentas"><i class="fas fa-arrow-left"></i> Volver</button>
-          <div class="form-group"><label>Período</label><select id="histPeriodo"><option value="semana">Semana</option><option value="mes">Mes</option></select></div>
-          <button class="btn-neu" id="histFilterBtn"><i class="fas fa-filter"></i> Filtrar</button>
-        </div>
-        <div class="table-responsive">
-          <table>
-            <thead><tr><th>Fecha</th><th>Punto</th><th>Productos</th><th>Total</th><th>Falta/Sobra</th><th>Ganancia</th><th>Fiado</th><th>Movilidad</th><th>Estado</th><th>Acciones</th></tr></thead>
-            <tbody id="histBody"></tbody>
-          </table>
-        </div>
-        <div class="mt-16"><canvas id="histChart" height="150"></canvas></div>
-      </div>
-    `;
-    container.innerHTML = html;
-    document.getElementById('btnVolverVentas').addEventListener('click', () => {
-      state.ventaEnCurso = null;
-      renderizarVentas();
-    });
-    document.getElementById('histFilterBtn').addEventListener('click', renderizarHistorial);
-    renderizarHistorial();
-  }
-
-  function renderizarHistorial() {
-    const periodo = document.getElementById('histPeriodo').value;
-    // Filtrar ventas según período
-    const ahora = new Date();
-    let ventasFiltradas = state.ventas;
-    if (periodo === 'semana') {
-      const inicio = new Date(ahora);
-      inicio.setDate(ahora.getDate() - 7);
-      ventasFiltradas = state.ventas.filter(v => new Date(v.fecha) >= inicio);
-    } else {
-      const inicio = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
-      ventasFiltradas = state.ventas.filter(v => new Date(v.fecha) >= inicio);
-    }
-    // Ordenar descendente
-    ventasFiltradas.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
-
-    const tbody = document.getElementById('histBody');
-    if (!ventasFiltradas.length) {
-      tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted">No hay ventas</td></tr>';
-      return;
-    }
-    let html = '';
-    ventasFiltradas.forEach(v => {
-      const resumen = v.productos.map(p => `${p.nombre}(${p.cantidad})`).join(', ');
-      const faltaSobra = v.retorno ? formatearMoneda(v.retorno.diferencia) : '—';
-      const ganancia = v.retorno ? formatearMoneda(v.retorno.ganancia) : '—';
-      const fiado = v.retorno ? formatearMoneda(v.retorno.fiado) : '—';
-      const movilidad = v.retorno ? formatearMoneda(v.retorno.movilidad) : '—';
-      const estado = v.estado === 'completado' ? '<span class="badge badge-completado">Completado</span>' : '<span class="badge badge-pendiente">Pendiente</span>';
-      const acciones = `
-        <div class="actions">
-          ${v.estado === 'pendiente' ? `<button class="btn-neu btn-neu-sm btn-neu-primary" onclick="completarRetornoDesdeHistorial('${v.id}')"><i class="fas fa-check"></i></button>` : ''}
-          <button class="btn-neu btn-neu-sm" onclick="editarVenta('${v.id}')"><i class="fas fa-edit"></i></button>
-          <button class="btn-neu btn-neu-sm btn-neu-danger" onclick="eliminarVenta('${v.id}')"><i class="fas fa-trash"></i></button>
-          ${v.retorno && v.retorno.fiado > 0 ? `<button class="btn-neu btn-neu-sm btn-neu-warning" onclick="pagarFiado('${v.id}')"><i class="fas fa-hand-holding-usd"></i> Pagar</button>` : ''}
-        </div>
-      `;
-      html += `<tr><td>${formatearFecha(v.fecha)}</td><td>${v.puntoVenta || 'N/A'}</td><td>${resumen}</td><td>${formatearMoneda(v.total)}</td><td>${faltaSobra}</td><td>${ganancia}</td><td>${fiado}</td><td>${movilidad}</td><td>${estado}</td><td>${acciones}</td></tr>`;
-    });
-    tbody.innerHTML = html;
-
-    // Gráfico de evolución de ventas (línea)
-    const ctx = document.getElementById('histChart').getContext('2d');
-    if (window._histChart) window._histChart.destroy();
-    const labels = ventasFiltradas.map(v => formatearFecha(v.fecha));
-    const data = ventasFiltradas.map(v => v.total);
-    window._histChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{ label: 'Ventas (S/)', data, borderColor: '#B4A3D9', tension: 0.2 }]
-      },
-      options: { responsive: true }
-    });
-  }
-
-  // Acciones desde historial
-  window.completarRetornoDesdeHistorial = function(id) {
-    const venta = state.ventas.find(v => v.id === id);
-    if (!venta) return;
-    state.ventaEnCurso = venta;
-    renderizarVentas();
-  };
-
-  window.editarVenta = function(id) {
-    toast('Editar venta - funcionalidad pendiente', 'warning');
-  };
-
-  window.eliminarVenta = function(id) {
-    if (!confirm('¿Eliminar esta venta?')) return;
-    state.ventas = state.ventas.filter(v => v.id !== id);
-    guardarState();
-    renderizarHistorial();
-    toast('Venta eliminada', 'success');
-  };
-
-  window.pagarFiado = function(id) {
-    const venta = state.ventas.find(v => v.id === id);
-    if (!venta || !venta.retorno) return;
-    const monto = venta.retorno.fiado;
-    if (monto <= 0) return;
-    // Simplemente reducir el fiado a 0 y sumar a efectivo? O registrar pago.
-    // Lo dejamos como que se paga y se refleja en efectivo
-    venta.retorno.fiado = 0;
-    venta.retorno.efectivo += monto;
-    // Recalcular diferencia y ganancia
-    const totalNoVendido = venta.retorno.totalNoVendido || 0;
-    const totalVendido = venta.total - totalNoVendido;
-    venta.retorno.diferencia = (venta.retorno.yape + venta.retorno.efectivo) - (totalVendido - venta.retorno.descuento - venta.retorno.movilidad);
-    venta.retorno.ganancia = totalVendido - venta.retorno.descuento - venta.retorno.movilidad;
-    guardarState();
-    renderizarHistorial();
-    toast('Fiado pagado', 'success');
-  };
-
-  // ============ RENDER: GASTOS ============
-  function renderizarGastos() {
-    const lista = document.getElementById('gastosList');
-    const search = document.getElementById('gastoSearch').value.toLowerCase();
-    const periodo = document.getElementById('gastoPeriodo').value;
-    let filtrados = state.gastos;
-    if (search) filtrados = filtrados.filter(g => g.producto.toLowerCase().includes(search));
-    // filtrar por período (semana/mes)
-    const ahora = new Date();
-    if (periodo === 'semana') {
-      const inicio = new Date(ahora);
-      inicio.setDate(ahora.getDate() - 7);
-      filtrados = filtrados.filter(g => new Date(g.fecha) >= inicio);
-    } else {
-      const inicio = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
-      filtrados = filtrados.filter(g => new Date(g.fecha) >= inicio);
-    }
-    filtrados.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
-
-    if (!filtrados.length) {
-      lista.innerHTML = '<p class="text-muted">No hay gastos</p>';
-    } else {
-      let html = `<table><thead><tr><th>Fecha</th><th>Producto</th><th>Precio</th><th>Acciones</th></tr></thead><tbody>`;
-      filtrados.forEach(g => {
-        html += `<tr><td>${formatearFecha(g.fecha)}</td><td>${g.producto}</td><td>${formatearMoneda(g.precio)}</td>
-          <td><div class="actions">
-            <button class="btn-neu btn-neu-sm" onclick="editarGasto('${g.id}')"><i class="fas fa-edit"></i></button>
-            <button class="btn-neu btn-neu-sm btn-neu-danger" onclick="eliminarGasto('${g.id}')"><i class="fas fa-trash"></i></button>
-          </div></td></tr>`;
-      });
-      html += '</tbody></table>';
-      lista.innerHTML = html;
-    }
-
-    // Gráfico de evolución de gastos
-    const ctx = document.getElementById('gastosChart').getContext('2d');
-    if (window._gastosChart) window._gastosChart.destroy();
-    const labels = filtrados.map(g => formatearFecha(g.fecha));
-    const data = filtrados.map(g => g.precio);
-    window._gastosChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{ label: 'Gastos (S/)', data, borderColor: '#F2B3D6', tension: 0.2 }]
-      },
-      options: { responsive: true }
-    });
-  }
-
-  window.editarGasto = function(id) {
-    const gasto = state.gastos.find(g => g.id === id);
-    if (!gasto) return;
-    abrirModal('Editar Gasto', `
-      <div class="form-group"><label>Producto</label><input type="text" id="editGastoProd" value="${gasto.producto}"></div>
-      <div class="form-group"><label>Precio</label><input type="number" id="editGastoPrecio" step="0.01" value="${gasto.precio}"></div>
-      <button class="btn-neu btn-neu-primary" id="saveEditGasto">Guardar</button>
-    `);
-    document.getElementById('saveEditGasto').addEventListener('click', () => {
-      const prod = document.getElementById('editGastoProd').value.trim();
-      const precio = parseFloat(document.getElementById('editGastoPrecio').value);
-      if (!prod || isNaN(precio) || precio <= 0) { toast('Datos inválidos', 'error'); return; }
-      gasto.producto = prod;
-      gasto.precio = precio;
-      guardarState();
-      cerrarModal();
-      renderizarGastos();
-      toast('Gasto actualizado', 'success');
-    });
-  };
-
-  window.eliminarGasto = function(id) {
-    if (!confirm('¿Eliminar este gasto?')) return;
-    state.gastos = state.gastos.filter(g => g.id !== id);
-    guardarState();
-    renderizarGastos();
-    toast('Gasto eliminado', 'success');
-  };
-
-  // ============ RENDER: INVENTARIO ============
-  function renderizarInventario() {
-    const lista = document.getElementById('inventarioList');
-    const search = document.getElementById('invSearch').value.toLowerCase();
-    const tipo = document.getElementById('invTipo').value;
-    let filtrados = state.inventario;
-    if (search) filtrados = filtrados.filter(i => i.producto.toLowerCase().includes(search));
-    if (tipo) filtrados = filtrados.filter(i => i.tipo === tipo);
-    filtrados.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
-
-    if (!filtrados.length) {
-      lista.innerHTML = '<p class="text-muted">No hay productos en inventario</p>';
-    } else {
-      let html = `<table><thead><tr><th>Fecha</th><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Tipo</th><th>Acciones</th></tr></thead><tbody>`;
-      filtrados.forEach(i => {
-        html += `<tr><td>${formatearFecha(i.fecha)}</td><td>${i.producto}</td><td>${i.cantidad}</td><td>${formatearMoneda(i.precio)}</td><td>${i.tipo}</td>
-          <td><div class="actions">
-            <button class="btn-neu btn-neu-sm" onclick="editarInventario('${i.id}')"><i class="fas fa-edit"></i></button>
-            <button class="btn-neu btn-neu-sm btn-neu-danger" onclick="eliminarInventario('${i.id}')"><i class="fas fa-trash"></i></button>
-          </div></td></tr>`;
-      });
-      html += '</tbody></table>';
-      lista.innerHTML = html;
-    }
-  }
-
-  window.editarInventario = function(id) {
-    const item = state.inventario.find(i => i.id === id);
-    if (!item) return;
-    abrirModal('Editar Inventario', `
-      <div class="form-group"><label>Producto</label><input type="text" id="editInvProd" value="${item.producto}"></div>
-      <div class="form-group"><label>Cantidad</label><input type="number" id="editInvCant" value="${item.cantidad}"></div>
-      <div class="form-group"><label>Precio</label><input type="number" id="editInvPrecio" step="0.01" value="${item.precio}"></div>
-      <div class="form-group"><label>Tipo</label><select id="editInvTipo"><option value="Insumo" ${item.tipo==='Insumo'?'selected':''}>Insumo</option><option value="Utensilio" ${item.tipo==='Utensilio'?'selected':''}>Utensilio</option><option value="Envase" ${item.tipo==='Envase'?'selected':''}>Envase</option><option value="Adorno" ${item.tipo==='Adorno'?'selected':''}>Adorno</option></select></div>
-      <button class="btn-neu btn-neu-primary" id="saveEditInv">Guardar</button>
-    `);
-    document.getElementById('saveEditInv').addEventListener('click', () => {
-      const prod = document.getElementById('editInvProd').value.trim();
-      const cant = parseInt(document.getElementById('editInvCant').value);
-      const precio = parseFloat(document.getElementById('editInvPrecio').value);
-      const tipo = document.getElementById('editInvTipo').value;
-      if (!prod || isNaN(cant) || cant < 0 || isNaN(precio) || precio < 0) { toast('Datos inválidos', 'error'); return; }
-      item.producto = prod;
-      item.cantidad = cant;
-      item.precio = precio;
-      item.tipo = tipo;
-      guardarState();
-      cerrarModal();
-      renderizarInventario();
-      toast('Inventario actualizado', 'success');
-    });
-  };
-
-  window.eliminarInventario = function(id) {
-    if (!confirm('¿Eliminar este producto del inventario?')) return;
-    state.inventario = state.inventario.filter(i => i.id !== id);
-    guardarState();
-    renderizarInventario();
-    toast('Producto eliminado', 'success');
-  };
-
-  // ============ RENDER: PUNTOS DE VENTA ============
-  function renderizarPuntos() {
-    const lista = document.getElementById('puntosList');
-    if (!state.puntosVenta.length) {
-      lista.innerHTML = '<p class="text-muted">No hay puntos de venta registrados</p>';
-    } else {
-      let html = `<table><thead><tr><th>Nombre</th><th>Ubicación</th><th>Acciones</th></tr></thead><tbody>`;
-      state.puntosVenta.forEach(p => {
-        html += `<tr><td>${p.nombre}</td><td>${p.ubicacion || ''}</td>
-          <td><div class="actions">
-            <button class="btn-neu btn-neu-sm" onclick="editarPunto('${p.id}')"><i class="fas fa-edit"></i></button>
-            <button class="btn-neu btn-neu-sm btn-neu-danger" onclick="eliminarPunto('${p.id}')"><i class="fas fa-trash"></i></button>
-          </div></td></tr>`;
-      });
-      html += '</tbody></table>';
-      lista.innerHTML = html;
-    }
-  }
-
-  window.editarPunto = function(id) {
-    const p = state.puntosVenta.find(pt => pt.id === id);
-    if (!p) return;
-    abrirModal('Editar Punto de Venta', `
-      <div class="form-group"><label>Nombre</label><input type="text" id="editPuntoNom" value="${p.nombre}"></div>
-      <div class="form-group"><label>Ubicación</label><input type="text" id="editPuntoUbic" value="${p.ubicacion || ''}"></div>
-      <button class="btn-neu btn-neu-primary" id="saveEditPunto">Guardar</button>
-    `);
-    document.getElementById('saveEditPunto').addEventListener('click', () => {
-      const nom = document.getElementById('editPuntoNom').value.trim();
-      const ubic = document.getElementById('editPuntoUbic').value.trim();
-      if (!nom) { toast('Nombre requerido', 'error'); return; }
-      p.nombre = nom;
-      p.ubicacion = ubic;
-      guardarState();
-      cerrarModal();
-      renderizarPuntos();
-      toast('Punto actualizado', 'success');
-    });
-  };
-
-  window.eliminarPunto = function(id) {
-    if (!confirm('¿Eliminar este punto de venta?')) return;
-    state.puntosVenta = state.puntosVenta.filter(p => p.id !== id);
-    guardarState();
-    renderizarPuntos();
-    toast('Punto eliminado', 'success');
-  };
-
-  // ============ MODAL ============
-  function abrirModal(titulo, contenido) {
-    modalTitle.innerHTML = titulo;
-    modalBody.innerHTML = contenido;
-    modalOverlay.classList.add('open');
-  }
-
-  function cerrarModal() {
-    modalOverlay.classList.remove('open');
-  }
-
-  modalCloseBtn.addEventListener('click', cerrarModal);
-  modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) cerrarModal();
-  });
-
-  // ============ EVENTOS ============
-  // Login
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const user = document.getElementById('loginUser').value;
-    const pass = document.getElementById('loginPass').value;
-    login(user, pass);
-  });
-
-  // Logout
-  logoutBtn.addEventListener('click', logout);
-
-  // Perfil
-  profileBtn.addEventListener('click', () => {
-    const user = state.currentUser;
-    if (!user) return;
-    abrirModal('Mi Perfil', `
-      <div class="form-group"><label>Nombre</label><input type="text" id="editPerfilNom" value="${user.nombre}"></div>
-      <div class="form-group"><label>Usuario</label><input type="text" id="editPerfilUser" value="${user.usuario}"></div>
-      <div class="form-group"><label>Nueva Contraseña (dejar vacío para mantener)</label><input type="password" id="editPerfilPass" placeholder="Nueva contraseña"></div>
-      <button class="btn-neu btn-neu-primary" id="savePerfil">Guardar cambios</button>
-    `);
-    document.getElementById('savePerfil').addEventListener('click', () => {
-      const nom = document.getElementById('editPerfilNom').value.trim();
-      const usu = document.getElementById('editPerfilUser').value.trim();
-      const pass = document.getElementById('editPerfilPass').value;
-      if (!nom || !usu) { toast('Nombre y usuario requeridos', 'error'); return; }
-      user.nombre = nom;
-      user.usuario = usu;
-      if (pass) user.password = pass;
-      guardarState();
-      cerrarModal();
-      userNameDisplay.textContent = user.nombre + ' (' + user.rol + ')';
-      toast('Perfil actualizado', 'success');
-    });
-  });
-
-  // Navegación sidebar
-  document.querySelectorAll('.sidebar ul li a').forEach(a => {
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      const page = a.dataset.page;
-      if (page) navegar(page);
-    });
-  });
-
-  // Menu toggle
-  menuToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-  });
-
-  // Ventas: botones nuevos
-  document.getElementById('btnNuevaVenta').addEventListener('click', () => {
-    state.ventaEnCurso = null;
-    renderizarVentas();
-  });
-  document.getElementById('btnVerHistorial').addEventListener('click', mostrarHistorial);
-
-  // Gastos: nuevo
-  document.getElementById('btnNuevoGasto').addEventListener('click', () => {
-    abrirModal('Nuevo Gasto', `
-      <div class="form-group"><label>Producto</label><input type="text" id="nuevoGastoProd" placeholder="Ej: Harina"></div>
-      <div class="form-group"><label>Precio (S/)</label><input type="number" id="nuevoGastoPrecio" step="0.01" placeholder="0.00"></div>
-      <button class="btn-neu btn-neu-primary" id="saveNuevoGasto">Guardar</button>
-    `);
-    document.getElementById('saveNuevoGasto').addEventListener('click', () => {
-      const prod = document.getElementById('nuevoGastoProd').value.trim();
-      const precio = parseFloat(document.getElementById('nuevoGastoPrecio').value);
-      if (!prod || isNaN(precio) || precio <= 0) { toast('Datos inválidos', 'error'); return; }
-      state.gastos.push({
-        id: generarId(),
-        fecha: new Date().toISOString().split('T')[0],
-        producto: prod,
-        precio: precio
-      });
-      guardarState();
-      cerrarModal();
-      renderizarGastos();
-      toast('Gasto registrado', 'success');
-    });
-  });
-
-  // Gastos filtros
-  document.getElementById('gastoFilterBtn').addEventListener('click', renderizarGastos);
-  document.getElementById('gastoSearch').addEventListener('input', renderizarGastos);
-  document.getElementById('gastoPeriodo').addEventListener('change', renderizarGastos);
-
-  // Inventario: nuevo
-  document.getElementById('btnNuevoInventario').addEventListener('click', () => {
-    abrirModal('Nuevo Inventario', `
-      <div class="form-group"><label>Producto</label><input type="text" id="nuevoInvProd" placeholder="Ej: Harina"></div>
-      <div class="form-group"><label>Cantidad</label><input type="number" id="nuevoInvCant" value="1"></div>
-      <div class="form-group"><label>Precio</label><input type="number" id="nuevoInvPrecio" step="0.01" value="0"></div>
-      <div class="form-group"><label>Tipo</label><select id="nuevoInvTipo"><option value="Insumo">Insumo</option><option value="Utensilio">Utensilio</option><option value="Envase">Envase</option><option value="Adorno">Adorno</option></select></div>
-      <button class="btn-neu btn-neu-primary" id="saveNuevoInv">Guardar</button>
-    `);
-    document.getElementById('saveNuevoInv').addEventListener('click', () => {
-      const prod = document.getElementById('nuevoInvProd').value.trim();
-      const cant = parseInt(document.getElementById('nuevoInvCant').value);
-      const precio = parseFloat(document.getElementById('nuevoInvPrecio').value);
-      const tipo = document.getElementById('nuevoInvTipo').value;
-      if (!prod || isNaN(cant) || cant < 0 || isNaN(precio) || precio < 0) { toast('Datos inválidos', 'error'); return; }
-      state.inventario.push({
-        id: generarId(),
-        fecha: new Date().toISOString().split('T')[0],
-        producto: prod,
-        cantidad: cant,
-        precio: precio,
-        tipo: tipo
-      });
-      guardarState();
-      cerrarModal();
-      renderizarInventario();
-      toast('Producto agregado al inventario', 'success');
-    });
-  });
-
-  // Inventario filtros
-  document.getElementById('invFilterBtn').addEventListener('click', renderizarInventario);
-  document.getElementById('invSearch').addEventListener('input', renderizarInventario);
-  document.getElementById('invTipo').addEventListener('change', renderizarInventario);
-
-  // Puntos: nuevo
-  document.getElementById('btnNuevoPunto').addEventListener('click', () => {
-    abrirModal('Nuevo Punto de Venta', `
-      <div class="form-group"><label>Nombre</label><input type="text" id="nuevoPuntoNom" placeholder="Ej: Parque Central"></div>
-      <div class="form-group"><label>Ubicación</label><input type="text" id="nuevoPuntoUbic" placeholder="Ej: Av. Siempre Viva 123"></div>
-      <button class="btn-neu btn-neu-primary" id="saveNuevoPunto">Guardar</button>
-    `);
-    document.getElementById('saveNuevoPunto').addEventListener('click', () => {
-      const nom = document.getElementById('nuevoPuntoNom').value.trim();
-      const ubic = document.getElementById('nuevoPuntoUbic').value.trim();
-      if (!nom) { toast('Nombre requerido', 'error'); return; }
-      state.puntosVenta.push({
-        id: generarId(),
-        nombre: nom,
-        ubicacion: ubic
-      });
-      guardarState();
-      cerrarModal();
-      renderizarPuntos();
-      toast('Punto de venta registrado', 'success');
-    });
-  });
-
-  // Dashboard eventos
-  document.getElementById('dashFilterBtn').addEventListener('click', actualizarDashboard);
-  document.getElementById('dashProdFilterBtn').addEventListener('click', actualizarDashboard);
-  document.getElementById('dashView').addEventListener('change', actualizarDashboard);
-
-  // ============ INICIALIZACIÓN ============
-  cargarState();
-
-  // Verificar si hay usuario guardado
-  const savedUser = localStorage.getItem('reposteriaCurrentUser');
-  if (savedUser) {
-    try {
-      const u = JSON.parse(savedUser);
-      const user = state.users.find(us => us.id === u.id);
-      if (user) {
-        state.currentUser = user;
-        mostrarApp();
-      } else {
-        mostrarLogin();
-      }
-    } catch(e) {
-      mostrarLogin();
-    }
-  } else {
-    mostrarLogin();
-  }
-
-  // Al redimensionar, controlar sidebar
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 992) {
-      sidebar.style.display = 'block';
-      sidebar.classList.remove('open');
-    } else {
-      sidebar.style.display = 'none';
-    }
-  });
-
-  // Exponer algunas funciones globales para eventos onclick en HTML (ya expuestas)
-  // (algunas ya se expusieron con window.xxx)
-
-  // Inicializar mes en dashboard
-  const now = new Date();
-  const mesDefault = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-  $('dashMonth').value = mesDefault;
-
-  // Cargar dashboard si está visible
-  if (state.currentUser) {
-    actualizarDashboard();
-  }
-
-})();
-</script>
+    </div>
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div id="toastContainer"></div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ----------------------------
+            //  DATA LAYER
+            // ----------------------------
+            const STORAGE_KEY = 'reposteriaData_v2';
+
+            function getDefaultData() {
+                return {
+                    users: [
+                        { id: 1, username: 'admin', password: 'admin123', nombre: 'Administrador', rol: 'admin' }
+                    ],
+                    puntosVenta: [
+                        { id: 1, nombre: 'Plaza Mayor', ubicacion: 'Centro' },
+                        { id: 2, nombre: 'Parque Central', ubicacion: 'Norte' }
+                    ],
+                    inventario: [
+                        { id: 1, nombre: 'Harina', cantidad: 20, precio: 2.5, tipo: 'Insumo', fecha: hoyStr() },
+                        { id: 2, nombre: 'Manteca', cantidad: 10, precio: 4.0, tipo: 'Insumo', fecha: hoyStr() }
+                    ],
+                    gastos: [
+                        { id: 1, fecha: hoyStr(), producto: 'Harina', precio: 2.5 },
+                        { id: 2, fecha: hoyStr(), producto: 'Manteca', precio: 4.0 }
+                    ],
+                    ventas: [],
+                    productosPendientes: []
+                };
+            }
+
+            function hoyStr() {
+                return new Date().toISOString().split('T')[0];
+            }
+
+            let data = loadData();
+
+            function loadData() {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    try {
+                        const parsed = JSON.parse(raw);
+                        if (!parsed.productosPendientes) parsed.productosPendientes = [];
+                        if (!parsed.users) parsed.users = getDefaultData().users;
+                        if (!parsed.puntosVenta) parsed.puntosVenta = getDefaultData().puntosVenta;
+                        if (!parsed.inventario) parsed.inventario = getDefaultData().inventario;
+                        if (!parsed.gastos) parsed.gastos = getDefaultData().gastos;
+                        if (!parsed.ventas) parsed.ventas = [];
+                        return parsed;
+                    } catch (e) {}
+                }
+                const def = getDefaultData();
+                saveData(def);
+                return def;
+            }
+
+            function saveData(d) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(d || data));
+            }
+
+            function persist() {
+                saveData(data);
+            }
+
+            function nextId(arr) {
+                if (!arr || arr.length === 0) return 1;
+                return Math.max(...arr.map(i => i.id)) + 1;
+            }
+
+            // ----------------------------
+            //  UTILITY FUNCTIONS
+            // ----------------------------
+            function formatCurrency(v) {
+                return v.toFixed(2);
+            }
+
+            function getPuntoNombre(id) {
+                const p = data.puntosVenta.find(x => x.id === id);
+                return p ? p.nombre : 'Sin punto';
+            }
+
+            function getSemanaRange(fecha) {
+                const d = new Date(fecha);
+                const dia = d.getDay();
+                const diff = d.getDate() - dia + (dia === 0 ? -6 : 1);
+                const lunes = new Date(d);
+                lunes.setDate(diff);
+                lunes.setHours(0, 0, 0, 0);
+                const domingo = new Date(lunes);
+                domingo.setDate(lunes.getDate() + 6);
+                domingo.setHours(23, 59, 59, 999);
+                return { inicio: lunes, fin: domingo };
+            }
+
+            function getQuincenaRange(fecha) {
+                const d = new Date(fecha);
+                const año = d.getFullYear();
+                const mes = d.getMonth();
+                const dia = d.getDate();
+                let inicio, fin;
+                if (dia <= 15) {
+                    inicio = new Date(año, mes, 1);
+                    fin = new Date(año, mes, 15);
+                } else {
+                    inicio = new Date(año, mes, 16);
+                    const ultimo = new Date(año, mes + 1, 0);
+                    fin = new Date(año, mes, ultimo.getDate());
+                }
+                inicio.setHours(0, 0, 0, 0);
+                fin.setHours(23, 59, 59, 999);
+                return { inicio, fin };
+            }
+
+            function getMesRange(fecha) {
+                const d = new Date(fecha);
+                const inicio = new Date(d.getFullYear(), d.getMonth(), 1);
+                const fin = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+                fin.setHours(23, 59, 59, 999);
+                return { inicio, fin };
+            }
+
+            function getPeriodoRango(fecha, periodo) {
+                if (periodo === 'semana') return getSemanaRange(fecha);
+                if (periodo === 'quincena') return getQuincenaRange(fecha);
+                return getMesRange(fecha);
+            }
+
+            function fechaEnRango(fechaStr, inicio, fin) {
+                const d = new Date(fechaStr);
+                return d >= inicio && d <= fin;
+            }
+
+            function filtrarPorPeriodo(items, fechaField, periodo, refDate) {
+                const ref = refDate ? new Date(refDate) : new Date();
+                const rango = getPeriodoRango(ref, periodo);
+                return items.filter(item => {
+                    const d = new Date(item[fechaField]);
+                    return d >= rango.inicio && d <= rango.fin;
+                });
+            }
+
+            function totalVenta(venta) {
+                let sum = 0;
+                if (venta.productos) {
+                    venta.productos.forEach(p => sum += p.cantidad * p.precioUnitario);
+                }
+                return sum;
+            }
+
+            function totalVendido(venta) {
+                if (venta.estado !== 'completado' || !venta.retorno) return 0;
+                const total = totalVenta(venta);
+                const noVendido = venta.retorno.productosNoVendidos ?
+                    venta.retorno.productosNoVendidos.reduce((acc, p) => acc + p.cantidad * p.precioUnitario, 0) :
+                    0;
+                const descuento = venta.retorno.descuento || 0;
+                const movilidad = venta.retorno.movilidad || 0;
+                return total - noVendido - descuento - movilidad;
+            }
+
+            function gananciaVenta(venta) {
+                if (venta.estado !== 'completado' || !venta.retorno) return 0;
+                const vendido = totalVendido(venta);
+                const gastosDia = data.gastos
+                    .filter(g => g.fecha === venta.fecha)
+                    .reduce((acc, g) => acc + g.precio, 0);
+                return vendido - gastosDia;
+            }
+
+            function diferenciaCaja(venta) {
+                if (venta.estado !== 'completado' || !venta.retorno) return 0;
+                const r = venta.retorno;
+                const yape = r.yape || 0;
+                const efectivo = r.efectivo || 0;
+                const fiado = r.fiado || 0;
+                const totalRecibido = yape + efectivo + fiado;
+                const vendido = totalVendido(venta);
+                return totalRecibido - vendido;
+            }
+
+            // ----------------------------
+            //  TOAST SYSTEM
+            // ----------------------------
+            function showToast(message, type = 'success') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                let icon = 'fa-check-circle';
+                if (type === 'error') icon = 'fa-exclamation-circle';
+                if (type === 'warning') icon = 'fa-exclamation-triangle';
+                toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+                container.appendChild(toast);
+                setTimeout(() => {
+                    if (toast.parentNode) toast.remove();
+                }, 3500);
+            }
+
+            // ----------------------------
+            //  LOGIN
+            // ----------------------------
+            const loginPage = document.getElementById('loginPage');
+            const appEl = document.getElementById('app');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginError = document.getElementById('loginError');
+
+            function doLogin() {
+                const user = document.getElementById('loginUser').value.trim();
+                const pass = document.getElementById('loginPass').value.trim();
+                const found = data.users.find(u => u.username === user && u.password === pass);
+                if (found) {
+                    loginError.textContent = '';
+                    loginPage.style.display = 'none';
+                    appEl.style.display = 'block';
+                    window.currentUser = found;
+                    document.getElementById('topbarNombre').textContent = found.nombre;
+                    document.getElementById('topbarRol').textContent = found.rol;
+                    // Inicializar UI
+                    cargarPuntosSelect();
+                    cargarVentasPendientesSelect();
+                    cargarPendientesGrid();
+                    // Fechas
+                    document.getElementById('ventaFecha').value = hoyStr();
+                    document.getElementById('gastoFecha').value = hoyStr();
+                    document.getElementById('invFecha').value = hoyStr();
+                    // Mes actual en dashboard
+                    const hoy = new Date();
+                    const mesStr = hoy.getFullYear() + '-' + String(hoy.getMonth() + 1).padStart(2, '0');
+                    document.getElementById('dashboardMes').value = mesStr;
+                    actualizarDashboard();
+                    cargarHistorial();
+                    cargarGastos();
+                    cargarInventario();
+                    cargarPuntos();
+                    showToast('Bienvenido ' + found.nombre, 'success');
+                } else {
+                    loginError.textContent = 'Usuario o contraseña incorrectos';
+                    showToast('Credenciales inválidas', 'error');
+                }
+            }
+
+            loginBtn.addEventListener('click', doLogin);
+            document.getElementById('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+            document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                if (confirm('¿Cerrar sesión?')) {
+                    appEl.style.display = 'none';
+                    loginPage.style.display = 'block';
+                    showToast('Sesión cerrada', 'warning');
+                }
+            });
+
+            // ----------------------------
+            //  NAVEGACION
+            // ----------------------------
+            const menuItems = document.querySelectorAll('.menu-item');
+            const sections = {
+                dashboard: document.getElementById('section-dashboard'),
+                ventas: document.getElementById('section-ventas'),
+                historial: document.getElementById('section-historial'),
+                gastos: document.getElementById('section-gastos'),
+                inventario: document.getElementById('section-inventario'),
+                puntos: document.getElementById('section-puntos')
+            };
+
+            function navigateTo(sectionId) {
+                Object.values(sections).forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+                const target = sections[sectionId];
+                if (target) target.classList.add('active');
+                const menuBtn = document.querySelector(`.menu-item[data-section="${sectionId}"]`);
+                if (menuBtn) menuBtn.classList.add('active');
+                document.getElementById('sidebar').classList.remove('open');
+                if (sectionId === 'ventas') {
+                    cargarPuntosSelect();
+                    cargarVentasPendientesSelect();
+                    cargarPendientesGrid();
+                }
+                if (sectionId === 'dashboard') actualizarDashboard();
+                if (sectionId === 'historial') cargarHistorial();
+                if (sectionId === 'gastos') cargarGastos();
+                if (sectionId === 'inventario') cargarInventario();
+                if (sectionId === 'puntos') cargarPuntos();
+            }
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const sec = this.dataset.section;
+                    if (sec) navigateTo(sec);
+                });
+            });
+
+            document.getElementById('hamburgerBtn').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('open');
+            });
+
+            // ----------------------------
+            //  PERFIL MODAL
+            // ----------------------------
+            const profileIcon = document.getElementById('profileIcon');
+            const perfilModal = document.getElementById('perfilModal');
+            profileIcon.addEventListener('click', () => {
+                const user = window.currentUser;
+                if (user) {
+                    document.getElementById('perfilNombre').value = user.nombre || '';
+                    document.getElementById('perfilUsuario').value = user.username || '';
+                    document.getElementById('perfilPass').value = '';
+                }
+                perfilModal.classList.add('open');
+            });
+            document.getElementById('perfilCancelar').addEventListener('click', () => {
+                perfilModal.classList.remove('open');
+            });
+            document.getElementById('perfilGuardar').addEventListener('click', () => {
+                const nombre = document.getElementById('perfilNombre').value.trim();
+                const usuario = document.getElementById('perfilUsuario').value.trim();
+                const pass = document.getElementById('perfilPass').value.trim();
+                if (!nombre || !usuario) {
+                    showToast('Nombre y usuario son obligatorios', 'warning');
+                    return;
+                }
+                const user = window.currentUser;
+                if (user) {
+                    user.nombre = nombre;
+                    user.username = usuario;
+                    if (pass) user.password = pass;
+                    persist();
+                    document.getElementById('topbarNombre').textContent = nombre;
+                    document.getElementById('topbarRol').textContent = user.rol;
+                    showToast('Perfil actualizado', 'success');
+                    perfilModal.classList.remove('open');
+                }
+            });
+
+            // ----------------------------
+            //  PUNTOS DE VENTA CRUD
+            // ----------------------------
+            function cargarPuntos() {
+                const tbody = document.getElementById('puntosBody');
+                tbody.innerHTML = '';
+                data.puntosVenta.forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${p.nombre}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning editarPunto" data-id="${p.id}"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger eliminarPunto" data-id="${p.id}"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                document.querySelectorAll('.editarPunto').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        const punto = data.puntosVenta.find(p => p.id === id);
+                        if (punto) {
+                            const nuevo = prompt('Editar nombre/ubicación:', punto.nombre);
+                            if (nuevo !== null && nuevo.trim() !== '') {
+                                punto.nombre = nuevo.trim();
+                                persist();
+                                cargarPuntos();
+                                cargarPuntosSelect();
+                                showToast('Punto actualizado', 'success');
+                            }
+                        }
+                    });
+                });
+                document.querySelectorAll('.eliminarPunto').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        if (confirm('¿Eliminar este punto de venta?')) {
+                            data.puntosVenta = data.puntosVenta.filter(p => p.id !== id);
+                            persist();
+                            cargarPuntos();
+                            cargarPuntosSelect();
+                            showToast('Punto eliminado', 'warning');
+                        }
+                    });
+                });
+            }
+
+            document.getElementById('agregarPuntoBtn').addEventListener('click', function() {
+                const nombre = document.getElementById('puntoNombre').value.trim();
+                if (!nombre) { showToast('Ingrese un nombre', 'warning'); return; }
+                data.puntosVenta.push({ id: nextId(data.puntosVenta), nombre: nombre, ubicacion: '' });
+                persist();
+                document.getElementById('puntoNombre').value = '';
+                cargarPuntos();
+                cargarPuntosSelect();
+                showToast('Punto agregado', 'success');
+            });
+
+            function cargarPuntosSelect() {
+                const selects = ['ventaPunto', 'retornoVentaSelect'];
+                selects.forEach(id => {
+                    const sel = document.getElementById(id);
+                    if (!sel) return;
+                    const current = sel.value;
+                    sel.innerHTML = '';
+                    data.puntosVenta.forEach(p => {
+                        const opt = document.createElement('option');
+                        opt.value = p.id;
+                        opt.textContent = p.nombre;
+                        sel.appendChild(opt);
+                    });
+                    if (current) sel.value = current;
+                });
+            }
+
+            // ----------------------------
+            //  INVENTARIO CRUD
+            // ----------------------------
+            function cargarInventario() {
+                const tbody = document.getElementById('inventarioBody');
+                const buscador = document.getElementById('invBuscador').value.toLowerCase();
+                const filtroTipo = document.getElementById('invFiltroTipo').value;
+                let items = data.inventario;
+                if (buscador) items = items.filter(i => i.nombre.toLowerCase().includes(buscador));
+                if (filtroTipo) items = items.filter(i => i.tipo === filtroTipo);
+                tbody.innerHTML = '';
+                items.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${item.fecha}</td>
+                        <td>${item.nombre}</td>
+                        <td>${item.cantidad}</td>
+                        <td>S/ ${item.precio.toFixed(2)}</td>
+                        <td>${item.tipo}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning editarInv" data-id="${item.id}"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger eliminarInv" data-id="${item.id}"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                document.querySelectorAll('.editarInv').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        const item = data.inventario.find(i => i.id === id);
+                        if (item) {
+                            const nuevoNombre = prompt('Nombre:', item.nombre);
+                            if (nuevoNombre !== null && nuevoNombre.trim() !== '') {
+                                item.nombre = nuevoNombre.trim();
+                                const nuevaCant = prompt('Cantidad:', item.cantidad);
+                                if (nuevaCant !== null && !isNaN(nuevaCant) && Number(nuevaCant) >= 0) {
+                                    item.cantidad = Number(nuevaCant);
+                                    const nuevoPrecio = prompt('Precio:', item.precio);
+                                    if (nuevoPrecio !== null && !isNaN(nuevoPrecio) && Number(nuevoPrecio) >= 0) {
+                                        item.precio = Number(nuevoPrecio);
+                                        const nuevoTipo = prompt('Tipo (Insumo,Utensilio,Envase,Adorno):', item
+                                            .tipo);
+                                        if (nuevoTipo !== null) {
+                                            item.tipo = nuevoTipo;
+                                            persist();
+                                            cargarInventario();
+                                            showToast('Inventario actualizado', 'success');
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+                document.querySelectorAll('.eliminarInv').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        if (confirm('¿Eliminar este producto del inventario?')) {
+                            data.inventario = data.inventario.filter(i => i.id !== id);
+                            persist();
+                            cargarInventario();
+                            showToast('Producto eliminado', 'warning');
+                        }
+                    });
+                });
+            }
+
+            document.getElementById('agregarInvBtn').addEventListener('click', function() {
+                const nombre = document.getElementById('invNombre').value.trim();
+                const cantidad = Number(document.getElementById('invCantidad').value);
+                const precio = Number(document.getElementById('invPrecio').value);
+                const tipo = document.getElementById('invTipo').value;
+                if (!nombre) { showToast('Ingrese nombre', 'warning'); return; }
+                if (isNaN(cantidad) || cantidad <= 0) { showToast('Cantidad válida', 'warning'); return; }
+                if (isNaN(precio) || precio < 0) { showToast('Precio válido', 'warning'); return; }
+                data.inventario.push({
+                    id: nextId(data.inventario),
+                    nombre,
+                    cantidad,
+                    precio,
+                    tipo,
+                    fecha: hoyStr()
+                });
+                persist();
+                document.getElementById('invNombre').value = '';
+                document.getElementById('invCantidad').value = '1';
+                document.getElementById('invPrecio').value = '0';
+                cargarInventario();
+                showToast('Producto agregado al inventario', 'success');
+            });
+
+            document.getElementById('invBuscador').addEventListener('input', cargarInventario);
+            document.getElementById('invFiltroTipo').addEventListener('change', cargarInventario);
+
+            // ----------------------------
+            //  GASTOS CRUD
+            // ----------------------------
+            function cargarGastos() {
+                const tbody = document.getElementById('gastosBody');
+                const buscador = document.getElementById('gastoBuscador').value.toLowerCase();
+                const periodo = document.getElementById('gastoPeriodo').value;
+                let items = data.gastos;
+                if (buscador) items = items.filter(g => g.producto.toLowerCase().includes(buscador));
+                items = filtrarPorPeriodo(items, 'fecha', periodo);
+                items.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                tbody.innerHTML = '';
+                items.forEach(g => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${g.fecha}</td>
+                        <td>${g.producto}</td>
+                        <td>S/ ${g.precio.toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning editarGasto" data-id="${g.id}"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger eliminarGasto" data-id="${g.id}"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                document.querySelectorAll('.editarGasto').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        const gasto = data.gastos.find(g => g.id === id);
+                        if (gasto) {
+                            const nuevoProd = prompt('Producto:', gasto.producto);
+                            if (nuevoProd !== null && nuevoProd.trim() !== '') {
+                                gasto.producto = nuevoProd.trim();
+                                const nuevoPrecio = prompt('Precio:', gasto.precio);
+                                if (nuevoPrecio !== null && !isNaN(nuevoPrecio) && Number(nuevoPrecio) >= 0) {
+                                    gasto.precio = Number(nuevoPrecio);
+                                    persist();
+                                    cargarGastos();
+                                    actualizarDashboard();
+                                    showToast('Gasto actualizado', 'success');
+                                }
+                            }
+                        }
+                    });
+                });
+                document.querySelectorAll('.eliminarGasto').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        if (confirm('¿Eliminar este gasto?')) {
+                            data.gastos = data.gastos.filter(g => g.id !== id);
+                            persist();
+                            cargarGastos();
+                            actualizarDashboard();
+                            showToast('Gasto eliminado', 'warning');
+                        }
+                    });
+                });
+                renderGraficoGastos(items);
+            }
+
+            document.getElementById('agregarGastoBtn').addEventListener('click', function() {
+                const producto = document.getElementById('gastoProducto').value.trim();
+                const precio = Number(document.getElementById('gastoPrecio').value);
+                if (!producto) { showToast('Ingrese producto', 'warning'); return; }
+                if (isNaN(precio) || precio < 0) { showToast('Precio válido', 'warning'); return; }
+                data.gastos.push({
+                    id: nextId(data.gastos),
+                    fecha: hoyStr(),
+                    producto,
+                    precio
+                });
+                persist();
+                document.getElementById('gastoProducto').value = '';
+                document.getElementById('gastoPrecio').value = '0';
+                cargarGastos();
+                actualizarDashboard();
+                showToast('Gasto registrado', 'success');
+            });
+
+            document.getElementById('gastoBuscador').addEventListener('input', cargarGastos);
+            document.getElementById('gastoPeriodo').addEventListener('change', cargarGastos);
+
+            // ----------------------------
+            //  VENTAS - PASO 1 (Llevar)
+            // ----------------------------
+            const productosAgregados = [];
+
+            function renderProductosAgregados() {
+                const list = document.getElementById('productosAgregadosList');
+                list.innerHTML = '';
+                let total = 0;
+                productosAgregados.forEach((p, idx) => {
+                    const subtotal = p.cantidad * p.precioUnitario;
+                    total += subtotal;
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.innerHTML = `
+                        <span>${p.nombre} x${p.cantidad} = S/ ${subtotal.toFixed(2)}</span>
+                        <div class="actions">
+                            <button class="eliminarProdAgregado" data-idx="${idx}"><i class="fas fa-times-circle"></i></button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+                document.getElementById('totalLlevar').textContent = total.toFixed(2);
+                document.querySelectorAll('.eliminarProdAgregado').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idx = parseInt(this.dataset.idx);
+                        productosAgregados.splice(idx, 1);
+                        renderProductosAgregados();
+                    });
+                });
+            }
+
+            document.getElementById('agregarProductoBtn').addEventListener('click', function() {
+                const nombre = document.getElementById('ventaProdNombre').value.trim();
+                const cantidad = Number(document.getElementById('ventaProdCant').value);
+                const precio = Number(document.getElementById('ventaProdPrecio').value);
+                if (!nombre) { showToast('Ingrese nombre del producto', 'warning'); return; }
+                if (isNaN(cantidad) || cantidad <= 0) { showToast('Cantidad válida', 'warning'); return; }
+                if (isNaN(precio) || precio < 0) { showToast('Precio válido', 'warning'); return; }
+                productosAgregados.push({ nombre, cantidad, precioUnitario: precio });
+                renderProductosAgregados();
+                document.getElementById('ventaProdNombre').value = '';
+                document.getElementById('ventaProdCant').value = '1';
+                document.getElementById('ventaProdPrecio').value = '0';
+            });
+
+            function cargarPendientesGrid() {
+                const grid = document.getElementById('pendientesGrid');
+                grid.innerHTML = '';
+                if (data.productosPendientes.length === 0) {
+                    grid.innerHTML = '<span class="text-muted">No hay productos pendientes</span>';
+                    return;
+                }
+                data.productosPendientes.forEach((p, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'pend-item';
+                    div.innerHTML = `
+                        <span>${p.nombre} (${p.cantidad}) S/ ${p.precioUnitario.toFixed(2)}</span>
+                        <button class="cargarPendiente" data-idx="${idx}"><i class="fas fa-arrow-right"></i></button>
+                    `;
+                    grid.appendChild(div);
+                });
+                document.querySelectorAll('.cargarPendiente').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idx = parseInt(this.dataset.idx);
+                        const pend = data.productosPendientes[idx];
+                        if (pend) {
+                            productosAgregados.push({
+                                nombre: pend.nombre,
+                                cantidad: pend.cantidad,
+                                precioUnitario: pend.precioUnitario
+                            });
+                            data.productosPendientes.splice(idx, 1);
+                            persist();
+                            renderProductosAgregados();
+                            cargarPendientesGrid();
+                            showToast('Producto pendiente cargado', 'success');
+                        }
+                    });
+                });
+            }
+
+            document.getElementById('cargarTodosPendientes').addEventListener('click', function() {
+                if (data.productosPendientes.length === 0) {
+                    showToast('No hay productos pendientes', 'warning');
+                    return;
+                }
+                data.productosPendientes.forEach(p => {
+                    productosAgregados.push({
+                        nombre: p.nombre,
+                        cantidad: p.cantidad,
+                        precioUnitario: p.precioUnitario
+                    });
+                });
+                data.productosPendientes = [];
+                persist();
+                renderProductosAgregados();
+                cargarPendientesGrid();
+                showToast('Todos los pendientes cargados', 'success');
+            });
+
+            document.getElementById('registrarLlevarBtn').addEventListener('click', function() {
+                const fecha = document.getElementById('ventaFecha').value;
+                const fondo = Number(document.getElementById('ventaFondo').value);
+                const puntoId = Number(document.getElementById('ventaPunto').value);
+                if (productosAgregados.length === 0) {
+                    showToast('Agregue al menos un producto', 'warning');
+                    return;
+                }
+                if (!puntoId) {
+                    showToast('Seleccione un punto de venta', 'warning');
+                    return;
+                }
+                const venta = {
+                    id: nextId(data.ventas),
+                    fecha: fecha,
+                    puntoVentaId: puntoId,
+                    fondoCaja: fondo || 0,
+                    productos: JSON.parse(JSON.stringify(productosAgregados)),
+                    estado: 'pendiente',
+                    retorno: null
+                };
+                data.ventas.push(venta);
+                persist();
+                productosAgregados.length = 0;
+                renderProductosAgregados();
+                document.getElementById('ventaFondo').value = '0';
+                cargarVentasPendientesSelect();
+                cargarPendientesGrid();
+                showToast('Venta registrada (pendiente)', 'success');
+                actualizarDashboard();
+            });
+
+            // ----------------------------
+            //  VENTAS - PASO 2 (Retorno)
+            // ----------------------------
+            function cargarVentasPendientesSelect() {
+                const sel = document.getElementById('retornoVentaSelect');
+                const current = sel.value;
+                sel.innerHTML = '';
+                const pendientes = data.ventas.filter(v => v.estado === 'pendiente');
+                if (pendientes.length === 0) {
+                    const opt = document.createElement('option');
+                    opt.value = '';
+                    opt.textContent = 'No hay ventas pendientes';
+                    sel.appendChild(opt);
+                } else {
+                    pendientes.forEach(v => {
+                        const opt = document.createElement('option');
+                        opt.value = v.id;
+                        const total = totalVenta(v);
+                        opt.textContent = `#${v.id} ${v.fecha} - ${getPuntoNombre(v.puntoVentaId)} - S/ ${total.toFixed(2)}`;
+                        sel.appendChild(opt);
+                    });
+                }
+                if (current) sel.value = current;
+                sel.dispatchEvent(new Event('change'));
+            }
+
+            document.getElementById('retornoVentaSelect').addEventListener('change', function() {
+                const id = Number(this.value);
+                const venta = data.ventas.find(v => v.id === id);
+                const resumen = document.getElementById('retornoResumen');
+                if (!venta || venta.estado !== 'pendiente') {
+                    resumen.textContent = 'Seleccione una venta pendiente';
+                    document.getElementById('retornoProductosNoVendidos').innerHTML = '';
+                    return;
+                }
+                resumen.textContent =
+                    `Fecha: ${venta.fecha} | Punto: ${getPuntoNombre(venta.puntoVentaId)} | Total llevado: S/ ${totalVenta(venta).toFixed(2)}`;
+                const container = document.getElementById('retornoProductosNoVendidos');
+                container.innerHTML = '';
+                venta.productos.forEach((p, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'form-row';
+                    div.style.alignItems = 'center';
+                    div.innerHTML = `
+                        <span style="flex:2;">${p.nombre} (llevó ${p.cantidad})</span>
+                        <div class="form-group" style="flex:1;min-width:80px;">
+                            <label>No vendidos</label>
+                            <input type="number" class="noVendidoInput" data-idx="${idx}" value="0" min="0" max="${p.cantidad}">
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+                calcularRetorno();
+            });
+
+            function calcularRetorno() {
+                const ventaId = Number(document.getElementById('retornoVentaSelect').value);
+                const venta = data.ventas.find(v => v.id === ventaId);
+                if (!venta || venta.estado !== 'pendiente') {
+                    document.getElementById('totalNoVendido').textContent = '0.00';
+                    document.getElementById('diferenciaCaja').textContent = '0.00';
+                    document.getElementById('gananciaDia').textContent = '0.00';
+                    return;
+                }
+                const inputs = document.querySelectorAll('.noVendidoInput');
+                let totalNoVendido = 0;
+                const noVendidos = [];
+                inputs.forEach(inp => {
+                    const idx = parseInt(inp.dataset.idx);
+                    const cant = Number(inp.value) || 0;
+                    const p = venta.productos[idx];
+                    if (p && cant > 0) {
+                        const subtotal = cant * p.precioUnitario;
+                        totalNoVendido += subtotal;
+                        noVendidos.push({ nombre: p.nombre, cantidad: cant, precioUnitario: p.precioUnitario });
+                    }
+                });
+                document.getElementById('totalNoVendido').textContent = totalNoVendido.toFixed(2);
+
+                const yape = Number(document.getElementById('retYape').value) || 0;
+                const efectivo = Number(document.getElementById('retEfectivo').value) || 0;
+                const fiado = Number(document.getElementById('retFiado').value) || 0;
+                const descuento = Number(document.getElementById('retDescuento').value) || 0;
+                const movilidad = Number(document.getElementById('retMovilidad').value) || 0;
+                const totalVentaCalc = totalVenta(venta);
+                const vendido = totalVentaCalc - totalNoVendido - descuento - movilidad;
+                const recibido = yape + efectivo + fiado;
+                const diff = recibido - vendido;
+                document.getElementById('diferenciaCaja').textContent = diff.toFixed(2);
+
+                const gastosDia = data.gastos.filter(g => g.fecha === venta.fecha)
+                    .reduce((acc, g) => acc + g.precio, 0);
+                const ganancia = vendido - gastosDia;
+                document.getElementById('gananciaDia').textContent = ganancia.toFixed(2);
+            }
+
+            document.querySelectorAll('#retYape, #retEfectivo, #retFiado, #retDescuento, #retMovilidad').forEach(el => {
+                el.addEventListener('input', calcularRetorno);
+            });
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('noVendidoInput')) {
+                    calcularRetorno();
+                }
+            });
+
+            document.getElementById('completarRetornoBtn').addEventListener('click', function() {
+                const ventaId = Number(document.getElementById('retornoVentaSelect').value);
+                const venta = data.ventas.find(v => v.id === ventaId);
+                if (!venta || venta.estado !== 'pendiente') {
+                    showToast('Seleccione una venta pendiente', 'warning');
+                    return;
+                }
+                const inputs = document.querySelectorAll('.noVendidoInput');
+                const noVendidos = [];
+                inputs.forEach(inp => {
+                    const idx = parseInt(inp.dataset.idx);
+                    const cant = Number(inp.value) || 0;
+                    const p = venta.productos[idx];
+                    if (p && cant > 0) {
+                        noVendidos.push({ nombre: p.nombre, cantidad: cant, precioUnitario: p.precioUnitario });
+                    }
+                });
+                const yape = Number(document.getElementById('retYape').value) || 0;
+                const efectivo = Number(document.getElementById('retEfectivo').value) || 0;
+                const fiado = Number(document.getElementById('retFiado').value) || 0;
+                const descuento = Number(document.getElementById('retDescuento').value) || 0;
+                const movilidad = Number(document.getElementById('retMovilidad').value) || 0;
+                const totalNoVendido = noVendidos.reduce((acc, p) => acc + p.cantidad * p.precioUnitario, 0);
+                const totalVentaCalc = totalVenta(venta);
+                const vendido = totalVentaCalc - totalNoVendido - descuento - movilidad;
+                const recibido = yape + efectivo + fiado;
+                const diff = recibido - vendido;
+                const gastosDia = data.gastos.filter(g => g.fecha === venta.fecha)
+                    .reduce((acc, g) => acc + g.precio, 0);
+                const ganancia = vendido - gastosDia;
+
+                venta.estado = 'completado';
+                venta.retorno = {
+                    yape,
+                    efectivo,
+                    fiado,
+                    descuento,
+                    movilidad,
+                    productosNoVendidos: noVendidos,
+                    totalNoVendido,
+                    diferencia: diff,
+                    ganancia: ganancia
+                };
+                noVendidos.forEach(p => {
+                    data.productosPendientes.push({
+                        nombre: p.nombre,
+                        cantidad: p.cantidad,
+                        precioUnitario: p.precioUnitario
+                    });
+                });
+                persist();
+                cargarVentasPendientesSelect();
+                cargarPendientesGrid();
+                actualizarDashboard();
+                showToast('Retorno completado', 'success');
+                document.getElementById('retYape').value = '0';
+                document.getElementById('retEfectivo').value = '0';
+                document.getElementById('retFiado').value = '0';
+                document.getElementById('retDescuento').value = '0';
+                document.getElementById('retMovilidad').value = '0';
+                document.getElementById('retornoProductosNoVendidos').innerHTML = '';
+                document.getElementById('retornoResumen').textContent = '';
+                document.getElementById('totalNoVendido').textContent = '0.00';
+                document.getElementById('diferenciaCaja').textContent = '0.00';
+                document.getElementById('gananciaDia').textContent = '0.00';
+            });
+
+            // ----------------------------
+            //  HISTORIAL
+            // ----------------------------
+            function cargarHistorial() {
+                const tbody = document.getElementById('historialBody');
+                const periodo = document.getElementById('historialPeriodo').value;
+                let ventas = filtrarPorPeriodo(data.ventas, 'fecha', periodo);
+                ventas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                tbody.innerHTML = '';
+                if (ventas.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="10" class="text-muted text-center">No hay ventas</td></tr>';
+                }
+                ventas.forEach(v => {
+                    const total = totalVenta(v);
+                    const estadoText = v.estado === 'completado' ? 'Completado' : 'Pendiente';
+                    const badgeClass = v.estado === 'completado' ? 'badge-success' : 'badge-danger';
+                    const totalVendidoVal = v.estado === 'completado' ? totalVendido(v) : 0;
+                    const gananciaVal = v.estado === 'completado' ? gananciaVenta(v) : 0;
+                    const diffVal = v.estado === 'completado' ? diferenciaCaja(v) : 0;
+                    const fiadoVal = v.retorno ? v.retorno.fiado || 0 : 0;
+                    const movilidadVal = v.retorno ? v.retorno.movilidad || 0 : 0;
+                    const resumenProd = v.productos.map(p => `${p.nombre}(${p.cantidad})`).join(', ');
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${v.fecha}</td>
+                        <td>${getPuntoNombre(v.puntoVentaId)}</td>
+                        <td>${resumenProd}</td>
+                        <td>S/ ${totalVendidoVal.toFixed(2)}</td>
+                        <td>S/ ${diffVal.toFixed(2)}</td>
+                        <td>S/ ${gananciaVal.toFixed(2)}</td>
+                        <td>S/ ${fiadoVal.toFixed(2)}</td>
+                        <td>S/ ${movilidadVal.toFixed(2)}</td>
+                        <td><span class="badge ${badgeClass}">${estadoText}</span></td>
+                        <td>
+                            ${v.estado === 'pendiente' ? `<button class="btn btn-sm btn-success completarRetornoHistorial" data-id="${v.id}"><i class="fas fa-undo"></i></button>` : ''}
+                            <button class="btn btn-sm btn-warning editarVentaHistorial" data-id="${v.id}"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger eliminarVentaHistorial" data-id="${v.id}"><i class="fas fa-trash"></i></button>
+                            ${v.estado === 'completado' && (v.retorno && v.retorno.fiado > 0) ? `<button class="btn btn-sm btn-primary pagarFiadoHistorial" data-id="${v.id}"><i class="fas fa-hand-holding-usd"></i></button>` : ''}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                document.querySelectorAll('.completarRetornoHistorial').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        navigateTo('ventas');
+                        const sel = document.getElementById('retornoVentaSelect');
+                        sel.value = id;
+                        sel.dispatchEvent(new Event('change'));
+                        showToast('Complete el retorno en la sección Ventas', 'warning');
+                    });
+                });
+                document.querySelectorAll('.editarVentaHistorial').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        abrirModalEditarVenta(id);
+                    });
+                });
+                document.querySelectorAll('.eliminarVentaHistorial').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        if (confirm('¿Eliminar esta venta?')) {
+                            data.ventas = data.ventas.filter(v => v.id !== id);
+                            persist();
+                            cargarHistorial();
+                            cargarVentasPendientesSelect();
+                            actualizarDashboard();
+                            showToast('Venta eliminada', 'warning');
+                        }
+                    });
+                });
+                document.querySelectorAll('.pagarFiadoHistorial').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        const venta = data.ventas.find(v => v.id === id);
+                        if (venta && venta.retorno) {
+                            const monto = venta.retorno.fiado || 0;
+                            if (confirm(`¿Registrar pago del fiado por S/ ${monto.toFixed(2)}?`)) {
+                                venta.retorno.fiado = 0;
+                                persist();
+                                cargarHistorial();
+                                showToast('Fiado pagado', 'success');
+                            }
+                        }
+                    });
+                });
+                renderGraficoHistorial(ventas);
+            }
+
+            document.getElementById('historialPeriodo').addEventListener('change', cargarHistorial);
+            document.getElementById('historialRefresh').addEventListener('click', cargarHistorial);
+
+            // ----------------------------
+            //  MODAL EDICIÓN DE VENTA
+            // ----------------------------
+            let ventaEditandoId = null;
+
+            function abrirModalEditarVenta(id) {
+                const venta = data.ventas.find(v => v.id === id);
+                if (!venta) return;
+                ventaEditandoId = id;
+                const form = document.getElementById('editarVentaForm');
+                form.innerHTML = '';
+                // Mostrar datos básicos
+                const info = document.createElement('div');
+                info.className = 'text-muted mb-1';
+                info.textContent =
+                    `Venta #${venta.id} - ${venta.fecha} - ${getPuntoNombre(venta.puntoVentaId)} - Estado: ${venta.estado}`;
+                form.appendChild(info);
+
+                // Editar productos
+                const prodDiv = document.createElement('div');
+                prodDiv.innerHTML = `<h4>Productos</h4>`;
+                venta.productos.forEach((p, idx) => {
+                    const row = document.createElement('div');
+                    row.className = 'form-row';
+                    row.innerHTML = `
+                        <div class="form-group"><label>Producto</label><input type="text" class="editProdNombre" data-idx="${idx}" value="${p.nombre}"></div>
+                        <div class="form-group"><label>Cantidad</label><input type="number" class="editProdCant" data-idx="${idx}" value="${p.cantidad}" min="0"></div>
+                        <div class="form-group"><label>Precio</label><input type="number" class="editProdPrecio" data-idx="${idx}" step="0.01" value="${p.precioUnitario}" min="0"></div>
+                    `;
+                    prodDiv.appendChild(row);
+                });
+                form.appendChild(prodDiv);
+
+                // Si está completada, mostrar campos de retorno
+                if (venta.estado === 'completado' && venta.retorno) {
+                    const retDiv = document.createElement('div');
+                    retDiv.innerHTML = `<h4>Retorno</h4>`;
+                    const r = venta.retorno;
+                    const campos = [
+                        { label: 'Yape/Plin', id: 'editRetYape', value: r.yape || 0 },
+                        { label: 'Efectivo', id: 'editRetEfectivo', value: r.efectivo || 0 },
+                        { label: 'Fiado', id: 'editRetFiado', value: r.fiado || 0 },
+                        { label: 'Descuento', id: 'editRetDescuento', value: r.descuento || 0 },
+                        { label: 'Movilidad', id: 'editRetMovilidad', value: r.movilidad || 0 }
+                    ];
+                    campos.forEach(c => {
+                        const group = document.createElement('div');
+                        group.className = 'form-group';
+                        group.innerHTML =
+                            `<label>${c.label}</label><input type="number" id="${c.id}" step="0.01" value="${c.value}" min="0">`;
+                        retDiv.appendChild(group);
+                    });
+                    // Productos no vendidos
+                    const noVendDiv = document.createElement('div');
+                    noVendDiv.innerHTML = `<h5>Productos no vendidos</h5>`;
+                    if (r.productosNoVendidos && r.productosNoVendidos.length > 0) {
+                        r.productosNoVendidos.forEach((nv, idx) => {
+                            const row = document.createElement('div');
+                            row.className = 'form-row';
+                            row.innerHTML = `
+                                <div class="form-group"><label>Producto</label><input type="text" class="editNoVendNombre" data-idx="${idx}" value="${nv.nombre}"></div>
+                                <div class="form-group"><label>Cantidad</label><input type="number" class="editNoVendCant" data-idx="${idx}" value="${nv.cantidad}" min="0"></div>
+                                <div class="form-group"><label>Precio</label><input type="number" class="editNoVendPrecio" data-idx="${idx}" step="0.01" value="${nv.precioUnitario}" min="0"></div>
+                            `;
+                            noVendDiv.appendChild(row);
+                        });
+                    } else {
+                        noVendDiv.innerHTML += '<span class="text-muted">No hay productos no vendidos</span>';
+                    }
+                    retDiv.appendChild(noVendDiv);
+                    form.appendChild(retDiv);
+                }
+
+                document.getElementById('editarVentaModal').classList.add('open');
+            }
+
+            document.getElementById('editarVentaCancelar').addEventListener('click', function() {
+                document.getElementById('editarVentaModal').classList.remove('open');
+            });
+
+            document.getElementById('editarVentaGuardar').addEventListener('click', function() {
+                const id = ventaEditandoId;
+                const venta = data.ventas.find(v => v.id === id);
+                if (!venta) { showToast('Venta no encontrada', 'error'); return; }
+
+                // Actualizar productos
+                const nombres = document.querySelectorAll('.editProdNombre');
+                const cantidades = document.querySelectorAll('.editProdCant');
+                const precios = document.querySelectorAll('.editProdPrecio');
+                const nuevosProductos = [];
+                for (let i = 0; i < nombres.length; i++) {
+                    const nom = nombres[i].value.trim();
+                    const cant = Number(cantidades[i].value);
+                    const prec = Number(precios[i].value);
+                    if (nom && !isNaN(cant) && cant >= 0 && !isNaN(prec) && prec >= 0) {
+                        nuevosProductos.push({ nombre: nom, cantidad: cant, precioUnitario: prec });
+                    }
+                }
+                if (nuevosProductos.length === 0) {
+                    showToast('Debe haber al menos un producto válido', 'warning');
+                    return;
+                }
+                venta.productos = nuevosProductos;
+
+                // Si está completada, actualizar retorno
+                if (venta.estado === 'completado' && venta.retorno) {
+                    const r = venta.retorno;
+                    r.yape = Number(document.getElementById('editRetYape').value) || 0;
+                    r.efectivo = Number(document.getElementById('editRetEfectivo').value) || 0;
+                    r.fiado = Number(document.getElementById('editRetFiado').value) || 0;
+                    r.descuento = Number(document.getElementById('editRetDescuento').value) || 0;
+                    r.movilidad = Number(document.getElementById('editRetMovilidad').value) || 0;
+                    // Actualizar no vendidos
+                    const nvNombres = document.querySelectorAll('.editNoVendNombre');
+                    const nvCants = document.querySelectorAll('.editNoVendCant');
+                    const nvPrecios = document.querySelectorAll('.editNoVendPrecio');
+                    const nuevosNoVend = [];
+                    for (let i = 0; i < nvNombres.length; i++) {
+                        const nom = nvNombres[i].value.trim();
+                        const cant = Number(nvCants[i].value);
+                        const prec = Number(nvPrecios[i].value);
+                        if (nom && !isNaN(cant) && cant > 0 && !isNaN(prec) && prec >= 0) {
+                            nuevosNoVend.push({ nombre: nom, cantidad: cant, precioUnitario: prec });
+                        }
+                    }
+                    r.productosNoVendidos = nuevosNoVend;
+                    // Recalcular totales
+                    const totalNoVendido = nuevosNoVend.reduce((acc, p) => acc + p.cantidad * p.precioUnitario, 0);
+                    r.totalNoVendido = totalNoVendido;
+                    const totalVentaCalc = totalVenta(venta);
+                    const vendido = totalVentaCalc - totalNoVendido - r.descuento - r.movilidad;
+                    const recibido = r.yape + r.efectivo + r.fiado;
+                    r.diferencia = recibido - vendido;
+                    const gastosDia = data.gastos.filter(g => g.fecha === venta.fecha)
+                        .reduce((acc, g) => acc + g.precio, 0);
+                    r.ganancia = vendido - gastosDia;
+                }
+
+                persist();
+                document.getElementById('editarVentaModal').classList.remove('open');
+                cargarHistorial();
+                cargarVentasPendientesSelect();
+                actualizarDashboard();
+                showToast('Venta actualizada', 'success');
+            });
+
+            // ----------------------------
+            //  DASHBOARD
+            // ----------------------------
+            let chartEvolucion = null;
+            let chartPuntos = null;
+            let chartHistorial = null;
+            let chartGastos = null;
+
+            function actualizarDashboard() {
+                const mesStr = document.getElementById('dashboardMes').value;
+                if (!mesStr) return;
+                const [year, month] = mesStr.split('-').map(Number);
+                const fechaRef = new Date(year, month - 1, 1);
+                const rangoMes = getMesRange(fechaRef);
+                const ventasMes = data.ventas.filter(v => fechaEnRango(v.fecha, rangoMes.inicio, rangoMes.fin));
+                const completadasMes = ventasMes.filter(v => v.estado === 'completado');
+                const totalVentasMes = completadasMes.reduce((acc, v) => acc + totalVendido(v), 0);
+                const gastosMes = data.gastos.filter(g => fechaEnRango(g.fecha, rangoMes.inicio, rangoMes.fin));
+                const totalGastosMes = gastosMes.reduce((acc, g) => acc + g.precio, 0);
+                const utilidadMes = totalVentasMes - totalGastosMes;
+                document.getElementById('statVentas').textContent = 'S/ ' + totalVentasMes.toFixed(2);
+                document.getElementById('statGastos').textContent = 'S/ ' + totalGastosMes.toFixed(2);
+                document.getElementById('statUtilidad').textContent = 'S/ ' + utilidadMes.toFixed(2);
+                document.getElementById('statVentasCount').textContent = completadasMes.length;
+
+                // Últimos 7 días
+                const hoy = new Date();
+                const inicio7 = new Date(hoy);
+                inicio7.setDate(hoy.getDate() - 7);
+                inicio7.setHours(0, 0, 0, 0);
+                const ventas7 = data.ventas.filter(v => fechaEnRango(v.fecha, inicio7, hoy));
+                const completadas7 = ventas7.filter(v => v.estado === 'completado');
+                const totalVentas7 = completadas7.reduce((acc, v) => acc + totalVendido(v), 0);
+                const gastos7 = data.gastos.filter(g => fechaEnRango(g.fecha, inicio7, hoy));
+                const totalGastos7 = gastos7.reduce((acc, g) => acc + g.precio, 0);
+                const utilidad7 = totalVentas7 - totalGastos7;
+                document.getElementById('statVentas7').textContent = 'S/ ' + totalVentas7.toFixed(2);
+                document.getElementById('statGastos7').textContent = 'S/ ' + totalGastos7.toFixed(2);
+                document.getElementById('statUtilidad7').textContent = 'S/ ' + utilidad7.toFixed(2);
+                document.getElementById('statVentasCount7').textContent = completadas7.length;
+
+                // Gráficos
+                renderEvolucion();
+                renderVentasPorPunto();
+            }
+
+            function renderEvolucion() {
+                const mesStr = document.getElementById('dashboardMes').value;
+                const periodo = document.getElementById('dashboardPeriodo').value;
+                if (!mesStr) return;
+                const [year, month] = mesStr.split('-').map(Number);
+                const fechaRef = new Date(year, month - 1, 1);
+                const rango = getPeriodoRango(fechaRef, periodo);
+                // Obtener todos los días en el rango y agrupar por período (semana, quincena, mes)
+                let labels = [];
+                let ventasData = [];
+                let gastosData = [];
+                if (periodo === 'semana') {
+                    // Agrupar por semana (lunes a domingo)
+                    let current = new Date(rango.inicio);
+                    while (current <= rango.fin) {
+                        const finSemana = new Date(current);
+                        finSemana.setDate(current.getDate() + 6);
+                        if (finSemana > rango.fin) finSemana.setTime(rango.fin.getTime());
+                        const label = current.toISOString().split('T')[0] + ' a ' + finSemana.toISOString().split('T')[0];
+                        labels.push(label);
+                        let ventas = 0,
+                            gastos = 0;
+                        for (let d = new Date(current); d <= finSemana; d.setDate(d.getDate() + 1)) {
+                            const fechaStr = d.toISOString().split('T')[0];
+                            ventas += data.ventas.filter(v => v.estado === 'completado' && v.fecha === fechaStr)
+                                .reduce((acc, v) => acc + totalVendido(v), 0);
+                            gastos += data.gastos.filter(g => g.fecha === fechaStr).reduce((acc, g) => acc + g.precio,
+                            0);
+                        }
+                        ventasData.push(ventas);
+                        gastosData.push(gastos);
+                        current.setDate(current.getDate() + 7);
+                    }
+                } else if (periodo === 'quincena') {
+                    // Dos períodos: 1-15 y 16-fin
+                    const quincenas = [
+                        { inicio: new Date(year, month - 1, 1), fin: new Date(year, month - 1, 15) },
+                        { inicio: new Date(year, month - 1, 16), fin: new Date(year, month, 0) }
+                    ];
+                    quincenas.forEach(q => {
+                        if (q.inicio > rango.fin || q.fin < rango.inicio) return;
+                        const label = q.inicio.toISOString().split('T')[0] + ' a ' + q.fin.toISOString().split('T')[0];
+                        labels.push(label);
+                        let ventas = 0,
+                            gastos = 0;
+                        for (let d = new Date(q.inicio); d <= q.fin; d.setDate(d.getDate() + 1)) {
+                            const fechaStr = d.toISOString().split('T')[0];
+                            ventas += data.ventas.filter(v => v.estado === 'completado' && v.fecha === fechaStr)
+                                .reduce((acc, v) => acc + totalVendido(v), 0);
+                            gastos += data.gastos.filter(g => g.fecha === fechaStr).reduce((acc, g) => acc + g.precio,
+                            0);
+                        }
+                        ventasData.push(ventas);
+                        gastosData.push(gastos);
+                    });
+                } else {
+                    // Mes: un solo período
+                    labels = [mesStr];
+                    let ventas = 0,
+                        gastos = 0;
+                    for (let d = new Date(rango.inicio); d <= rango.fin; d.setDate(d.getDate() + 1)) {
+                        const fechaStr = d.toISOString().split('T')[0];
+                        ventas += data.ventas.filter(v => v.estado === 'completado' && v.fecha === fechaStr)
+                            .reduce((acc, v) => acc + totalVendido(v), 0);
+                        gastos += data.gastos.filter(g => g.fecha === fechaStr).reduce((acc, g) => acc + g.precio, 0);
+                    }
+                    ventasData.push(ventas);
+                    gastosData.push(gastos);
+                }
+
+                const ctx = document.getElementById('chartEvolucion').getContext('2d');
+                if (chartEvolucion) chartEvolucion.destroy();
+                chartEvolucion = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: 'Ventas', data: ventasData, backgroundColor: 'rgba(180,163,217,0.7)',
+                                borderColor: '#9C8BD9', borderWidth: 2 },
+                            { label: 'Gastos', data: gastosData, backgroundColor: 'rgba(242,179,214,0.7)',
+                                borderColor: '#F2B3D6', borderWidth: 2 }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+
+            function renderVentasPorPunto() {
+                const periodo = document.getElementById('dashboardPuntoPeriodo').value;
+                const mesStr = document.getElementById('dashboardMes').value;
+                if (!mesStr) return;
+                const [year, month] = mesStr.split('-').map(Number);
+                const fechaRef = new Date(year, month - 1, 1);
+                const rango = getPeriodoRango(fechaRef, periodo);
+
+                const puntos = data.puntosVenta;
+                const ventasPorPunto = puntos.map(p => {
+                    const ventas = data.ventas.filter(v => v.estado === 'completado' && v.puntoVentaId === p.id &&
+                        fechaEnRango(v.fecha, rango.inicio, rango.fin));
+                    const total = ventas.reduce((acc, v) => acc + totalVendido(v), 0);
+                    return { punto: p.nombre, total };
+                });
+                const labels = ventasPorPunto.map(d => d.punto);
+                const values = ventasPorPunto.map(d => d.total);
+
+                const ctx = document.getElementById('chartPuntos').getContext('2d');
+                if (chartPuntos) chartPuntos.destroy();
+                chartPuntos = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Ventas (S/)',
+                            data: values,
+                            backgroundColor: 'rgba(156,139,217,0.7)',
+                            borderColor: '#9C8BD9',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+
+            document.getElementById('dashboardActualizar').addEventListener('click', actualizarDashboard);
+            document.getElementById('dashboardMes').addEventListener('change', actualizarDashboard);
+            document.getElementById('dashboardPeriodo').addEventListener('change', renderEvolucion);
+            document.getElementById('dashboardPuntoPeriodo').addEventListener('change', renderVentasPorPunto);
+
+            // ----------------------------
+            //  GRÁFICOS GASTOS E HISTORIAL
+            // ----------------------------
+            function renderGraficoGastos(items) {
+                const ctx = document.getElementById('chartGastos').getContext('2d');
+                if (chartGastos) chartGastos.destroy();
+                const agrupado = {};
+                items.forEach(g => {
+                    agrupado[g.fecha] = (agrupado[g.fecha] || 0) + g.precio;
+                });
+                const labels = Object.keys(agrupado).sort();
+                const data = labels.map(l => agrupado[l]);
+                chartGastos = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{ label: 'Gastos (S/)', data: data, borderColor: '#F2B3D6',
+                            backgroundColor: 'rgba(242,179,214,0.2)', fill: true, tension: 0.3 }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+
+            function renderGraficoHistorial(ventas) {
+                const ctx = document.getElementById('chartHistorial').getContext('2d');
+                if (chartHistorial) chartHistorial.destroy();
+                const agrupado = {};
+                ventas.forEach(v => {
+                    if (v.estado === 'completado') {
+                        agrupado[v.fecha] = (agrupado[v.fecha] || 0) + totalVendido(v);
+                    }
+                });
+                const labels = Object.keys(agrupado).sort();
+                const data = labels.map(l => agrupado[l]);
+                chartHistorial = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{ label: 'Ventas (S/)', data: data, borderColor: '#9C8BD9',
+                            backgroundColor: 'rgba(156,139,217,0.2)', fill: true, tension: 0.3 }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+
+            // ----------------------------
+            //  INICIALIZACIÓN
+            // ----------------------------
+            // Si ya hay sesión (por ejemplo recarga) pero mantenemos login.
+            // Autocompletar datos de ejemplo si no hay ventas
+            if (data.ventas.length === 0) {
+                const fechaEjemplo = hoyStr();
+                const puntoId = data.puntosVenta.length > 0 ? data.puntosVenta[0].id : 1;
+                const ventaEjemplo = {
+                    id: nextId(data.ventas),
+                    fecha: fechaEjemplo,
+                    puntoVentaId: puntoId,
+                    fondoCaja: 50,
+                    productos: [
+                        { nombre: 'Pastel de chocolate', cantidad: 3, precioUnitario: 25 },
+                        { nombre: 'Galletas', cantidad: 10, precioUnitario: 5 }
+                    ],
+                    estado: 'completado',
+                    retorno: {
+                        yape: 60,
+                        efectivo: 30,
+                        fiado: 10,
+                        descuento: 5,
+                        movilidad: 2,
+                        productosNoVendidos: [
+                            { nombre: 'Pastel de chocolate', cantidad: 1, precioUnitario: 25 }
+                        ],
+                        totalNoVendido: 25,
+                        diferencia: 10,
+                        ganancia: 53
+                    }
+                };
+                data.ventas.push(ventaEjemplo);
+                data.productosPendientes.push({ nombre: 'Pastel de chocolate', cantidad: 1, precioUnitario: 25 });
+                persist();
+            }
+
+            // Mostrar login
+            loginPage.style.display = 'block';
+            appEl.style.display = 'none';
+            console.log('Aplicación Repostería lista.');
+
+        })();
+    </script>
 </body>
 </html>
